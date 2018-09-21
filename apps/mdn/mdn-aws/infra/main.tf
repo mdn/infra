@@ -21,6 +21,11 @@ module "mdn_shared" {
   region  = "${var.region}"
 }
 
+module "rds-backups" {
+  source = "./modules/rds-backups"
+  region = "us-west-2"
+}
+
 module "mdn_cdn" {
   source      = "./modules/mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
