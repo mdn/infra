@@ -299,7 +299,7 @@ k8s-delete-db-migration-job:
 k8s-kuma-record-deployment-job: k8s-kuma-delete-record-deployment-job
 	env APP_NAME=kuma \
 		FROM_REVISION_HASH=${FROM_REVISION_HASH} \
-		TO_REVISION_HASH=$(shell make k8s-get-kuma-revision-hash) \
+		TO_REVISION_HASH=${TO_REVISION_HASH} \
 		j2 mdn-record-deployment-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 	env JOB_NAME=mdn-kuma-record-deployment ./wait_for_job.sh
 
@@ -309,7 +309,7 @@ k8s-kuma-delete-record-deployment-job:
 k8s-kumascript-record-deployment-job: k8s-kumascript-delete-record-deployment-job
 	env APP_NAME=kumascript \
 		FROM_REVISION_HASH=${FROM_REVISION_HASH} \
-		TO_REVISION_HASH=$(shell make k8s-get-kumascript-revision-hash) \
+		TO_REVISION_HASH=${TO_REVISION_HASH} \
 		j2 mdn-record-deployment-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 	env JOB_NAME=mdn-kumascript-record-deployment ./wait_for_job.sh
 
