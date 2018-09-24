@@ -57,3 +57,11 @@ output "aws_account_id" {
 output "datadog_role_arn" {
   value = "${module.datadog.integration_role_arn}"
 }
+
+output "rds_backup_user" {
+  value = "${module.rds-backups.backup-bucket-users}"
+}
+
+output "rds_backup_secret_key" {
+  value = "${module.rds-backups.backup-bucket-key}"
+}
