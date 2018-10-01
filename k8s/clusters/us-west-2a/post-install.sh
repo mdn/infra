@@ -104,7 +104,7 @@ install_calico_rbac() {
 
 install_fluentd() {
 
-    PAPERTRAIL_CONFIG="${SECRETS_PATH}/k8s/secrets/portland/papertrail.sh"
+    PAPERTRAIL_CONFIG="${SECRETS_PATH}/k8s/secrets/${CLUSTER_ALT_NAME}/papertrail.sh"
     if [ ! -f "${PAPERTRAIL_CONFIG}" ]; then
         echo "Can't find papertrail.sh"
         exit 1
@@ -133,9 +133,17 @@ install_cluster_autoscaler() {
 install_datadog() {
     echo "Installing datadog"
     kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-namespace.yaml"
-    kubectl apply -f "${SECRETS_PATH}/scm/mdn-k8s-private/k8s/secrets/datadog-cluster.yaml"
+    kubectl apply -f "${SECRETS_PATH}/k8s/secrets/${CLUSTER_ALT_NAME}/datadog-cluster.yaml"
     kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-agent.yaml"
     kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog_statsd_svc.yaml"
+}
+
+install_block-aws() {
+    echo "Install block-aws"
+    kubectl apply -f "${KOPS_INSTALLER}/services/block-aws/block-aws-namespace.yaml"
+    kubectl apply -f "${SECRETS_PATH}/k8s/secrets/${CLUSTER_ALT_NAME}/block-aws-secrets.yaml"
+    kubectl apply -f "${KOPS_INSTALLER}/services/block-aws/block-aws-cron.yaml"
+    kubectl apply -f "${KOPS_INSTALLER}/services/block-aws/block-aws-networkpolicy.yaml"
 }
 
 install_services() {
@@ -145,4 +153,5 @@ install_services() {
     install_mig
     install_datadog
     install_redirector_service
+    install_block-aws
 }
