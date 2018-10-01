@@ -387,7 +387,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward = "whitelist"
-        whitelisted_names = ["django_language", "dwf_sg_task_completion", "sessionid"]
+        whitelisted_names = ["django_language", "dwf_contrib_beta", "dwf_sg_task_completion", "sessionid"]
       }
     }
   }
@@ -642,7 +642,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward = "whitelist"
-        whitelisted_names = ["django_language", "dwf_sg_task_completion", "sessionid"]
+        whitelisted_names = ["django_language", "dwf_contrib_beta", "dwf_sg_task_completion", "sessionid"]
       }
     }
   }
