@@ -1,4 +1,4 @@
-from python:3.6-slim
+from python:3-slim
 
 ENV AWS_ACCESS_KEY_ID setme
 ENV AWS_SECRET_ACCESS_KEY setme
@@ -10,16 +10,15 @@ ENV BUCKET s3://mdn-shared-backup
 ENV PUSH_OR_PULL PUSH
 
 # install packages
-RUN apt update && apt -y upgrade && apt install -y python3-pip curl
+RUN apt-get update && apt-get -y upgrade && apt-get install -y python3-pip curl
+RUN pip3 install pip --upgrade
+RUN pip3 install awscli --upgrade
 
 RUN groupadd --gid 1000 kuma
 RUN useradd -ms /bin/bash --uid 1000 --gid 1000 kuma
 USER kuma:kuma
 
 WORKDIR /mdnsync
-RUN pip3 install awscli --upgrade --user
 
-
-ENV PATH="/home/kuma/.local/bin/:${PATH}"
 ADD mdn_sync.sh /mdnsync/mdn_sync.sh
 CMD ["/mdnsync/mdn_sync.sh"]
