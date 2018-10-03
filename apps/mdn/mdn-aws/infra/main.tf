@@ -26,6 +26,12 @@ module "rds-backups" {
   region = "us-west-2"
 }
 
+module "security" {
+  source              = "./modules/security"
+  us-west-2-vpc-id    = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  eu-central-1-vpc-id = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
+}
+
 module "mdn_cdn" {
   source      = "./modules/mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
@@ -40,7 +46,7 @@ module "mdn_cdn" {
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.stage")}"
 
   # attachment CDN
-  cloudfront_attachments_enabled           = "0" # Disable for stage
+  cloudfront_attachments_enabled           = "0"                                                                  # Disable for stage
   acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.stage"))}"
