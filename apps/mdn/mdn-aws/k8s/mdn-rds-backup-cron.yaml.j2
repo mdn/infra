@@ -1,0 +1,73 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: mdn-rds-backup
+spec:
+  schedule: {{ RDS_BACKUP_SCHEDULE }}
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: {{ FAILED_JOBS_HISTORY_LIMIT }}
+  successfulJobsHistoryLimit: {{ SUCCESSFUL_JOBS_HISTORY_LIMIT }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: mdn-rds-backup
+              image: {{ RDS_BACKUP_IMAGE }}:{{ RDS_BACKUP_IMAGE_TAG }}
+              {%- if RDS_BACKUP_DEBUG_MODE == 'true' %}
+              command: [ "/bin/bash", "-c", "--" ]
+              args: [ "while true; do sleep 30; done;" ]
+              {%- endif %}
+              env:
+                - name: DBTYPE
+                  value: {{ RDS_BACKUP_DBTYPE }}
+                - name: BACKUP_DIR
+                  value: {{ RDS_BACKUP_DIR }}
+                - name: BACKUP_BUCKET
+                  value: {{ RDS_BACKUP_BUCKET }}
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: access_key
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: secret_key
+                - name: BACKUP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: BACKUP_PASSWORD
+                - name: DBHOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: DBHOST
+                - name: DBNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: DBNAME
+                - name: DBPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: DBPASSWORD
+                - name: DBPORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: DBPORT
+                - name: DBUSER
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: DBUSER
+                - name: DEADMANSSNITCH_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-rds-backup-secrets
+                      key: DEADMANSSNITCH_URL
