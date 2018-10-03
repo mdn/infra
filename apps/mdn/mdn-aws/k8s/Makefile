@@ -157,7 +157,13 @@ export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
 export RESTORE_SERVICE_SCHEDULE ?= "@hourly"
 export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
 
-
+export RDS_BACKUP_DIR ?= /backup
+export RDS_BACKUP_DBTYPE ?= MYSQL
+export RDS_BACKUP_DEBUG_MODE ?= false
+export RDS_BACKUP_IMAGE_TAG ?= d7d259b
+export RDS_BACKUP_IMAGE ?= mdnwebdocs/mdn-rds-backup
+export RDS_BACKUP_SCHEDULE ?= "@weekly"
+export RDS_BACKUP_BUCKET ?= s3://mdn-backup-bucket-0899eecc1f038f41/backups
 
 export FAILED_JOBS_HISTORY_LIMIT ?= 3
 export SUCCESSFUL_JOBS_HISTORY_LIMIT ?= 3
@@ -441,6 +447,12 @@ k8s-redis-dd: check-service-env
 k8s-delete-redis-dd: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${DATADOG_REDIS_DEPLOYMENT_NAME}
 
+k8s-rds-backup-cron: check-service-env
+	j2 mdn-rds-backup-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-rds-backup-cron: check-service-env
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob mdn-rds-backup
+
 ### end administrative tasks
 ###############################
 
@@ -574,4 +586,5 @@ k8s-get-kumascript-revision-hash:
 		k8s-kuma-delete-record-deployment-job \
 		k8s-kumascript-delete-record-deployment-job \
 		k8s-get-kuma-revision-hash k8s-get-kumascript-revision-hash \
+		k8s-rds-backup-cron k8s-delete-rds-backup-cron \
 		check-service-env
