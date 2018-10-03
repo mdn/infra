@@ -13,8 +13,8 @@ export BACKUP_BUCKET ?= s3://meao-rds-backups/backups
 export DEBUG_MODE ?= false
 # automatically append month-year-date to new pod names
 export BACKUP_POD_SUFFIX ?= $(shell date +%F)
-export RDSBACKUP_IMAGE_TAG ?= bff26ed6aa0350e164cb3003fcae81f4ee9d9ff5
-export RDS_IMAGE ?= quay.io/mozmar/rdsbackup:${RDSBACKUP_IMAGE_TAG}
+export RDSBACKUP_IMAGE_TAG ?= d7d259b
+export RDS_IMAGE ?= mdnwebdocs/mdn-rds-backup:${RDSBACKUP_IMAGE_TAG}
 # the command to use to render yaml and create pod in k8s
 export RENDER_POD_CMD ?= j2 rds_backup_pod.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
 
@@ -32,4 +32,3 @@ backup-frankfurt:
 		DB_SECRETS_NAME=rds-backup-frankfurt \
 		BACKUP_POD_NAME=frankfurt \
 	${RENDER_POD_CMD}
-
