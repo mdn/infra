@@ -1,7 +1,7 @@
 FROM python:3
 
 RUN apt-get update\
-        && apt-get install -y --no-install-recommends mysql-client python-setuptools python-pip openssl\
+        && apt-get install -y --no-install-recommends mysql-client openssl\
         && pip install awscli --upgrade \
         && apt-get clean -y \
         && apt-get autoclean -y \
