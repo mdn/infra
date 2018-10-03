@@ -1,5 +1,5 @@
-GIT_COMMIT ?= $(shell git rev-parse HEAD)
+GIT_COMMIT ?= $(shell git rev-parse --short=7 HEAD)
 
 all:
-	docker build . -t quay.io/mozmar/rdsbackup:${GIT_COMMIT}
-	docker push quay.io/mozmar/rdsbackup:${GIT_COMMIT}
+	docker build . -t mdnwebdocs/mdn-rds-backup:${GIT_COMMIT}
+	docker push mdnwebdocs/mdn-rds-backup:${GIT_COMMIT}
