@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ec2:DeleteNetworkAclEntry",
+      "Resource": [
+        "arn:aws:ec2:us-west-2::network-acl/${us-west-2-nacl-id}",
+        "arn:aws:ec2:eu-central-1::network-acl/${eu-central-1-nacl-id}"
+
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:ReplaceNetworkAclEntry",
+        "ec2:CreateNetworkAclEntry",
+        "ec2:DescribeNetworkAcls"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

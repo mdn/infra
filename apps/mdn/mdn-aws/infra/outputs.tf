@@ -65,3 +65,11 @@ output "rds_backup_user" {
 output "rds_backup_secret_key" {
   value = "${module.rds-backups.backup-bucket-key}"
 }
+
+output "worf_user" {
+  value = "${module.security.worf_user}"
+}
+
+output "work_user_secret_key" {
+  value = "${module.security.worf_secret_key}"
+}
