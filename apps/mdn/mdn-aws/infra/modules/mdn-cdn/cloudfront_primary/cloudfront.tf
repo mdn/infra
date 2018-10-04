@@ -1,11 +1,49 @@
-variable "enabled" {}
-variable "distribution_name" {}
-variable "comment" {}
-variable "domain_name" {}
-variable "acm_cert_arn" {}
 
-variable "aliases" {
-  type = "list"
+locals {
+  log_bucket = "${var.distribution_name}-logs"
+}
+
+resource "random_id" "rand-var" {
+  keepers = {
+    bucket_name = "${local.log_bucket}"
+  }
+
+  byte_length = 8
+}
+
+resource "aws_s3_bucket" "logging" {
+  bucket = "${local.log_bucket}-${random_id.rand-var.hex}"
+  acl    = "log-delivery-write"
+
+  versioning {
+    enabled = true
+  }
+
+  lifecycle_rule {
+    enabled = true
+
+    transition {
+      days          = "${var.standard_transition_days}"
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days  = "${var.glacier_transition_days}"
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = "${var.expiration_days}"
+    }
+  }
+
+  tags {
+    Name        = "${local.log_bucket}-${random_id.rand-var.hex}"
+    Environment = "${var.environment}"
+    Service     = "MDN"
+    Purpose     = "Cloudfront logging bucket"
+  }
+
 }
 
 resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
@@ -17,6 +55,12 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   http_version    = "http2"
   is_ipv6_enabled = true
   price_class     = "PriceClass_All"
+
+  logging_config {
+    include_cookies = "${var.cloudfront_log_cookies}"
+    bucket          = "${aws_s3_bucket.logging.bucket_domain_name}"
+    prefix          = "${var.cloudfront_log_prefix}"
+  }
 
   custom_error_response {
     error_caching_min_ttl = 0
@@ -678,5 +722,12 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
     minimum_protocol_version = "TLSv1.1_2016"
+  }
+
+  tags {
+    Name        = "${var.distribution_name}"
+    Environment = "${var.environment}"
+    Purpose     = "Primary CDN"
+    Service     = "MDN"
   }
 }
