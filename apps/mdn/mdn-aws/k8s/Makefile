@@ -453,6 +453,18 @@ k8s-rds-backup-cron: check-service-env
 k8s-delete-rds-backup-cron: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob mdn-rds-backup
 
+# one-time job to push EFS to S3
+k8s-sync-efs-to-s3-job: check-service-env
+	env PUSH_OR_PULL=PUSH \
+		JOB_NAME=mdn-sync-efs-to-s3 \
+		j2 mdn-sync-efs-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+# one-time job to load EFS from S3
+k8s-sync-efs-from-s3-job: check-service-env
+	env PUSH_OR_PULL=PULL \
+		JOB_NAME=mdn-sync-efs-from-s3 \
+		j2 mdn-sync-efs-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
 ### end administrative tasks
 ###############################
 
