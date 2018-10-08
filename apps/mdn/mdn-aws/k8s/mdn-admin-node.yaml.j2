@@ -17,6 +17,17 @@ spec:
           volumeMounts:
             - mountPath: {{ BACKUP_MOUNT_DIR }}
               name: {{ SHARED_PVC_NAME }}
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-admin-node-secrets
+                  key: access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-admin-node-secrets
+                  key: secret_key
       volumes:
         - name: {{ SHARED_PVC_NAME }}
           persistentVolumeClaim:
