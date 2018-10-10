@@ -49,6 +49,12 @@
                   key: redis-url-1
             - name: CELERYD_MAX_TASKS_PER_CHILD
               value: "{{ KUMA_CELERYD_MAX_TASKS_PER_CHILD }}"
+            - name: CSP_ENABLE_MIDDLEWARE
+              value: "{{ KUMA_CSP_ENABLE_MIDDLEWARE }}"
+            - name: CSP_REPORT_ENABLE
+              value: "{{ KUMA_CSP_REPORT_ENABLE }}"
+            - name: CSP_REPORT_ONLY
+              value: "{{ KUMA_CSP_REPORT_ONLY }}"
             - name: CSRF_COOKIE_SECURE
               value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
