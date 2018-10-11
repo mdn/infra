@@ -13,7 +13,7 @@ The default target will build and push the image to quay.io.
 ## Configuration
 
 - `LOCAL_DIR` - the directory *in the running container* that we'll push or pull from.
-- `BUCKET` - the bucket where backup data is stored. 
+- `BUCKET` - the bucket where backup data is stored.
 - `REMOTE_DIR` - the directory in `$BUCKET` that we'll push or pull from.
 - `PUSH_OR_PULL` - set to either `PUSH` or `PULL`
   - `PUSH` - recursively sync from `$LOCAL_DIR` to `$BUCKET$REMOTE_DIR`
@@ -56,7 +56,7 @@ docker run \
         -e PUSH_OR_PULL="PULL" \
         -e LOCAL_DIR="/mdn_stuff" \
         -e REMOTE_DIR="/backups/www" \
-        -e BUCKET="s3://mdn-shared-backup" \
+        -e BUCKET="s3://mdn-efs-backup" \
         -v $(pwd)/stuff:/mdn_stuff \
         quay.io/mozmar/mdn-backup:latest
 ```
