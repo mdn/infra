@@ -47,3 +47,44 @@ resource aws_subnet "us-west-2c-k8s-us-west-2a-mdn-mozit-cloud" {
     "kubernetes.io/role/elb"                               = "1"
   }
 }
+
+# Allow inbound ssh and http from specified IP's
+resource "aws_security_group_rule" "inbound-ssh-to-master" {
+  count             = "${length(module.kubernetes.master_security_group_ids)}"
+  type              = "ingress"
+  security_group_id = "${element(module.kubernetes.master_security_group_ids, count.index)}"
+  from_port         = "22"
+  to_port           = "22"
+  protocol          = "TCP"
+  cidr_blocks       = "${var.ip_whitelist}"
+}
+
+resource "aws_security_group_rule" "inbound-ssh-to-nodes" {
+  count             = "${length(module.kubernetes.node_security_group_ids)}"
+  type              = "ingress"
+  security_group_id = "${element(module.kubernetes.node_security_group_ids, count.index)}"
+  from_port         = "22"
+  to_port           = "22"
+  protocol          = "TCP"
+  cidr_blocks       = "${var.ip_whitelist}"
+}
+
+resource "aws_security_group_rule" "inbound-https-to-master" {
+  count             = "${length(module.kubernetes.master_security_group_ids)}"
+  type              = "ingress"
+  security_group_id = "${element(module.kubernetes.master_security_group_ids, count.index)}"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "TCP"
+  cidr_blocks       = "${var.ip_whitelist}"
+}
+
+resource "aws_security_group_rule" "inbound-https-to-nodes" {
+  count             = "${length(module.kubernetes.node_security_group_ids)}"
+  type              = "ingress"
+  security_group_id = "${element(module.kubernetes.node_security_group_ids, count.index)}"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "TCP"
+  cidr_blocks       = "${var.ip_whitelist}"
+}

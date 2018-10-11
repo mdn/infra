@@ -16,3 +16,7 @@ You will need the following tools to get kubernetes installed
     - Create external DNS name
 - choose cluster name
 
+
+## Post install
+- Run post-install.sh script
+- Login to AWS console and edit security group for `master` and `node` delete the ssh rule that allows access from `0.0.0.0/0`

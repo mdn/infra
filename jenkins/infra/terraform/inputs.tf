@@ -29,3 +29,7 @@ variable "backup_dir" {
 variable "nginx_htpasswd" {}
 
 variable "jenkins_backup_dms" {}
+
+variable "ip_whitelist" {
+  type = "list"
+}
