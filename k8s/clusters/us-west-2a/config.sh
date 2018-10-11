@@ -18,3 +18,4 @@ export KOPS_INSTALLER="../../install"
 
 # secrets path
 export SECRETS_PATH="${HOME}/scm/mdn-k8s-private"
+export TF_SECRETS_PATH="${SECRETS_PATH}/terraform/k8s"

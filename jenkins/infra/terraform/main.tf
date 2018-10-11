@@ -143,9 +143,19 @@ resource "aws_security_group" "ci" {
   }
 
   tags = {
-    Name   = "ci-sg"
-    Region = "${var.region}"
+    Name    = "ci-sg"
+    Region  = "${var.region}"
+    Service = "MDN"
   }
+}
+
+resource "aws_security_group_rule" "ingress_ssh" {
+  type              = "ingress"
+  security_group_id = "${aws_security_group.ci.id}"
+  from_port         = "22"
+  to_port           = "22"
+  protocol          = "TCP"
+  cidr_blocks       = "${var.ip_whitelist}"
 }
 
 resource "aws_autoscaling_group" "ci" {
