@@ -4,7 +4,7 @@ ENV AWS_ACCESS_KEY_ID setme
 ENV AWS_SECRET_ACCESS_KEY setme
 ENV LOCAL_DIR /data
 ENV REMOTE_DIR /backups/
-ENV BUCKET s3://mdn-shared-backup
+ENV BUCKET s3://mdn-efs-backup
 
 # set to either PUSH or PULL
 ENV PUSH_OR_PULL PUSH

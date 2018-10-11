@@ -136,5 +136,5 @@ export KUMA_WEB_CONCURRENCY=4
 
 export INTERACTIVE_EXAMPLES_BASE_URL=https://interactive-examples.mdn.mozilla.net
 
-export SYNC_BUCKET=s3://mdn-shared-backup-c2037ed87dd96008
-export BACKUP_BUCKET=s3://mdn-shared-backup-c2037ed87dd96008
+export SYNC_BUCKET=s3://mdn-efs-backup-c2037ed87dd96008
+export BACKUP_BUCKET=s3://mdn-efs-backup-c2037ed87dd96008

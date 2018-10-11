@@ -166,7 +166,7 @@ export RDS_BACKUP_DEBUG_MODE ?= false
 export RDS_BACKUP_IMAGE_TAG ?= d7d259b
 export RDS_BACKUP_IMAGE ?= mdnwebdocs/mdn-rds-backup
 export RDS_BACKUP_SCHEDULE ?= "@daily"
-export RDS_BACKUP_BUCKET ?= s3://mdn-backup-bucket-0899eecc1f038f41/backups
+export RDS_BACKUP_BUCKET ?= s3://mdn-rds-backup-7752d5ca6f3744a0/backups
 
 export FAILED_JOBS_HISTORY_LIMIT ?= 3
 export SUCCESSFUL_JOBS_HISTORY_LIMIT ?= 3
