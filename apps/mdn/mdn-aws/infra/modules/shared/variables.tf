@@ -17,7 +17,7 @@ variable downloads_bucket_name {
 }
 
 variable shared_backup_bucket_name {
-  default = "mdn-shared-backup"
+  default = "mdn-efs-backup"
 }
 
 variable "hosted-zone-id-defs" {

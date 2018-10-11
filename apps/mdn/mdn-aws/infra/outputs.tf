@@ -1,3 +1,7 @@
+output "efs_backup_bucket" {
+  value = "${module.mdn_shared.efs_backup_bucket_name}"
+}
+
 output "efs_backup_user_access_key" {
   value = "${module.mdn_shared.efs_backup_user_access_key}"
 }
@@ -58,12 +62,16 @@ output "datadog_role_arn" {
   value = "${module.datadog.integration_role_arn}"
 }
 
+output "rds_backup_bucket" {
+  value = "${module.rds-backups.rds-backup-bucket-name}"
+}
+
 output "rds_backup_user" {
-  value = "${module.rds-backups.backup-bucket-users}"
+  value = "${module.rds-backups.rds-backup-bucket-users}"
 }
 
 output "rds_backup_secret_key" {
-  value = "${module.rds-backups.backup-bucket-key}"
+  value = "${module.rds-backups.rds-backup-bucket-key}"
 }
 
 output "worf_user" {
