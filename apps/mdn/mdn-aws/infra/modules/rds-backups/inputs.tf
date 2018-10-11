@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "backup-bucket" {
-  default = "mdn-backup-bucket"
+  default = "mdn-rds-backup"
 }
 
 variable "bucket-acl" {
