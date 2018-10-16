@@ -29,7 +29,7 @@ export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
-export WEB_SERVICE_CERT_ARN=arn:aws:acm:eu-central-1:178589013767:certificate/1a9fc27c-c161-449b-8b6f-09e9ffed3e77
+export WEB_SERVICE_CERT_ARN=arn:aws:acm:eu-central-1:178589013767:certificate/eb602c6b-4695-4c72-8a94-0e78c49b05b8
 
 export API_SERVICE_NAME=api
 export API_SERVICE_TYPE=ClusterIP
@@ -51,7 +51,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=2Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,demos.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud,standby.mdn.mozit.cloud,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,demos.mdn.mozit.cloud,demos-origin.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud,standby.mdn.mozit.cloud,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 
 export API_NAME=api
 export API_REPLICAS=1
@@ -104,7 +104,7 @@ export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL=https
 export KUMA_ADMIN_NAMES="MDN devs"
 export KUMA_ALLOW_ROBOTS=True
 export KUMA_ATTACHMENT_HOST=mdn.mozillademos.org
-export KUMA_ATTACHMENT_ORIGIN=prod.mdn.mozit.cloud
+export KUMA_ATTACHMENT_ORIGIN=demos-origin.mdn.mozit.cloud
 export KUMA_CELERY_ALWAYS_EAGER=False
 export KUMA_CELERYD_MAX_TASKS_PER_CHILD=0
 export KUMA_CSRF_COOKIE_SECURE=True
