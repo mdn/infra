@@ -18,17 +18,6 @@ module "acm_star_mdn" {
   zone_id     = "${data.terraform_remote_state.dns.master-zone}"
 }
 
-module "interactive-example-acm" {
-  source = "./modules/acm"
-
-  providers = {
-    aws = "aws.acm"
-  }
-
-  domain_name = "interactive-examples.mdn.mozit.cloud"
-  zone_id     = "${data.terraform_remote_state.dns.master-zone}"
-}
-
 module "acm_ci" {
   source = "./modules/acm"
 
