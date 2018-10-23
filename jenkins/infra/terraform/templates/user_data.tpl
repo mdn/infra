@@ -5,6 +5,11 @@ set -xu
 BACKUP_DIR="${backup_dir}"
 BACKUP_BUCKET="${backup_bucket}"
 JENKINS_BACKUP_DMS="${jenkins_backup_dms}"
+NGINX_HTPASSWD="${nginx_htpasswd}"
+PAPERTRAIL_HOST="${papertrail_host}"
+PAPERTRAIL_PORT="${papertrail_port}"
+DATADOG_KEY="${datadog_key}"
+DATADOG_HOSTNAME="${datadog_hostname}"
 
 die() {
     echo "$*" 1>&2
@@ -62,7 +67,10 @@ main() {
     # run ansible
     git clone https://github.com/mdn/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
     cd /tmp/ansible-jenkins && \
-        ansible-playbook site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} jenkins_backup_dms=${jenkins_backup_dms} nginx_htpasswd=${nginx_htpasswd}" \
+        ansible-playbook site.yml -e "jenkins_backup_directory="$${BACKUP_DIR}" jenkins_backup_bucket="$${BACKUP_BUCKET}" \
+                                        jenkins_backup_dms="$${JENKINS_BACKUP_DMS}" nginx_htpasswd="$${NGINX_HTPASSWD}" \
+                                        papertrail_host="$${PAPERTRAIL_HOST}" papertrail_port="$${PAPERTRAIL_PORT}" \
+                                        datadog_key="$${DATADOG_KEY}" datadog_hostname="$${DATADOG_HOSTNAME}"" \
         || die "Failed to run ansible"
 
     echo "Restoring backup sets to $${BACKUP_DIR}"

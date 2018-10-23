@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "instance_type" {
-  default = "m5.large"
+  default = "m5.xlarge"
 }
 
 variable "project" {
@@ -29,6 +29,14 @@ variable "backup_dir" {
 variable "nginx_htpasswd" {}
 
 variable "jenkins_backup_dms" {}
+
+variable "papertrail_host" {}
+
+variable "papertrail_port" {}
+
+variable "datadog_key" {}
+
+variable "datadog_hostname" {}
 
 variable "ip_whitelist" {
   type = "list"
