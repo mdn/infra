@@ -176,7 +176,8 @@ resource "aws_autoscaling_group" "ci" {
   min_size                  = "1"
   desired_capacity          = "1"
   health_check_grace_period = 1800
-  health_check_type         = "ELB"
+  # Less than ideal but the initial sync takes such a long time
+  health_check_type         = "EC2"
   force_delete              = true
   launch_configuration      = "${aws_launch_configuration.ci.name}"
 
@@ -212,6 +213,10 @@ data template_file "user_data" {
     backup_bucket      = "${aws_s3_bucket.ci-backup-bucket.id}"
     nginx_htpasswd     = "${var.nginx_htpasswd}"
     jenkins_backup_dms = "${var.jenkins_backup_dms}"
+    papertrail_host    = "${var.papertrail_host}"
+    papertrail_port    = "${var.papertrail_port}"
+    datadog_key        = "${var.datadog_key}"
+    datadog_hostname   = "${var.datadog_hostname}"
   }
 }
 
@@ -328,6 +333,41 @@ resource aws_iam_role_policy "ci-backup" {
     }
   ]
 }
-
 EOF
+}
+
+resource aws_iam_policy "mdn-interactive-permissive" {
+  name        = "mdn-interactive-permissive"
+  description = "Allow ci to push to interactive-example bucket"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::mdninteractive-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::mdninteractive-*/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource aws_iam_role_policy_attachment "ci-role" {
+  role       = "${aws_iam_role.ci.name}"
+  policy_arn = "${aws_iam_policy.mdn-interactive-permissive.arn}"
 }
