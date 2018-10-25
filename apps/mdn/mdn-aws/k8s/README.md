@@ -45,9 +45,9 @@ brew install jq
 
 #### Deploying MDN with Kuma updates only
 
-- Specify the Kuma image tag you want to deploy. It must be available from quay.io (see https://quay.io/repository/mozmar/kuma?tab=tags for a list of available tags). New Kuma images are built and registered on quay.io after every commit to the `master` branch of https://github.com/mozilla/kuma.
+- Specify the Kuma image tag you want to deploy. It must be available from DockerHub (see https://hub.docker.com/r/mdnwebdocs/kuma/tags/ for a list of available tags). New Kuma images are built and registered on DockerHub after every commit to the `master` branch of https://github.com/mozilla/kuma.
 ```sh
-export KUMA_IMAGE_TAG=<tag-from-quay.io>
+export KUMA_IMAGE_TAG=<tag-from-dockerhub>
 ```
 
 - Run the database migrations
@@ -72,9 +72,9 @@ make k8s-kuma-rollback
 
 #### Deploying MDN with Kumascript updates only
 
-- Specify the Kumascript image tag you want to deploy. It must be available from quay.io (see https://quay.io/repository/mozmar/kumascript?tab=tags for a list of available tags). New Kumascript images are built and registered on quay.io after every commit to the `master` branch of https://github.com/mdn/kumascript.
+- Specify the Kumascript image tag you want to deploy. It must be available from DockerHub (see https://hub.docker.com/r/mdnwebdocs/kumascript/tags/ for a list of available tags). New Kumascript images are built and registered on DockerHub after every commit to the `master` branch of https://github.com/mdn/kumascript.
 ```sh
-export KUMASCRIPT_IMAGE_TAG=<tag-from-quay.io>
+export KUMASCRIPT_IMAGE_TAG=<tag-from-dockerhub>
 ```
 
 - Rollout the update
@@ -96,8 +96,8 @@ make k8s-kumascript-rollback
 
 - Specify the Kuma and Kumascript image tags you want to deploy.
 ```sh
-export KUMA_IMAGE_TAG=<tag-from-quay.io>
-export KUMASCRIPT_IMAGE_TAG=<tag-from-quay.io>
+export KUMA_IMAGE_TAG=<tag-from-dockerhub>
+export KUMASCRIPT_IMAGE_TAG=<tag-from-dockerhub>
 ```
 
 - Run the database migrations

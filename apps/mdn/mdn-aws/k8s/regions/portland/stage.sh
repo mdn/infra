@@ -88,14 +88,14 @@ export CELERY_CAM_MEMORY_REQUEST=256Mi
 export KUMASCRIPT_NAME=kumascript
 export KUMASCRIPT_REPLICAS=1
 export KUMASCRIPT_CONTAINER_PORT=${KUMASCRIPT_SERVICE_TARGET_PORT}
-export KUMASCRIPT_IMAGE=quay.io/mozmar/kumascript
+export KUMASCRIPT_IMAGE=mdnwebdocs/kumascript
 export KUMASCRIPT_IMAGE_PULL_POLICY=IfNotPresent
 export KUMASCRIPT_CPU_LIMIT=2
 export KUMASCRIPT_CPU_REQUEST=100m
 export KUMASCRIPT_MEMORY_LIMIT=4Gi
 export KUMASCRIPT_MEMORY_REQUEST=256Mi
 
-export KUMA_IMAGE=quay.io/mozmar/kuma
+export KUMA_IMAGE=mdnwebdocs/kuma
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
