@@ -1,5 +1,7 @@
 FROM python:3
 
+ENV LANG C.UTF-8
+
 RUN apt-get update\
         && apt-get install -y --no-install-recommends mysql-client openssl\
         && pip install awscli --upgrade \
