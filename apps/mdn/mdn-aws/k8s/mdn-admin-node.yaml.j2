@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: {{ ADMIN_NODE_NAME }}
-          image: mdnwebdocs/mdn-admin:e4ff5ba
+          image: mdnwebdocs/mdn-admin:2f6c560
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 30; done;" ]
           volumeMounts:
