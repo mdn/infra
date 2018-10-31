@@ -13,7 +13,7 @@ brew update
 brew install jq
 ```
 
-- Move/copy your K8s configuration file for the Portland cluster to `~/.kube/portland.config`
+- Move/copy your K8s configuration file for the Oregon cluster to `~/.kube/oregon.config`
 
 ## Deploying MDN
 
@@ -28,19 +28,19 @@ brew install jq
 
     - Stage
     ```sh
-    source regions/portland/stage.sh
+    source regions/oregon/stage.sh
     ```
     - Stage in Maintenance Mode
     ```sh
-    source regions/portland/stage.mm.sh
+    source regions/oregon/stage.mm.sh
     ```
     - Production
     ```sh
-    source regions/portland/prod.sh
+    source regions/oregon/prod.sh
     ```
     - Production in Maintenance Mode
     ```sh
-    source regions/portland/prod.mm.sh
+    source regions/oregon/prod.mm.sh
     ```
 
 #### Deploying MDN with Kuma updates only
