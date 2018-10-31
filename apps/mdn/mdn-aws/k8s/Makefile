@@ -103,6 +103,7 @@ export KUMA_CSRF_COOKIE_SECURE ?= True
 export KUMA_CSP_ENABLE_MIDDLEWARE ?= False
 export KUMA_CSP_REPORT_ENABLE ?= False
 export KUMA_CSP_REPORT_ONLY ?= True
+export KUMA_CSP_REPORT_URI ?= /csp-violation-capture
 export KUMA_DEBUG ?= False
 export KUMA_DEBUG_TOOLBAR ?= False
 export KUMA_DOMAIN ?= mdn-dev.moz.works
