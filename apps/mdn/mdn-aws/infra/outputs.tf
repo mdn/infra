@@ -26,14 +26,6 @@ output "downloads_bucket_website" {
   value = "${module.mdn_shared.downloads_bucket_website_endpoint}"
 }
 
-output "db_storage_bucket_name" {
-  value = "${module.mdn_shared.db_storage_bucket_name}"
-}
-
-output "db_storage_anonymized_bucket_name" {
-  value = "${module.mdn_shared.db_storage_bucket_anonymized_name}"
-}
-
 output "us-west-2-efs-dns" {
   value = "${module.efs-us-west-2.efs_dns}"
 }
