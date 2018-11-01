@@ -4,6 +4,10 @@ variable "region" {
 
 variable enabled {}
 
+variable db_storage_bucket_name {
+  default = "mdn-db-storage"
+}
+
 variable elb_logs_bucket_name {
   default = "mdn-elb-logs"
 }

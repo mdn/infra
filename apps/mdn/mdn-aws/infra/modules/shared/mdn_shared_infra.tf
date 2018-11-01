@@ -5,7 +5,11 @@ provider "aws" {
 resource "random_id" "rand-var" {
   count = "${var.enabled}"
 
+  # NOTE: don't mess with these keepers here
+  #       if we remove anyone of these it means the hashes will all regenerate
+  #       which means every bucket gets renamed
   keepers = {
+    db_storage_bucket_name = "${var.db_storage_bucket_name}"
     elb_logs_bucket_name   = "${var.elb_logs_bucket_name}"
     downloads_bucket_name  = "${var.downloads_bucket_name}"
   }
@@ -52,6 +56,12 @@ EOF
   }
 }
 
+resource "aws_s3_bucket" "mdn-downloads-logs" {
+  count  = "${var.enabled}"
+  bucket = "${local.downloads}-logs"
+  acl    = "log-delivery-write"
+}
+
 resource "aws_s3_bucket" "mdn-downloads" {
   count         = "${var.enabled}"
   bucket        = "${local.downloads}"
@@ -69,7 +79,7 @@ resource "aws_s3_bucket" "mdn-downloads" {
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
 
   logging {
-    target_bucket = "${local.downloads}"
+    target_bucket = "${aws_s3_bucket.mdn-downloads-logs.id}"
     target_prefix = "logs/"
   }
 
