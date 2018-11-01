@@ -8,6 +8,9 @@ resource "random_id" "rand-var" {
   # NOTE: don't mess with these keepers here
   #       if we remove anyone of these it means the hashes will all regenerate
   #       which means every bucket gets renamed
+  #
+  #       The variable var.db_storage_bucket_name is no longer used
+  #       but we keep it around to avoid hash regeneration
   keepers = {
     db_storage_bucket_name = "${var.db_storage_bucket_name}"
     elb_logs_bucket_name   = "${var.elb_logs_bucket_name}"

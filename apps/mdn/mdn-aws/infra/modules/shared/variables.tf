@@ -4,6 +4,8 @@ variable "region" {
 
 variable enabled {}
 
+# This variable is no longer used but we have to keep
+# it around to avoid the has to regenerate
 variable db_storage_bucket_name {
   default = "mdn-db-storage"
 }
