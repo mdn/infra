@@ -96,7 +96,7 @@ export KUMA_MOUNT_PATH ?= /mdn
 # Defaults for the Kuma environment.
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
 export KUMA_ADMIN_NAMES ?= "MDN devs"
-export KUMA_ATTACHMENT_HOST ?= mdn-dev.moz.works
+export KUMA_ATTACHMENT_HOST ?= dev.mdn.mozit.cloud
 export KUMA_CELERY_ALWAYS_EAGER ?= False
 export KUMA_CELERYD_MAX_TASKS_PER_CHILD ?= 0
 export KUMA_CSRF_COOKIE_SECURE ?= True
@@ -105,7 +105,7 @@ export KUMA_CSP_REPORT_ENABLE ?= False
 export KUMA_CSP_REPORT_ONLY ?= True
 export KUMA_DEBUG ?= False
 export KUMA_DEBUG_TOOLBAR ?= False
-export KUMA_DOMAIN ?= mdn-dev.moz.works
+export KUMA_DOMAIN ?= dev.mdn.mozit.cloud
 export KUMA_EMAIL_BACKEND ?= django.core.mail.backends.smtp.EmailBackend
 export KUMA_ENABLE_CONTRIBUTIONS ?= False
 export KUMA_ENABLE_CONTRIBUTIONS_CONFIRMATION_EMAIL ?= False
@@ -138,7 +138,7 @@ export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
 
 export BACKUP_MOUNT_DIR ?= "/mdn"
 
-export BACKUP_BUCKET ?= s3://mdn-shared-backup
+export BACKUP_BUCKET ?= s3://mdn-efs-backup-c2037ed87dd96008
 export AWS_BACKUP_REGION ?= us-west-2
 export AWS_BACKUP_PAGE_SIZE ?= 100
 
@@ -146,7 +146,7 @@ export BACKUP_LOCAL_DIR ?= "/mdn/www/"
 # note, this is different than the sync directory in S3
 export BACKUP_REMOTE_DIR ?= "/backups/mdn/"
 
-export SYNC_BUCKET ?= s3://mdn-shared-backup
+export SYNC_BUCKET ?= s3://mdn-efs-backup-c2037ed87dd96008
 export AWS_SYNC_REGION ?= us-west-2
 export AWS_SYNC_PAGE_SIZE ?= 100
 export SYNC_LOCAL_DIR ?= "/mdn/www/"
@@ -186,7 +186,7 @@ export ELB_S3_LOGGING_ENABLED ?= false
 # Logging interval specified in minutes.
 export ELB_S3_LOGGING_INTERVAL ?= 60
 # S3 bucket name without the s3:// prefix.
-export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
+export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs-c2037ed87dd96008
 # ELB_S3_LOGGING_PREFIX can't end with a slash!
 export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
 # Connection-idle timeout specified in seconds.
