@@ -17,3 +17,11 @@ variable "hosted-zone-id-defs" {
 }
 
 variable "acm_certificate_arn" {}
+
+variable "origin_id" {
+  default = "MDNInteractive"
+}
+
+variable "cdn_aliases" {
+  type = "list"
+}

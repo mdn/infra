@@ -76,7 +76,7 @@ EOF
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = "${local.interactive-example-bucket}.s3-website-${var.region}.amazonaws.com"
-    origin_id   = "MDNInteractive"
+    origin_id   = "${var.origin_id}"
 
     custom_origin_config {
       origin_protocol_policy = "http-only"
@@ -97,17 +97,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     prefix          = "cflogs"
   }
 
-  aliases = [
-    # FIXME: public name is taken by MozMeao account
-    # cloudfront complains about CNAMEAlreadyExists
-    #"interactive-examples.mdn.mozilla.net",
-    "interactive-examples.mdn.mozit.cloud",
-  ]
+  aliases = "${var.cdn_aliases}"
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "MDNInteractive"
+    target_origin_id = "${var.origin_id}"
     compress         = true
 
     forwarded_values {
