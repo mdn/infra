@@ -110,6 +110,7 @@ export KUMA_CELERYD_MAX_TASKS_PER_CHILD=0
 export KUMA_CSP_ENABLE_MIDDLEWARE=True
 export KUMA_CSP_REPORT_ENABLE=True
 export KUMA_CSP_REPORT_ONLY=True
+export KUMA_CSP_REPORT_URI=https://sentry.prod.mozaws.net/api/72/security/?sentry_key=25e652a045b642dfaa310e92e800058a
 export KUMA_CSRF_COOKIE_SECURE=True
 export KUMA_DEBUG=False
 export KUMA_DEBUG_TOOLBAR=False

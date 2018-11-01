@@ -55,6 +55,8 @@
               value: "{{ KUMA_CSP_REPORT_ENABLE }}"
             - name: CSP_REPORT_ONLY
               value: "{{ KUMA_CSP_REPORT_ONLY }}"
+            - name: CSP_REPORT_URI
+              value: "{{ KUMA_CSP_REPORT_URI }}"
             - name: CSRF_COOKIE_SECURE
               value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
@@ -154,6 +156,8 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: sentry-dsn
+            - name: SENTRY_ENVIRONMENT
+              value: "{{ K8S_CLUSTER_SHORT_NAME }}:{{ TARGET_ENVIRONMENT }}"
             - name: SERVE_LEGACY
               value: "{{ KUMA_SERVE_LEGACY }}"
             - name: SERVER_EMAIL
