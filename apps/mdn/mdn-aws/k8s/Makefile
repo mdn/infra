@@ -121,6 +121,7 @@ export KUMA_SECURE_HSTS_SECONDS ?= 0
 export KUMA_SERVE_LEGACY ?= True
 export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_STATIC_URL ?= /static/
+export KUMA_STRIPE_PRODUCT_ID ?= ""
 export KUMA_STRIPE_PUBLIC_KEY ?= ""
 export KUMA_WEB_CONCURRENCY ?= 4
 
