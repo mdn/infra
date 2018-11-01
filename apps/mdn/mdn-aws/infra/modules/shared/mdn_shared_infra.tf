@@ -6,7 +6,6 @@ resource "random_id" "rand-var" {
   count = "${var.enabled}"
 
   keepers = {
-    db_storage_bucket_name = "${var.db_storage_bucket_name}"
     elb_logs_bucket_name   = "${var.elb_logs_bucket_name}"
     downloads_bucket_name  = "${var.downloads_bucket_name}"
   }
@@ -15,69 +14,9 @@ resource "random_id" "rand-var" {
 }
 
 locals {
-  db_storage            = "${var.db_storage_bucket_name}-${random_id.rand-var.hex}"
-  db_storage_anonymized = "${var.db_storage_bucket_name}-anonymized-${random_id.rand-var.hex}"
+  downloads             = "${var.downloads_bucket_name}"
   elb_logs              = "${var.elb_logs_bucket_name}-${random_id.rand-var.hex}"
-  downloads             = "${var.downloads_bucket_name}-${random_id.rand-var.hex}"
   shared_backup         = "${var.shared_backup_bucket_name}-${random_id.rand-var.hex}"
-}
-
-# access is controlled via private IAM policy
-# do NOT enable public access to this bucket
-resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
-  bucket              = "${local.db_storage_anonymized}"
-  region              = "${var.region}"
-  acceleration_status = "Enabled"
-  acl                 = "log-delivery-write"
-
-  logging {
-    target_bucket = "${local.db_storage_anonymized}"
-    target_prefix = "logs/"
-  }
-
-  versioning {
-    enabled = true
-  }
-
-  tags {
-    Name        = "${local.db_storage_anonymized}"
-    Stack       = "MDN"
-    Environment = "shared"
-    Purpose     = "db-storage"
-  }
-}
-
-resource "aws_s3_bucket" "mdn-db-storage-logs" {
-  count  = "${var.enabled}"
-  bucket = "${local.db_storage}-logs"
-  acl    = "log-delivery-write"
-}
-
-# access is controlled via private IAM policy
-# do NOT enable public access to this bucket
-resource "aws_s3_bucket" "mdn-db-storage" {
-  count = "${var.enabled}"
-
-  bucket              = "${local.db_storage}"
-  region              = "${var.region}"
-  acceleration_status = "Enabled"
-  acl                 = "private"
-
-  logging {
-    target_bucket = "${aws_s3_bucket.mdn-db-storage-logs.id}"
-    target_prefix = "logs/"
-  }
-
-  versioning {
-    enabled = true
-  }
-
-  tags {
-    Name        = "${local.db_storage}"
-    Stack       = "MDN"
-    Environment = "shared"
-    Purpose     = "db-storage"
-  }
 }
 
 resource "aws_s3_bucket" "mdn-elb-logs" {
@@ -113,12 +52,6 @@ EOF
   }
 }
 
-resource "aws_s3_bucket" "mdn-downloads-logs" {
-  count  = "${var.enabled}"
-  bucket = "${local.downloads}-logs"
-  acl    = "log-delivery-write"
-}
-
 resource "aws_s3_bucket" "mdn-downloads" {
   count         = "${var.enabled}"
   bucket        = "${local.downloads}"
@@ -136,7 +69,7 @@ resource "aws_s3_bucket" "mdn-downloads" {
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
 
   logging {
-    target_bucket = "${aws_s3_bucket.mdn-downloads-logs.id}"
+    target_bucket = "${local.downloads}"
     target_prefix = "logs/"
   }
 
