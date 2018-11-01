@@ -21,8 +21,8 @@ variable cloudfront_primary {
   default = {
     enabled           = "1"
     distribution_name = "mdn-primary-cdn"
-    aliases.stage     = "developer-stage.mdn.mozit.cloud"
-    aliases.prod      = "developer-prod.mdn.mozit.cloud"
+    aliases.stage     = "developer-stage.mdn.mozit.cloud,developer.allizom.org"
+    aliases.prod      = "developer-prod.mdn.mozit.cloud,developer.mozilla.org"
     domain.stage      = "stage.mdn.mozit.cloud"
     domain.prod       = "prod.mdn.mozit.cloud"
   }
@@ -35,7 +35,7 @@ variable cloudfront_attachments {
     aliases.stage     = ""
     #FIXME: mdn.mozillademos.org is taken
     #aliases.prod      = "mdn.mozillademos.org,demos.mdn.mozit.cloud"
-    aliases.prod      = "demos.mdn.mozit.cloud"
+    aliases.prod      = "demos.mdn.mozit.cloud,mdn.mozillademos.org"
     acm_arn.stage     = ""
     acm_arn.prod      = "arn:aws:acm:us-west-2:178589013767:certificate/2f399635-126c-4e83-bf43-5ddbd0525719"
     domain.stage      = "stage.mdn.mozit.cloud"
