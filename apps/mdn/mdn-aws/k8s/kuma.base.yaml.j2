@@ -156,6 +156,8 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: sentry-dsn
+            - name: SENTRY_ENVIRONMENT
+              value: "{{ K8S_CLUSTER_SHORT_NAME }}:{{ TARGET_ENVIRONMENT }}"
             - name: SERVE_LEGACY
               value: "{{ KUMA_SERVE_LEGACY }}"
             - name: SERVER_EMAIL
