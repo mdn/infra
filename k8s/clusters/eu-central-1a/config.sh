@@ -3,7 +3,7 @@
 source ../common.sh
 
 export KOPS_REGION="eu-central-1"
-export CLUSTER_ALT_NAME="frankfurt"
+export CLUSTER_ALT_NAME="germany"
 export KOPS_SHORTNAME="k8s.${KOPS_REGION}a"
 export KOPS_CLUSTER="k8s.${KOPS_REGION}a.${KOPS_DOMAIN}"
 export KOPS_CLUSTER_NAME="${KOPS_CLUSTER}"
