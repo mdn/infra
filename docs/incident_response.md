@@ -1,4 +1,4 @@
-# MozMEAO incident response guide
+# MDN Incident Response Guide
 
 Stay cool, take a deep breath. We'll solve this problem together, and this guide is here to help.
 
@@ -16,16 +16,8 @@ When an incident occurs, the IL posts messages in the primary developer IRC chan
     - we'll call this the *incident comms channel* in this document
 - a Vidyo chat room if needed
 - finally, decide if you need to notify the appropriate engineers that can help resolve the issue
-    - TODO: link to on-call process
 
-Our primary service channels are:
-- `#mdndev`
-- `#www`
-- `#basket`
-- `#snippets`
-- `#sumodev`
-
-Smaller Mozilla sites/service messages can be posted in `#mozmeao`.
+Our service channels are `#mdndev` (IRC), `#mdn` (Slack), and `#mdn-infra` (Slack).
 
 
 ***Security incidents must not be discussed on IRC.***
@@ -39,7 +31,7 @@ metadave>  updates will be posted in the #mdndev channel          12:00 PM
 metadave>  ping jwhitlock rjohnson there is an urgent MDN outage  12:00 PM
 metadave>  please meet in my Vidyo room                           12:01 PM
 ```
-    
+
 > it's helpful to include a short description of the incident when mentioning IRC users. For example `ping metadave` is not very useful when it appears as a notification on my phone, but `ping metadave MDN infra is on fire` lets me know that the issue is urgent without having to open my IRC app.
 
 ### Acknowledge Incident In PagerDuty
@@ -62,9 +54,9 @@ jgmize> Confirmed, I am now IL                                     4:01 PM
 
 Notify the following IRC channels:
 
-- `#mozmeao`
-- `#meao-infra`
-- `#moc`
+- `#mdn` (Slack)
+- `#mdn-infra` (Slack)
+- `#moc` (IRC)
     - the moc maintains an incident respone guide [here](https://mana.mozilla.org/wiki/display/SECURITY/Incident+Response#IncidentResponse-IncidentResponseTemplate).
 
 Example:
@@ -98,7 +90,6 @@ metadave> TL: listeners have been manually added back to the ELB    4:05 PM
 metadave> TL: listeners have been overwritten by K8s                4:10 PM
 ```
 
-
 ## Incident resolution
 
 When an incident has been resolved, post a message in the incident comms channel stating so:
@@ -123,4 +114,3 @@ Please add an [incident report](https://mana.mozilla.org/wiki/pages/viewpage.act
     - Give props to team members who are "fighting the good fight".
 - Bring some humor to help break the tension.
 - Don't distract the team by being critical, such as "this is poorly designed, it should be implemented with XYZ". This doesn't help us resolve the issue we're working on *right now*, but may be helpful as part of a postmortem.
-
