@@ -9,7 +9,6 @@ It was originally established and maintained by MozMEAO during the AWS update
 in 2017-2018. In 2018, MDN engineering moved to Emerging Technologies, and this
 repo was forked from [mozmeao/infra][mozmeao-infra] to the [MDN org][mdn-org].
 
-
 [mdn]: https://developer.mozilla.org
 [mdn-org]: https://github.com/mdn
 [mozmeao]: https://mozilla.github.io/meao/
@@ -36,12 +35,11 @@ repo was forked from [mozmeao/infra][mozmeao-infra] to the [MDN org][mdn-org].
 
 - [Kubernetes](https://kubernetes.io/)
   - container orchestration in the cloud
-  - See [this](https://github.com/mdn/infra/tree/master/k8s) page for more info.
+  - see [this](https://github.com/mdn/infra/tree/master/k8s) page for more info.
 - [Kops](https://github.com/kubernetes/kops)
   - Kubernetes installation in AWS
-- [Quay.io](https://quay.io/repository/)
-  - builds, analyzes, and distributed container images
-  - [just how do you pronounce quay anyways?](https://www.youtube.com/watch?v=6LRYrGJg-PM)
+- [DockerHub](https://hub.docker.com/)
+  - public image registry
 
 ### Monitoring tools:
 
@@ -55,7 +53,6 @@ repo was forked from [mozmeao/infra][mozmeao-infra] to the [MDN org][mdn-org].
   - centralized logging
 - [FluentD](http://www.fluentd.org/)
   - collecting logs from Kubernetes pods
-
 
 ## How we manage our work
 
@@ -72,9 +69,6 @@ and applied in production. Sensitive issues are discussed in confidential
 The MDN team uses 3-week sprints to break up work into manageable milestones.
 The MDN team work is tracked in GitHub issues and milestones using
 [ZenHub][zenhub]. See the [sprints wiki][sprints] for more information.
-
-The Mozilla IT team is tracking their tasks for the MDN project at
-https://github.com/orgs/nubisproject/projects/4.
 
 [zenhub]: https://www.zenhub.com/
 [sprints]: https://github.com/mdn/sprints/wiki

@@ -1,6 +1,7 @@
 # MDN DNS setup
-This repository creates the DNS records needed to setup kubernetes, since the domain is owned by mozilla this will create a delegation set
-and we can delegate the domain on the mozilla side of things
+This repository creates the DNS records needed to setup Kubernetes. Since the
+domain is owned by Mozilla this will create a delegation set
+and we can delegate the domain on the Mozilla side of things.
 
 ## State bucket
 We assume the state bucket is created, we create the state bucket by doing the following
