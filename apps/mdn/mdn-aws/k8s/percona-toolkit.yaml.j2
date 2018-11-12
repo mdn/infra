@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: percona-toolkit-ptkill
+  namespace: {{ env['PERCONA_TOOLKIT_NS'] }}
+  labels:
+    app: percona-toolkit-ptkill
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: percona-toolkit-ptkill
+  template:
+    metadata:
+      labels:
+        app: percona-toolkit-ptkill
+    spec:
+      containers:
+      - name: percona-toolkit-ptkill
+        image: {{ env['PERCONA_TOOLKIT_IMAGE'] }}
+        env:
+          - name: PT_CMD
+            valueFrom:
+              secretKeyRef:
+                name: percona-toolkit-ptkill-secrets
+                key: pt_cmd
+          - name: PTDEBUG
+            value: "1"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+      restartPolicy: Always

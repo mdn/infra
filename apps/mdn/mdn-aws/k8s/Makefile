@@ -223,6 +223,8 @@ export DATADOG_REDIS_CONFIG ?= foo
 # see https://kubernetes.io/docs/concepts/configuration/secret/
 export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64)
 
+export PERCONA_TOOLKIT_NS ?= percona-toolkit
+export PERCONA_TOOLKIT_IMAGE ?= quay.io/metadave/percona-toolkit:3b90d7e
 
 ###############################
 ### core tasks
@@ -469,6 +471,15 @@ k8s-sync-efs-from-s3-job: check-service-env
 	env PUSH_OR_PULL=PULL \
 		JOB_NAME=mdn-sync-efs-from-s3 \
 		j2 mdn-sync-efs-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+
+#check-service-env
+k8s-percona-toolkit-ptkill: 
+	j2 percona-toolkit.yaml.j2 | ${KUBECTL} apply -n ${PERCONA_TOOLKIT_NS} -f -
+
+k8s-delete-percona-toolkit-ptkill: check-service-env
+	${KUBECTL} delete -n ${PERCONA_TOOLKIT_NS} --ignore-not-found deployment percona-toolkit-ptkill
+
 
 ### end administrative tasks
 ###############################
