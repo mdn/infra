@@ -475,7 +475,7 @@ k8s-sync-efs-from-s3-job: check-service-env
 
 #check-service-env
 k8s-percona-toolkit-ptkill: 
-	j2 percona-toolkit.yaml.j2 | ${KUBECTL} apply -n ${PERCONA_TOOLKIT_NS} -f -
+	j2 percona-toolkit-ptkill.yaml.j2 | ${KUBECTL} apply -n ${PERCONA_TOOLKIT_NS} -f -
 
 k8s-delete-percona-toolkit-ptkill: check-service-env
 	${KUBECTL} delete -n ${PERCONA_TOOLKIT_NS} --ignore-not-found deployment percona-toolkit-ptkill
