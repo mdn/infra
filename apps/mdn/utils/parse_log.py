@@ -5,7 +5,7 @@ Parse a Kuma papertrail log, mostly to count IP addresses to find the scrapers.
 To get some log entries, use command line papertrail, like:
 
 papertrail --min-time '2017-11-12 4:00 AM' --max-time '2017-11-12 5:00 AM'\
-  -g portland -- mdn-prod_web '-"GET /readiness"' '-"GET /healthz"'\
+  -g k8s-oregon -- mdn-prod_web '-"GET /readiness"' '-"GET /healthz"'\
   '-"- - HTTP/1.0"' > trouble.log
 
 A simplier version can be used to just count IP addresses, but I was being
@@ -265,7 +265,7 @@ def get_parser():
     epilog = """\
 Logs are generated using the papertrail command line app:
 papertrail --min-time '%(mintime)s' --max-time '%(maxtime)s'\
- -g portland -- mdn-prod_web '-"GET /readiness"' '-"GET /healthz"'\
+ -g k8s-oregon -- mdn-prod_web '-"GET /readiness"' '-"GET /healthz"'\
  '-"- - HTTP/1.0"' > %(outfile)s""" % {
          'mintime': mintime.strftime(fmt),
          'maxtime': maxtime.strftime(fmt),
