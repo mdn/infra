@@ -29,7 +29,6 @@ module "rds-backups" {
 module "security" {
   source              = "./modules/security"
   us-west-2-vpc-id    = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
-  eu-central-1-vpc-id = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
 }
 
 module "mdn_cdn" {
