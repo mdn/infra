@@ -4,6 +4,8 @@ metadata:
   name: dd-agent
   namespace: datadog
 spec:
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -11,12 +13,13 @@ spec:
       name: dd-agent
       namespace: datadog
     spec:
+      serviceAccountName: datadog-agent
       tolerations:
         - operator: "Exists"
           key: "node-role.kubernetes.io/master"
           effect: "NoSchedule"
       containers:
-      - image: datadog/docker-dd-agent:latest
+      - image: datadog/agent:latest
         imagePullPolicy: Always
         resources:
           limits:
@@ -27,16 +30,23 @@ spec:
           - containerPort: 8125
             name: dogstatsdport
             protocol: UDP
+          - containerPort: 8126
+            name: traceport
+            protocol: TCP
         env:
-          - name: API_KEY
+          - name: DD_API_KEY
             valueFrom:
               secretKeyRef:
                 name: datadog-cluster-secrets
                 key: API_KEY
           - name: KUBERNETES
-            value: "yes"
+            value: "true"
           - name: SD_BACKEND
             value: docker
+          - name: DD_COLLECT_KUBERNETES_EVENTS
+            value: "true"
+          - name: DD_LEADER_ELECTION
+            value: "true"
         volumeMounts:
           - name: dockersocket
             mountPath: /var/run/docker.sock
@@ -46,6 +56,12 @@ spec:
           - name: cgroups
             mountPath: /host/sys/fs/cgroup
             readOnly: true
+        livenessProbe:
+          exec:
+            command:
+            - ./probe.sh
+          initialDelaySeconds: 15
+          periodSeconds: 5
       volumes:
         - hostPath:
             path: /var/run/docker.sock
