@@ -1,17 +1,10 @@
 # NOTE: Not ideal way of doing this
 
 provider "aws" {
-  alias  = "lookup-us-west-2"
   region = "us-west-2"
 }
 
-provider "aws" {
-  alias  = "lookup-eu-central-1"
-  region = "eu-central-1"
-}
-
 data "aws_network_acls" "us-west-2-nacl" {
-  provider = "aws.lookup-us-west-2"
   vpc_id   = "${var.us-west-2-vpc-id}"
 
   tags {
@@ -19,14 +12,7 @@ data "aws_network_acls" "us-west-2-nacl" {
   }
 }
 
-data "aws_network_acls" "eu-central-1-nacl" {
-  provider = "aws.lookup-eu-central-1"
-  vpc_id   = "${var.eu-central-1-vpc-id}"
-
-  tags {
-    Service = "MDN"
-  }
-}
+data "aws_caller_identity" "current" {}
 
 resource "aws_iam_user" "worf" {
   name = "${var.security-user}"
@@ -41,8 +27,8 @@ data "template_file" "worf_policy" {
 
   # Not ideal, data provider returns a list
   vars {
+    account_id           = "${data.aws_caller_identity.current.account_id}"
     us-west-2-nacl-id    = "${element(concat(data.aws_network_acls.us-west-2-nacl.ids, list("")), 0)}"
-    eu-central-1-nacl-id = "${element(concat(data.aws_network_acls.eu-central-1-nacl.ids, list("")), 0)}"
   }
 }
 

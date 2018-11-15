@@ -4,11 +4,7 @@
     {
       "Effect": "Allow",
       "Action": "ec2:DeleteNetworkAclEntry",
-      "Resource": [
-        "arn:aws:ec2:us-west-2::network-acl/${us-west-2-nacl-id}",
-        "arn:aws:ec2:eu-central-1::network-acl/${eu-central-1-nacl-id}"
-
-      ]
+      "Resource": "arn:aws:ec2:us-west-2:${account_id}:network-acl/${us-west-2-nacl-id}"
     },
     {
       "Effect": "Allow",
