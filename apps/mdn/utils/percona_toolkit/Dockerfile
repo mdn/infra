@@ -1,5 +1,5 @@
 # https://github.com/fr3nd/docker-percona-toolkit/blob/master/Dockerfile
-FROM debian:jessie-slim
+FROM debian:stretch-slim
 
 RUN apt-get update && apt-get install -y \
       libdbd-mysql-perl \
