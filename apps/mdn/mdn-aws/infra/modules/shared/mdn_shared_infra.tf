@@ -21,9 +21,9 @@ resource "random_id" "rand-var" {
 }
 
 locals {
-  downloads             = "${var.downloads_bucket_name}"
-  elb_logs              = "${var.elb_logs_bucket_name}-${random_id.rand-var.hex}"
-  shared_backup         = "${var.shared_backup_bucket_name}-${random_id.rand-var.hex}"
+  downloads     = "${var.downloads_bucket_name}"
+  elb_logs      = "${var.elb_logs_bucket_name}-${random_id.rand-var.hex}"
+  shared_backup = "${var.shared_backup_bucket_name}-${random_id.rand-var.hex}"
 }
 
 resource "aws_s3_bucket" "mdn-elb-logs" {
@@ -32,6 +32,14 @@ resource "aws_s3_bucket" "mdn-elb-logs" {
   bucket = "${local.elb_logs}"
   region = "${var.region}"
   acl    = "log-delivery-write"
+
+  lifecycle_rule {
+    enabled = true
+
+    expiration {
+      days = 30
+    }
+  }
 
   policy = <<EOF
 {
