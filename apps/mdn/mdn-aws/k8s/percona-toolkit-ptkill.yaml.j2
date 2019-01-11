@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: percona-toolkit-ptkill
-  namespace: {{ env['PERCONA_TOOLKIT_NS'] }}
+  namespace: {{ PERCONA_TOOLKIT_NS }}
   labels:
     app: percona-toolkit-ptkill
 spec:
@@ -17,15 +17,30 @@ spec:
     spec:
       containers:
       - name: percona-toolkit-ptkill
-        image: {{ env['PERCONA_TOOLKIT_IMAGE'] }}
+        image: {{ PERCONA_TOOLKIT_IMAGE }}
         env:
-          - name: PT_CMD
+          - name: PTDEBUG
+            value: "0"
+          - name: DB_HOST
             valueFrom:
               secretKeyRef:
                 name: percona-toolkit-ptkill-secrets
-                key: pt_cmd
-          - name: PTDEBUG
-            value: "0"
+                key: db_host
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: percona-toolkit-ptkill-secrets
+                key: db_name
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: percona-toolkit-ptkill-secrets
+                key: db_user
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: percona-toolkit-ptkill-secrets
+                key: db_pass
         resources:
           requests:
             memory: "64Mi"

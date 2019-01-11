@@ -224,7 +224,7 @@ export DATADOG_REDIS_CONFIG ?= foo
 export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64)
 
 export PERCONA_TOOLKIT_NS ?= percona-toolkit
-export PERCONA_TOOLKIT_IMAGE ?= quay.io/metadave/percona-toolkit:3b90d7e
+export PERCONA_TOOLKIT_IMAGE ?= mdnwebdocs/percona-toolkit:300705b
 
 ###############################
 ### core tasks
