@@ -19,11 +19,6 @@ spec:
       - name: percona-toolkit-ptkill
         image: {{ PERCONA_TOOLKIT_IMAGE }}
         env:
-          - name: PT_CMD
-            valueFrom:
-              secretKeyRef:
-                name: percona-toolkit-ptkill-secrets
-                key: pt_cmd
           - name: PTDEBUG
             value: "0"
           - name: DB_HOST
