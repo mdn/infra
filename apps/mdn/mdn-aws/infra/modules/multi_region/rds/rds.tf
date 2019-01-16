@@ -1,90 +1,9 @@
-
-variable "mysql_db_name" {}
-
-variable "mysql_username" {}
-
-variable "mysql_password" {}
-
-variable "mysql_identifier" {}
-
-variable "mysql_env" {}
-
-variable "mysql_security_group_name" {}
-
-variable "mysql_storage_gb" {
-  default     = "100"
-  description = "Storage size in GB"
-}
-
-variable "mysql_instance_class" {
-  default     = "db.m3.xlarge"
-  description = "Instance class"
-}
-
-variable "mysql_port" {
-  default = 3306
-  description = "ingress port to open"
-}
-
-variable "mysql_engine" {
-  default     = "mysql"
-  description = "Engine type, example values mysql, postgres"
-}
-
-variable "mysql_engine_version" {
-  description = "Engine version"
-
-  default = {
-    mysql = "5.6.35"
-  }
-}
-
-variable "mysql_storage_type" {
-  default = "gp2"
-}
-
-variable "mysql_backup_retention_days" {
-  default     = 7
-}
-
-variable "mysql_backup_window" {
-  default = "00:00-00:30"
-}
-
-variable "mysql_maintenance_window" {
-  default = "Sun:00:31-Sun:01:01"
-}
-
-variable "mysql_storage_encrypted" {
-  default = true
-}
-
-variable "mysql_auto_minor_version_upgrade" {
-  default = true
-}
-
-variable "mysql_allow_major_version_upgrade" {
-  default = false
-}
-
-variable "vpc_id" { }
-
-variable "vpc_cidr" { }
-
-variable "enabled" {}
-
-variable "environment" {}
-
-variable "region" {}
-
-variable "subnets" {}
-
 provider "aws" {
-  region  = "${var.region}"
+  region = "${var.region}"
 }
 
 resource "aws_db_parameter_group" "mdn-params" {
-  count       = "${var.enabled}"
+  count = "${var.enabled}"
 
   name        = "${var.mysql_identifier}-params"
   family      = "mysql5.6"
@@ -92,8 +11,8 @@ resource "aws_db_parameter_group" "mdn-params" {
 
   # https://stackoverflow.com/questions/8744813/mysql-error-2006-hy000-at-line-406-mysql-server-has-gone-away#10709964
   parameter {
-    name      = "max_allowed_packet"
-    value     = "26214400"
+    name  = "max_allowed_packet"
+    value = "26214400"
   }
 }
 
@@ -103,7 +22,7 @@ resource "aws_db_subnet_group" "rds" {
   name        = "mdn-${var.environment}-rds-subnet-group"
   description = "mdn-${var.environment}-rds-subnet-group"
 
-  subnet_ids = [ "${split(",", var.subnets)}" ]
+  subnet_ids = ["${split(",", var.subnets)}"]
 
   tags {
     Name        = "mdn-${var.environment}-rds-subnet-group"
@@ -121,28 +40,30 @@ resource "aws_db_instance" "mdn_rds" {
   auto_minor_version_upgrade  = "${var.mysql_auto_minor_version_upgrade}"
   backup_retention_period     = "${var.mysql_backup_retention_days}"
   backup_window               = "${var.mysql_backup_window}"
+
   # note: this resource already existed at time of provisioning from
   # our k8s install automation
   #db_subnet_group_name        = "main_subnet_group"
-  db_subnet_group_name        = "${element(aws_db_subnet_group.rds.*.name, count.index)}"
-  depends_on                  = ["aws_security_group.mdn_rds_sg"]
-  engine                      = "${var.mysql_engine}"
-  engine_version              = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
-  identifier                  = "${var.mysql_identifier}"
-  instance_class              = "${var.mysql_instance_class}"
-  maintenance_window          = "${var.mysql_maintenance_window}"
-  multi_az                    = true
-  name                        = "${var.mysql_db_name}"
-  parameter_group_name        = "${aws_db_parameter_group.mdn-params.name}"
-  password                    = "${var.mysql_password}"
-  publicly_accessible         = false
-  storage_encrypted           = "${var.mysql_storage_encrypted}"
-  storage_type                = "${var.mysql_storage_type}"
-  username                    = "${var.mysql_username}"
-  vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
-  skip_final_snapshot         = true
-  apply_immediately           = true
+  db_subnet_group_name = "${element(aws_db_subnet_group.rds.*.name, count.index)}"
 
+  depends_on             = ["aws_security_group.mdn_rds_sg"]
+  engine                 = "${var.mysql_engine}"
+  engine_version         = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
+  identifier             = "${var.mysql_identifier}"
+  instance_class         = "${var.mysql_instance_class}"
+  maintenance_window     = "${var.mysql_maintenance_window}"
+  multi_az               = true
+  name                   = "${var.mysql_db_name}"
+  parameter_group_name   = "${aws_db_parameter_group.mdn-params.name}"
+  password               = "${var.mysql_password}"
+  publicly_accessible    = false
+  storage_encrypted      = "${var.mysql_storage_encrypted}"
+  storage_type           = "${var.mysql_storage_type}"
+  username               = "${var.mysql_username}"
+  vpc_security_group_ids = ["${aws_security_group.mdn_rds_sg.id}"]
+  skip_final_snapshot    = true
+  apply_immediately      = true
+  monitoring_interval    = "${var.monitoring_interval}"
 
   tags {
     Name        = "MDN-rds-${var.environment}"
@@ -179,20 +100,4 @@ resource "aws_security_group" "mdn_rds_sg" {
     Environment = "${var.environment}"
     Region      = "${var.region}"
   }
-}
-
-output "rds_arn" {
-  value = "${element(concat(aws_db_instance.mdn_rds.*.arn, list("")), 0)}"
-}
-
-output "rds_address" {
-  value = "${element(concat(aws_db_instance.mdn_rds.*.address, list("")), 0)}"
-}
-
-output "rds_endpoint" {
-  value = "${element(concat(aws_db_instance.mdn_rds.*.endpoint, list("")), 0)}"
-}
-
-output "rds_id" {
-  value = "${element(concat(aws_db_instance.mdn_rds.*.id, list("")), 0)}"
 }
