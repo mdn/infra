@@ -27,8 +27,8 @@ module "rds-backups" {
 }
 
 module "security" {
-  source              = "./modules/security"
-  us-west-2-vpc-id    = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  source           = "./modules/security"
+  us-west-2-vpc-id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
 }
 
 module "mdn_cdn" {
@@ -196,6 +196,7 @@ module "mysql-us-west-2" {
   vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
   subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
+  monitoring_interval         = "60"
 }
 
 module "mysql-us-west-2-prod" {
