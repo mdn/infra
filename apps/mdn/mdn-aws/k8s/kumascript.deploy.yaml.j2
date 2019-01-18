@@ -20,35 +20,20 @@ spec:
           ports:
             - containerPort: {{ KUMASCRIPT_CONTAINER_PORT }}
           env:
-            - name: interactive_examples__base_url
-              value: {{ INTERACTIVE_EXAMPLES_BASE_URL }}
-            - name: live_samples__base_url
-              value: {{ KUMASCRIPT_LIVE_SAMPLES_BASE_URL }}
-            - name: log__console
-              value: "true"
-            - name: server__template_root_dir
-              value: macros
-            - name: server__document_url_template
+            - name: DOCUMENT_URL
+              value: {{ KUMASCRIPT_DOCUMENT_URL }}
+            - name: DOCUMENT_URL_TEMPLATE
               value: {{ KUMASCRIPT_DOCUMENT_URL_TEMPLATE }}
-            - name: server__memcache__server
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: memcached-url
-            - name: server__template_class
-              value: EJSTemplate
-            - name: server__autorequire__mdn
-              value: MDN:Common
-            - name: server__autorequire__Page
-              value: DekiScript:Page
-            - name: server__autorequire__String
-              value: DekiScript:String
-            - name: server__autorequire__Uri
-              value: DekiScript:Uri
-            - name: server__autorequire__Web
-              value: DekiScript:Web
-            - name: server__autorequire__Wiki
-              value: DekiScript:Wiki
+            - name: INTERACTIVE_EXAMPLES_URL
+              value: {{ INTERACTIVE_EXAMPLES_BASE_URL }}
+            - name: KUMASCRIPT_PORT
+              value: {{ KUMASCRIPT_CONTAINER_PORT }}
+            - name: KUMASCRIPT_CACHE_MEGABYTES
+              value: {{ KUMASCRIPT_CACHE_MEGABYTES }}
+            - name: KUMASCRIPT_CACHE_MINUTES
+              value: {{ KUMASCRIPT_CACHE_MINUTES }}
+            - name: LIVE_SAMPLES_URL
+              value: {{ KUMASCRIPT_LIVE_SAMPLES_BASE_URL }}
             - name: NEW_RELIC_APP_NAME
               value: {{ NEW_RELIC_APP_NAME }}
               # for Kumascript only, we rename NEW_RELIC_MONITOR_MODE to NEW_RELIC_ENABLED
@@ -60,11 +45,22 @@ spec:
               value: "{{ NEW_RELIC_LOG }}"
             - name: NEW_RELIC_BROWSER_MONITOR_ENABLE
               value: "{{ NEW_RELIC_BROWSER_MONITOR_ENABLE }}"
-            - name: newrelic__license_key
+            - name: NEW_RELIC_HIGH_SECURITY
+              value: "true"
+            - name: NEW_RELIC_NO_CONFIG_FILE
+              value: "true"
+            - name: NEW_RELIC_LOG_LEVEL
+              value: "{{ NEW_RELIC_LOG_LEVEL }}"
+            - name: NEW_RELIC_LICENSE_KEY
               valueFrom:
                 secretKeyRef:
                   name: newrelic-secrets
                   key: NEW_RELIC_LICENSE_KEY
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: redis-url-2
           resources:
             requests:
               cpu: {{ KUMASCRIPT_CPU_REQUEST }}
