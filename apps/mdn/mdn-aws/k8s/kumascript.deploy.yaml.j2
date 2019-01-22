@@ -27,11 +27,11 @@ spec:
             - name: INTERACTIVE_EXAMPLES_URL
               value: {{ INTERACTIVE_EXAMPLES_BASE_URL }}
             - name: KUMASCRIPT_PORT
-              value: {{ KUMASCRIPT_CONTAINER_PORT }}
+              value: "{{ KUMASCRIPT_CONTAINER_PORT }}"
             - name: KUMASCRIPT_CACHE_MEGABYTES
-              value: {{ KUMASCRIPT_CACHE_MEGABYTES }}
+              value: "{{ KUMASCRIPT_CACHE_MEGABYTES }}"
             - name: KUMASCRIPT_CACHE_MINUTES
-              value: {{ KUMASCRIPT_CACHE_MINUTES }}
+              value: "{{ KUMASCRIPT_CACHE_MINUTES }}"
             - name: LIVE_SAMPLES_URL
               value: {{ KUMASCRIPT_LIVE_SAMPLES_BASE_URL }}
             - name: NEW_RELIC_APP_NAME
