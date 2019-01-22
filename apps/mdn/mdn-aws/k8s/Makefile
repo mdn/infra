@@ -87,6 +87,8 @@ export KUMASCRIPT_CPU_LIMIT ?= 2
 export KUMASCRIPT_CPU_REQUEST ?= 100m
 export KUMASCRIPT_MEMORY_LIMIT ?= 4Gi
 export KUMASCRIPT_MEMORY_REQUEST ?= 256Mi
+export KUMASCRIPT_CACHE_MEGABYTES ?= 80
+export KUMASCRIPT_CACHE_MINUTES ?= 60
 
 export KUMA_IMAGE ?= mdnwebdocs/kuma
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
@@ -128,8 +130,9 @@ export KUMA_WEB_CONCURRENCY ?= 4
 export INTERACTIVE_EXAMPLES_BASE_URL ?= https://interactive-examples.mdn.mozilla.net
 
 # Derived environment variables for both Kuma and Kumascript. These are always set.
+export KUMASCRIPT_DOCUMENT_URL=http://${API_SERVICE_NAME}
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
-export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_SERVICE_NAME}/en-US/docs/{path}?raw=1&redirect=no
+export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=${KUMASCRIPT_DOCUMENT_URL}/en-US/docs/{path}?raw=1&redirect=no
 export KUMASCRIPT_LIVE_SAMPLES_BASE_URL=${KUMA_PROTOCOL}${KUMA_ATTACHMENT_HOST}
 
 # MDN backup tool
@@ -203,6 +206,7 @@ export NEW_RELIC_MONITOR_MODE ?= 1
 export NEW_RELIC_LOG ?= stderr
 export NEW_RELIC_BROWSER_MONITOR_ENABLE ?= false
 export NEW_RELIC_LABELS ?= Project:MDN;Cluster:${K8S_CLUSTER_SHORT_NAME};Namespace:${K8S_NAMESPACE}
+export NEW_RELIC_LOG_LEVEL ?= info
 
 # New Relic app names
 export NEW_RELIC_MONITOR_SUFFIX ?= ${TARGET_ENVIRONMENT}-${K8S_CLUSTER_SHORT_NAME}
