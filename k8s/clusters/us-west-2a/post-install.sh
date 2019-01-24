@@ -146,6 +146,11 @@ install_block-aws() {
     kubectl apply -f "${KOPS_INSTALLER}/services/block-aws/block-aws-networkpolicy.yaml"
 }
 
+install_metrics-server() {
+    echo "Install metrics-server"
+    kubectl apply -f "${KOPS_INSTALLER}/services/metrics-server/"
+}
+
 install_services() {
     install_cluster_autoscaler
     install_calico_rbac
