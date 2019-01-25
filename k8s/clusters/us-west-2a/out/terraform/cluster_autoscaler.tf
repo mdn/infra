@@ -13,6 +13,7 @@ resource "aws_iam_policy" "nodes-k8s-us-west-2a-mdn-mozit-cloud-autoscaler-polic
             "Action": [
                 "autoscaling:DescribeAutoScalingGroups",
                 "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeTags",
                 "autoscaling:SetDesiredCapacity",
                 "autoscaling:TerminateInstanceInAutoScalingGroup"
             ],
