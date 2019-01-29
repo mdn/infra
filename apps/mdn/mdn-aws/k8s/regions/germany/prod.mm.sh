@@ -49,8 +49,8 @@ export WEB_GUNICORN_WORKERS=8
 export WEB_GUNICORN_TIMEOUT=120
 export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
-export WEB_MEMORY_LIMIT=8Gi
-export WEB_MEMORY_REQUEST=2Gi
+export WEB_MEMORY_LIMIT=6Gi
+export WEB_MEMORY_REQUEST=4Gi
 export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,demos.mdn.mozit.cloud,demos-origin.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud,standby.mdn.mozit.cloud,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 
 export API_NAME=api
