@@ -7,6 +7,8 @@
             - "run-program"
             - "gunicorn"
             - "-w={{ KUMA_GUNICORN_WORKERS }}"
+            - "--max-requests={{ KUMA_GUNICORN_WORKER_MAX_REQUESTS }}"
+            - "--max-requests-jitter={{ KUMA_GUNICORN_WORKER_MAX_REQUESTS_JITTER }}"
             - "--bind=0.0.0.0:{{ KUMA_CONTAINER_PORT }}"
             - "--access-logfile=-"
             - "--timeout={{ KUMA_GUNICORN_TIMEOUT }}"
