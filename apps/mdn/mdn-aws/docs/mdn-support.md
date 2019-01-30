@@ -17,7 +17,7 @@ Tech details:
 - [MDN infra - general docs](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/docs)
 - [MDN AWS resource definitions](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra)
     - [Shared resources (S3)](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/shared)
-    - [per-region resources RDS/Redis/Memcached/EFS](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/multi_region)
+    - [per-region resources RDS/Redis/EFS](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/multi_region)
 - [MDN CDN resource definition](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/mdn-cdn)
 - [Interactive examples hosting](https://github.com/mozmeao/infra/tree/master/apps/mdn/interactive-examples)
 
@@ -370,7 +370,6 @@ Starting to serve on 127.0.0.1:8001
 
 - [MDN Prod Redis (Celery)](https://app.datadoghq.com/dash/373636/mdn-prod-redis?live=true&page=0&is_auto=false&from_ts=1507298951634&to_ts=1507302551634&tile_size=m)
 - [MySQL (RDS)](https://app.datadoghq.com/screen/integration/aws_rds_mysql?tpl_var_dbinstanceidentifier=mdn-prod)
-- [MemcacheD](https://app.datadoghq.com/screen/integration/aws_elasticache_memcached?tpl_var_cluster_id=mdn-memcached-prod)	
 - [Redis](https://app.datadoghq.com/screen/integration/aws_elasticache_redis?tpl_var_cluster_id=mdn-redis-prod-001) (select from primary/secondary nodes in the filter)
 - [K8s running containers](https://app.datadoghq.com/containers?columns=container_name,container_cpu,container_memory,container_net_sent_bps,container_net_rcvd_bps,container_status,container_created&options=normalizeCPU&sort=container_memory,DESC&tags=kube_namespace%3Amdn-prod)	
 - [K8s running containers by deployment](https://app.datadoghq.com/containers?columns=container_name,container_cpu,container_memory,container_net_sent_bps,container_net_rcvd_bps,container_status,container_created&options=normalizeCPU&sort=container_memory,DESC&tags=kube_namespace%3Amdn-prod&groups=kube_deployment)

@@ -1,10 +1,5 @@
-
 output "efs_dns" {
   value = "${module.efs.efs_dns}"
-}
-
-output "memcached_endpoint" {
-  value = "${module.memcached.memcached_endpoint}"
 }
 
 output "redis_endpoint" {
