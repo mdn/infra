@@ -113,11 +113,6 @@
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEDIA_URL
               value: {{ KUMA_MEDIA_URL }}
-            - name: MEMCACHE_SERVERS
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: memcached-url
             - name: NEW_RELIC_APP_NAME
               value: {{ NEW_RELIC_APP_NAME }}
             - name: NEW_RELIC_BROWSER_MONITOR_ENABLE
