@@ -30,10 +30,6 @@ output "us-west-2-efs-dns" {
   value = "${module.efs-us-west-2.efs_dns}"
 }
 
-output "us-west-2-memcached-endpoint" {
-  value = "${module.memcached-us-west-2.memcached_endpoint}"
-}
-
 output "us-west-2-redis-endpoint" {
   value = "${module.redis-us-west-2.redis_endpoint}"
 }

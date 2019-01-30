@@ -13,9 +13,10 @@ data "aws_security_group" "kube_master" {
   count = "${var.enabled}"
 
   filter {
-    name   = "group-name"
+    name = "group-name"
+
     values = [
-      "masters.k8s.*"
+      "masters.k8s.*",
     ]
   }
 }
@@ -24,9 +25,10 @@ data "aws_security_group" "kube_nodes" {
   count = "${var.enabled}"
 
   filter {
-    name   = "group-name"
+    name = "group-name"
+
     values = [
-      "nodes.k8s.*"
+      "nodes.k8s.*",
     ]
   }
 }
@@ -42,13 +44,13 @@ locals {
 #########################################
 
 module "efs" {
-  source                = "./efs"
-  enabled               = "${var.enabled * var.enable_efs}"
-  environment           = "${var.environment}"
-  region                = "${var.region}"
-  efs_name              = "${var.environment}"
-  subnets               = "${module.info.private_subnets}"
-  nodes_security_group  = "${local.security_groups}"
+  source               = "./efs"
+  enabled              = "${var.enabled * var.enable_efs}"
+  environment          = "${var.environment}"
+  region               = "${var.region}"
+  efs_name             = "${var.environment}"
+  subnets              = "${module.info.private_subnets}"
+  nodes_security_group = "${local.security_groups}"
 }
 
 #module "efs-dev" {
@@ -65,16 +67,15 @@ module "efs" {
 module "redis" {
   source = "./redis"
 
-  enabled               = "${var.enabled * var.enable_redis}"
-  region                = "${var.region}"
-  environment           = "${var.environment}"
-  redis_name            = "${var.environment}"
-  redis_node_size       = "${var.redis_node_size}"
-  redis_num_nodes       = "${var.redis_num_nodes}"
-  subnets               = "${module.info.private_subnets}"
-  nodes_security_group  = "${split(",",module.info.instance_security_groups)}"
-  nodes_security_group  = "${local.security_groups}"
-
+  enabled              = "${var.enabled * var.enable_redis}"
+  region               = "${var.region}"
+  environment          = "${var.environment}"
+  redis_name           = "${var.environment}"
+  redis_node_size      = "${var.redis_node_size}"
+  redis_num_nodes      = "${var.redis_num_nodes}"
+  subnets              = "${module.info.private_subnets}"
+  nodes_security_group = "${split(",",module.info.instance_security_groups)}"
+  nodes_security_group = "${local.security_groups}"
 }
 
 #module "redis-dev" {
@@ -82,33 +83,6 @@ module "redis" {
 #    redis_name = "dev"
 #    redis_node_size = "cache.t2.micro"
 #    redis_num_nodes = 1
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
-#########################################
-# Memcached
-#########################################
-
-module "memcached" {
-  source = "./memcached"
-
-  enabled               = "${var.enabled * var.enable_memcached}"
-  region                = "${var.region}"
-  environment           = "${var.environment}"
-  memcached_name        = "${var.environment}"
-  memcached_node_size   = "${var.memcached_node_size}"
-  memcached_num_nodes   = "${var.memcached_num_nodes}"
-  subnets               = "${module.info.private_subnets}"
-  nodes_security_group  = "${local.security_groups}"
-
-}
-
-#module "memcached-dev" {
-#    source = "memcached"
-#    memcached_name = "dev"
-#    memcached_node_size = "cache.t2.micro"
-#    memcached_num_nodes = 1
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
@@ -155,6 +129,7 @@ module "mysql" {
 #    vpc_id = "${var.vpc_id}"
 #    vpc_cidr = "${var.vpc_cidr}"
 #}
+
 
 #module "mysql-prod" {
 #    source = "rds"

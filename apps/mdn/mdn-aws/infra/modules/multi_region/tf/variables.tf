@@ -6,21 +6,11 @@ variable "environment" {}
 
 variable "account" {}
 
-variable "enable_memcached" {}
-
 variable "enable_rds" {}
 
 variable "enable_efs" {}
 
 variable "enable_redis" {}
-
-variable "memcached_node_size" {
-  default = "cache.t2.small"
-}
-
-variable "memcached_num_nodes" {
-  default = "3"
-}
 
 variable "redis_node_size" {
   default = "cache.t2.small"

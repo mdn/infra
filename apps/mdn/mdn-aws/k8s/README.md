@@ -129,7 +129,6 @@ This section needs to be fleshed-out. It lists the one-time steps required befor
 - Create an AWS EFS volume
 - Create an AWS SSL certificate
 - Create an AWS ElasticCache Redis instance
-- Create an AWS ElasticCache Memcached instance
 - Create an ElasticCloud (Elasticsearch) instance
 
 #### Make the K8s namespace, volumes, and services
