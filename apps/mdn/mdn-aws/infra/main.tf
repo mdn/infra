@@ -142,42 +142,6 @@ module "redis-eu-central-1-prod" {
   nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
 }
 
-module "memcached-us-west-2" {
-  source               = "./modules/multi_region/memcached"
-  enabled              = "${lookup(var.features, "memcached")}"
-  environment          = "stage"
-  region               = "us-west-2"
-  memcached_name       = "stage"
-  memcached_node_size  = "${lookup(var.memcached, "node_size.stage")}"
-  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.stage")}"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
-}
-
-module "memcached-us-west-2-prod" {
-  source               = "./modules/multi_region/memcached"
-  enabled              = "${lookup(var.features, "memcached")}"
-  environment          = "prod"
-  region               = "us-west-2"
-  memcached_name       = "prod"
-  memcached_node_size  = "${lookup(var.memcached, "node_size.prod")}"
-  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.prod")}"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
-}
-
-module "memcached-eu-central-1-prod" {
-  source               = "./modules/multi_region/memcached"
-  enabled              = "${lookup(var.features, "memcached")}"
-  environment          = "prod"
-  region               = "eu-central-1"
-  memcached_name       = "prod"
-  memcached_node_size  = "${lookup(var.memcached, "node_size.prod")}"
-  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.prod")}"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-eu-central-1.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
-}
-
 module "mysql-us-west-2" {
   source                      = "./modules/multi_region/rds"
   enabled                     = "${lookup(var.features, "rds")}"
