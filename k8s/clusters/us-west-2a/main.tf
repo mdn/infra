@@ -14,6 +14,13 @@ module "kubernetes" {
   source = "./out/terraform"
 }
 
+module "ark_bucket" {
+  source       = "github.com/limed/tf-ark-backups?ref=master"
+  region       = "${var.region}"
+  bucket_name  = "cluster-backups"
+  cluster_name = "oregon-a"
+}
+
 # These are added here after terraform creates the kube cluster
 # because we create a single AZ cluster, only subnet gets created.
 # and that in turn makes things like RDS grumpy. So we import this after the fact

@@ -151,6 +151,20 @@ install_metrics-server() {
     kubectl apply -f "${KOPS_INSTALLER}/services/metrics-server/"
 }
 
+install_ark() {
+    echo "Install ark"
+    kubectl apply -f "${KOPS_INSTALLER}/ark/ark-prereqs.yaml"
+    kubectl -n heptio-ark create secret generic cloud-credentials \
+        --from-file cloud="${SECRETS_PATH}/k8s/secret/${CLUSTER_ALT_NAME}/credentials-ark"
+
+    export AWS_REGION=${KOPS_REGION}
+    export ARK_BUCKET=$(terraform output ark_bucket)
+    (cd "${KOPS_INSTALLER}/ark" && make deploy)
+
+    kubectl apply -f "${KOPS_INSTALLER}/ark/ark-deployment.yaml"
+
+}
+
 install_services() {
     install_cluster_autoscaler
     install_calico_rbac
@@ -159,4 +173,5 @@ install_services() {
     install_datadog
     install_redirector_service
     install_block-aws
+    install_ark
 }
