@@ -14,6 +14,13 @@ module "kubernetes" {
   source = "./out/terraform"
 }
 
+module "ark_bucket" {
+  source       = "github.com/limed/tf-ark-backups?ref=master"
+  region       = "${var.region}"
+  bucket_name  = "cluster-backups"
+  cluster_name = "germany"
+}
+
 data aws_route_table "selected" {
   vpc_id = "${module.kubernetes.vpc_id}"
 
