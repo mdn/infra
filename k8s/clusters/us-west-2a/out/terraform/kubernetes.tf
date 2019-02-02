@@ -1,5 +1,27 @@
+locals = {
+  cluster_name                 = "k8s.us-west-2a.mdn.mozit.cloud"
+  master_autoscaling_group_ids = ["${aws_autoscaling_group.master-us-west-2a-masters-k8s-us-west-2a-mdn-mozit-cloud.id}"]
+  master_security_group_ids    = ["${aws_security_group.masters-k8s-us-west-2a-mdn-mozit-cloud.id}"]
+  masters_role_arn             = "${aws_iam_role.masters-k8s-us-west-2a-mdn-mozit-cloud.arn}"
+  masters_role_name            = "${aws_iam_role.masters-k8s-us-west-2a-mdn-mozit-cloud.name}"
+  node_autoscaling_group_ids   = ["${aws_autoscaling_group.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"]
+  node_security_group_ids      = ["${aws_security_group.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"]
+  node_subnet_ids              = ["${aws_subnet.us-west-2a-k8s-us-west-2a-mdn-mozit-cloud.id}"]
+  nodes_role_arn               = "${aws_iam_role.nodes-k8s-us-west-2a-mdn-mozit-cloud.arn}"
+  nodes_role_name              = "${aws_iam_role.nodes-k8s-us-west-2a-mdn-mozit-cloud.name}"
+  region                       = "us-west-2"
+  route_table_public_id        = "${aws_route_table.k8s-us-west-2a-mdn-mozit-cloud.id}"
+  subnet_us-west-2a_id         = "${aws_subnet.us-west-2a-k8s-us-west-2a-mdn-mozit-cloud.id}"
+  vpc_cidr_block               = "${aws_vpc.k8s-us-west-2a-mdn-mozit-cloud.cidr_block}"
+  vpc_id                       = "${aws_vpc.k8s-us-west-2a-mdn-mozit-cloud.id}"
+}
+
 output "cluster_name" {
   value = "k8s.us-west-2a.mdn.mozit.cloud"
+}
+
+output "master_autoscaling_group_ids" {
+  value = ["${aws_autoscaling_group.master-us-west-2a-masters-k8s-us-west-2a-mdn-mozit-cloud.id}"]
 }
 
 output "master_security_group_ids" {
@@ -12,6 +34,10 @@ output "masters_role_arn" {
 
 output "masters_role_name" {
   value = "${aws_iam_role.masters-k8s-us-west-2a-mdn-mozit-cloud.name}"
+}
+
+output "node_autoscaling_group_ids" {
+  value = ["${aws_autoscaling_group.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"]
 }
 
 output "node_security_group_ids" {
@@ -32,6 +58,18 @@ output "nodes_role_name" {
 
 output "region" {
   value = "us-west-2"
+}
+
+output "route_table_public_id" {
+  value = "${aws_route_table.k8s-us-west-2a-mdn-mozit-cloud.id}"
+}
+
+output "subnet_us-west-2a_id" {
+  value = "${aws_subnet.us-west-2a-k8s-us-west-2a-mdn-mozit-cloud.id}"
+}
+
+output "vpc_cidr_block" {
+  value = "${aws_vpc.k8s-us-west-2a-mdn-mozit-cloud.cidr_block}"
 }
 
 output "vpc_id" {
