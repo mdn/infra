@@ -1,8 +1,11 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ DATADOG_REDIS_DEPLOYMENT_NAME }}
 spec:
+  selector:
+    matchLabels:
+      app: {{ DATADOG_REDIS_DEPLOYMENT_NAME }}
   template:
     metadata:
       labels:
@@ -75,4 +78,3 @@ spec:
               items:
                 - key: REDIS_CONFIG_FILE
                   path: redisdb.yaml
-

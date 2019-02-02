@@ -1,9 +1,12 @@
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: {{ KUMA_NAME }}
 spec:
   replicas: {{ KUMA_REPLICAS }}
+  selector:
+    matchLabels:
+      app: {{ KUMA_APP_LABEL }}
   template:
     metadata:
       labels:
