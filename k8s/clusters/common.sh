@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export KUBERNETES_VERSION="v1.9.7"
+export KUBERNETES_VERSION="v1.11.7"
 
 export KOPS_DOMAIN="mdn.mozit.cloud"
 

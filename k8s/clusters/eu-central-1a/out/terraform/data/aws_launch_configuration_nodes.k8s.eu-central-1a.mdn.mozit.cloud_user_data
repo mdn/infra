@@ -17,8 +17,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-NODEUP_URL=https://kubeupv2.s3.amazonaws.com/kops/1.10.0/linux/amd64/nodeup
-NODEUP_HASH=fb38a1015a3589eae22924c9b623d329c964244f
+NODEUP_URL=https://kubeupv2.s3.amazonaws.com/kops/1.11.0/linux/amd64/nodeup
+NODEUP_HASH=6ee282d77600c47ed7744435400e163fa34ee17e
 
 export AWS_REGION=eu-central-1
 
@@ -50,19 +50,20 @@ download-or-bust() {
 
       if [[ -e "${file}" ]]; then
         echo "== File exists for ${url} =="
-      elif [[ $(which curl) ]]; then
+
+      # CoreOS runs this script in a container without which (but has curl)
+      # Note also that busybox wget doesn't support wget --version, but busybox doesn't normally have curl
+      # So we default to wget unless we see curl
+      elif [[ $(curl --version) ]]; then
         if ! curl -f --ipv4 -Lo "${file}" --connect-timeout 20 --retry 6 --retry-delay 10 "${url}"; then
           echo "== Failed to curl ${url}. Retrying. =="
           break
         fi
-      elif [[ $(which wget ) ]]; then
+      else
         if ! wget --inet4-only -O "${file}" --connect-timeout=20 --tries=6 --wait=10 "${url}"; then
           echo "== Failed to wget ${url}. Retrying. =="
           break
         fi
-      else
-        echo "== Could not find curl or wget. Retrying. =="
-        break
       fi
 
       if [[ -n "${hash}" ]] && ! validate-hash "${file}" "${hash}"; then
@@ -149,13 +150,13 @@ docker:
   logOpt:
   - max-size=10m
   - max-file=5
-  storage: overlay,aufs
+  storage: overlay2,overlay,aufs
   version: 17.03.2
 kubeProxy:
   clusterCIDR: 100.96.0.0/11
   cpuRequest: 100m
   hostnameOverride: '@aws'
-  image: gcr.io/google_containers/kube-proxy:v1.9.7
+  image: k8s.gcr.io/kube-proxy:v1.11.7
   logLevel: 2
 kubelet:
   allowPrivileged: true
@@ -172,7 +173,7 @@ kubelet:
   logLevel: 2
   networkPluginName: cni
   nonMasqueradeCIDR: 100.64.0.0/10
-  podInfraContainerImage: gcr.io/google_containers/pause-amd64:3.0
+  podInfraContainerImage: k8s.gcr.io/pause-amd64:3.0
   podManifestPath: /etc/kubernetes/manifests
 
 __EOF_CLUSTER_SPEC
@@ -181,17 +182,16 @@ cat > ig_spec.yaml << '__EOF_IG_SPEC'
 kubelet: null
 nodeLabels:
   kops.k8s.io/instancegroup: nodes
-suspendProcesses: null
 taints: null
 
 __EOF_IG_SPEC
 
 cat > kube_env.yaml << '__EOF_KUBE_ENV'
 Assets:
-- 41a46a32d3a24afb7451a3836e95d00c040d1235@https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubelet
-- 7425dbf67007cee328b85da3bf5155d01d3939e2@https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl
+- be55c02936004fb54487e65a18650d9ec17585cb@https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/linux/amd64/kubelet
+- 142b72418855b985b8a89e81f17df9d5fb88f1a9@https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/linux/amd64/kubectl
 - d595d3ded6499a64e8dac02466e2f5f2ce257c9f@https://storage.googleapis.com/kubernetes-release/network-plugins/cni-plugins-amd64-v0.6.0.tgz
-- 1903d30f87488f6e3550918283ff8aa1c5553471@https://kubeupv2.s3.amazonaws.com/kops/1.10.0/linux/amd64/utils.tar.gz
+- b16b5367e05bad082f416f786c7f8813f7794630@https://kubeupv2.s3.amazonaws.com/kops/1.11.0/linux/amd64/utils.tar.gz
 ClusterName: k8s.eu-central-1a.mdn.mozit.cloud
 ConfigBase: s3://kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.eu-central-1a.mdn.mozit.cloud
 InstanceGroupName: nodes
@@ -201,9 +201,9 @@ Tags:
 channels:
 - s3://kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.eu-central-1a.mdn.mozit.cloud/addons/bootstrap-channel.yaml
 protokubeImage:
-  hash: 139d69230bb029a419ca8e5a9be2f406d8e685c4
-  name: protokube:1.10.0
-  source: https://kubeupv2.s3.amazonaws.com/kops/1.10.0/images/protokube.tar.gz
+  hash: 725c2de47755544a9aa349e27ed9900d195f0ceb
+  name: protokube:1.11.0
+  source: https://kubeupv2.s3.amazonaws.com/kops/1.11.0/images/protokube.tar.gz
 
 __EOF_KUBE_ENV
 
