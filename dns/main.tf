@@ -29,6 +29,17 @@ resource aws_route53_zone "master-zone" {
   }
 }
 
+resource aws_route53_zone "mdn-dev" {
+  name = "mdn.dev"
+
+  delegation_set_id = "${aws_route53_delegation_set.delegation-set.id}"
+
+  tags {
+    Name    = "mdn.dev"
+    Purpose = "mdn.dev master zone"
+  }
+}
+
 module "us-west-2" {
   source      = "./hosted_zone"
   region      = "us-west-2"
