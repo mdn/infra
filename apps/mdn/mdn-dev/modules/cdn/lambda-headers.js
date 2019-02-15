@@ -30,9 +30,21 @@ exports.handler = (event, context, callback) => {
 
     headers['content-security-policy'] = [{
         key:   'Content-Security-Policy',
-        value: "default-src 'none'; img-src 'self'; script-src 'unsafe-inline'; style-src 'self'"
+        value: ("default-src 'none'" +
+                "; img-src 'self'" +
+                "; script-src 'self'" +
+                "; style-src" +
+                  " 'self'" +
+                  // Hash of empty string, injected by webpack
+                  " 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='" +
+                "; font-src 'self'" +
+                // Observatory recommendations
+                "; frame-ancestors 'none'" +
+                "; base-uri 'none'" +
+                "; form-action 'none'")
     }];
 
     callback(null, response);
 
 };
+
