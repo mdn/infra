@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = "${var.region}"
+  region = "${var.region}"
 }
 
 ########################################
@@ -7,14 +7,15 @@ provider "aws" {
 ########################################
 
 module "primary-cloudfront" {
-  source            = "./cloudfront_primary"
-  enabled           = "${var.enabled * var.cloudfront_primary_enabled}"
-  distribution_name = "${var.cloudfront_primary_distribution_name}-${var.environment}"
-  environment       = "${var.environment}"
-  comment           = "MDN Primary ${var.environment} CDN"
-  acm_cert_arn      = "${var.acm_primary_cert_arn}"
-  aliases           = [ "${var.cloudfront_primary_aliases}" ]
-  domain_name       = "${var.cloudfront_primary_domain_name}"
+  source              = "./cloudfront_primary"
+  enabled             = "${var.enabled * var.cloudfront_primary_enabled}"
+  distribution_name   = "${var.cloudfront_primary_distribution_name}-${var.environment}"
+  environment         = "${var.environment}"
+  comment             = "MDN Primary ${var.environment} CDN"
+  acm_cert_arn        = "${var.acm_primary_cert_arn}"
+  aliases             = ["${var.cloudfront_primary_aliases}"]
+  domain_name         = "${var.cloudfront_primary_domain_name}"
+  origin_read_timeout = "120"
 }
 
 ########################################
@@ -28,6 +29,6 @@ module "cloudfront-attachments" {
   distribution_name = "${var.cloudfront_attachments_distribution_name}-${var.environment}"
   comment           = "MDN ${var.environment} Attachments CDN"
   acm_cert_arn      = "${var.acm_attachments_cert_arn}"
-  aliases           = [ "${var.cloudfront_attachments_aliases}" ]
+  aliases           = ["${var.cloudfront_attachments_aliases}"]
   domain_name       = "${var.cloudfront_attachments_domain_name}"
 }
