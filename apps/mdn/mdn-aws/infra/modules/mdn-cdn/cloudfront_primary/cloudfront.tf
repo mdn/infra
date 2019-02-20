@@ -1,4 +1,3 @@
-
 locals {
   log_bucket = "${var.distribution_name}-logs"
 }
@@ -28,7 +27,7 @@ resource "aws_s3_bucket" "logging" {
     }
 
     transition {
-      days  = "${var.glacier_transition_days}"
+      days          = "${var.glacier_transition_days}"
       storage_class = "GLACIER"
     }
 
@@ -43,11 +42,10 @@ resource "aws_s3_bucket" "logging" {
     Service     = "MDN"
     Purpose     = "Cloudfront logging bucket"
   }
-
 }
 
 resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
-  count           = "${var.enabled}"
+  count = "${var.enabled}"
 
   aliases         = "${var.aliases}"
   comment         = "${var.comment}"
@@ -107,8 +105,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
-      headers = ["Host"]
-      query_string = true
+      headers                 = ["Host"]
+      query_string            = true
       query_string_cache_keys = ["t"]
 
       cookies {
@@ -132,7 +130,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
-      headers = ["Host"]
+      headers      = ["Host"]
       query_string = false
 
       cookies {
@@ -156,7 +154,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
-      headers = ["Host"]
+      headers      = ["Host"]
       query_string = false
 
       cookies {
@@ -181,7 +179,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -204,7 +203,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -227,7 +227,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -250,7 +251,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -273,7 +275,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -296,7 +299,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -319,7 +323,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -342,7 +347,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -365,7 +371,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -388,7 +395,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -411,7 +419,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -434,7 +443,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -457,10 +467,10 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["Host", "Accept-Language"]
+      headers      = ["Host", "Accept-Language"]
 
       cookies {
-        forward = "whitelist"
+        forward           = "whitelist"
         whitelisted_names = ["django_language", "dwf_contrib_beta", "dwf_sg_task_completion", "sessionid"]
       }
     }
@@ -482,9 +492,10 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["Host", "Accept-Language", "X-Requested-With"]
+      headers      = ["Host", "Accept-Language", "X-Requested-With"]
+
       cookies {
-        forward = "whitelist"
+        forward           = "whitelist"
         whitelisted_names = ["django_language", "sessionid"]
       }
     }
@@ -506,9 +517,10 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["Host", "Accept-Language", "X-Requested-With"]
+      headers      = ["Host", "Accept-Language", "X-Requested-With"]
+
       cookies {
-        forward = "whitelist"
+        forward           = "whitelist"
         whitelisted_names = ["django_language"]
       }
     }
@@ -530,9 +542,10 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["Host", "Accept-Language", "X-Requested-With"]
+      headers      = ["Host", "Accept-Language", "X-Requested-With"]
+
       cookies {
-        forward = "whitelist"
+        forward           = "whitelist"
         whitelisted_names = ["django_language"]
       }
     }
@@ -554,7 +567,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -577,7 +591,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -600,7 +615,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -623,7 +639,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -646,7 +663,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -669,7 +687,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -692,7 +711,8 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["*"]
+      headers      = ["*"]
+
       cookies {
         forward = "all"
       }
@@ -712,10 +732,10 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["Host", "Accept-Language"]
+      headers      = ["Host", "Accept-Language"]
 
       cookies {
-        forward = "whitelist"
+        forward           = "whitelist"
         whitelisted_names = ["django_language", "dwf_contrib_beta", "dwf_sg_task_completion", "sessionid"]
       }
     }
@@ -729,7 +749,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
       http_port                = "80"
       https_port               = "443"
       origin_protocol_policy   = "https-only"
-      origin_read_timeout      = 60
+      origin_read_timeout      = "${var.origin_read_timeout}"
       origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       origin_keepalive_timeout = 5
     }

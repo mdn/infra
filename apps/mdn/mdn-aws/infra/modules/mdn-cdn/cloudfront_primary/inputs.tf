@@ -28,3 +28,7 @@ variable "cloudfront_log_cookies" {
 variable "cloudfront_log_prefix" {
   default = ""
 }
+
+variable "origin_read_timeout" {
+  default = "60"
+}
