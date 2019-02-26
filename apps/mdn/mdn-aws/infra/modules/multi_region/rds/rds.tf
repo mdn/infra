@@ -46,9 +46,10 @@ resource "aws_db_instance" "mdn_rds" {
   #db_subnet_group_name        = "main_subnet_group"
   db_subnet_group_name = "${element(aws_db_subnet_group.rds.*.name, count.index)}"
 
-  depends_on             = ["aws_security_group.mdn_rds_sg"]
-  engine                 = "${var.mysql_engine}"
-  engine_version         = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
+  depends_on = ["aws_security_group.mdn_rds_sg"]
+  engine     = "${var.mysql_engine}"
+
+  engine_version         = "${var.mysql_engine_version}"
   identifier             = "${var.mysql_identifier}"
   instance_class         = "${var.mysql_instance_class}"
   maintenance_window     = "${var.mysql_maintenance_window}"

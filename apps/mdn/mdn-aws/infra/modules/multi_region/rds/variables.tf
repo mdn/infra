@@ -32,10 +32,7 @@ variable "mysql_engine" {
 
 variable "mysql_engine_version" {
   description = "Engine version"
-
-  default = {
-    mysql = "5.6.35"
-  }
+  default     = "5.6.35"
 }
 
 variable "mysql_storage_type" {
