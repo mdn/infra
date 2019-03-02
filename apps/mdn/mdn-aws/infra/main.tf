@@ -183,16 +183,18 @@ module "mysql-us-west-2-prod" {
   vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
   subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
+  monitoring_interval         = "60"
 }
 
 # Replica set
 module "mysql-eu-central-1-replica-prod" {
-  source            = "./modules/multi_region/rds-replica"
-  environment       = "prod"
-  region            = "eu-central-1"
-  subnets           = "${join(",", data.aws_subnet_ids.eu-central-subnet_ids.ids)}"
-  replica_source_db = "${module.mysql-us-west-2-prod.rds_arn}"
-  vpc_id            = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
-  kms_key_id        = "${lookup(var.rds, "key_id.eu-central-1")}"                     # Less than ideal this key is copied from the console
-  instance_class    = "${lookup(var.rds, "instance_class.prod")}"
+  source              = "./modules/multi_region/rds-replica"
+  environment         = "prod"
+  region              = "eu-central-1"
+  subnets             = "${join(",", data.aws_subnet_ids.eu-central-subnet_ids.ids)}"
+  replica_source_db   = "${module.mysql-us-west-2-prod.rds_arn}"
+  vpc_id              = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
+  kms_key_id          = "${lookup(var.rds, "key_id.eu-central-1")}"                     # Less than ideal this key is copied from the console
+  instance_class      = "${lookup(var.rds, "instance_class.prod")}"
+  monitoring_interval = "60"
 }

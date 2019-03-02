@@ -33,3 +33,7 @@ variable "multi_az" {
 variable "mysql_port" {
   default = "3306"
 }
+
+variable "monitoring_interval" {
+  default = "0"
+}
