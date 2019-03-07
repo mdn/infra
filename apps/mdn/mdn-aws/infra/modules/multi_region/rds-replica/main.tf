@@ -35,6 +35,7 @@ resource aws_db_instance "replica" {
 
   apply_immediately   = true
   skip_final_snapshot = true
+  monitoring_interval = "${var.monitoring_interval}"
 
   tags {
     Name        = "${local.name_prefix}"
