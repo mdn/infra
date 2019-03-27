@@ -25,10 +25,9 @@ data "terraform_remote_state" "dns" {
   }
 }
 
-# This is only temporary until we can get the dns site
-data "aws_acm_certificate" "star-mdn-mozit" {
+data "aws_acm_certificate" "mdn-dev" {
   provider = "aws.aws-acm"
-  domain   = "*.mdn.mozit.cloud"
+  domain   = "mdn.dev"
   statuses = ["ISSUED"]
 }
 
@@ -51,5 +50,5 @@ module "dns-mdn-dev" {
 module "mdn-dev" {
   source              = "./modules/cdn"
   cloudfront_aliases  = ["mdn.dev", "mdn-dev.mdn.mozit.cloud"]
-  acm_certificate_arn = "${data.aws_acm_certificate.star-mdn-mozit.arn}"
+  acm_certificate_arn = "${data.aws_acm_certificate.mdn-dev.arn}"
 }
