@@ -18,9 +18,6 @@
 # http://creativecommons.org/publicdomain/zero/1.0/
 #
 
-# Get EIP id from userdata and dump it to the filesystem
-echo "${eip_id}" > /etc/aws_eip_id
-
 # Install packages needed for Web server support
 
 yum groupinstall -y "Web Server" "PHP Support"
@@ -30,7 +27,6 @@ yum install -y npm
 yum install -y openssl-devel
 yum install -y sqlite-devel
 yum install -y libevent-devel
-yum install -y git
 
 # Create a group for the Web content and add the default user to it
 
