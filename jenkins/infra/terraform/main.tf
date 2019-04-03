@@ -176,10 +176,11 @@ resource "aws_autoscaling_group" "ci" {
   min_size                  = "1"
   desired_capacity          = "1"
   health_check_grace_period = 1800
+
   # Less than ideal but the initial sync takes such a long time
-  health_check_type         = "EC2"
-  force_delete              = true
-  launch_configuration      = "${aws_launch_configuration.ci.name}"
+  health_check_type    = "EC2"
+  force_delete         = true
+  launch_configuration = "${aws_launch_configuration.ci.name}"
 
   enabled_metrics = [
     "GroupMinSize",
@@ -223,7 +224,8 @@ data template_file "user_data" {
 resource "aws_launch_configuration" "ci" {
   name_prefix = "ci-${var.project}-"
 
-  image_id = "${data.aws_ami.ubuntu.id}"
+  #image_id = "${data.aws_ami.ubuntu.id}"
+  image_id = "ami-01e0cf6e025c036e4"
 
   instance_type               = "${var.instance_type}"
   key_name                    = "${aws_key_pair.mdn.key_name}"
@@ -360,6 +362,37 @@ resource aws_iam_policy "mdn-interactive-permissive" {
       ],
       "Resource": [
         "arn:aws:s3:::mdninteractive-*/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource aws_iam_role_policy "mdn-dev-s3" {
+  name = "mdn-dev-s3-${var.region}"
+  role = "${aws_iam_role.ci.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::mdn-dev-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::mdn-dev-*/*"
       ]
     }
   ]
