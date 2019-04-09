@@ -103,6 +103,7 @@ export KUMA_MOUNT_PATH=/mdn
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL=https
 export KUMA_ADMIN_NAMES="MDN devs"
 export KUMA_ALLOW_ROBOTS=True
+export KUMA_API_S3_BUCKET_NAME=mdn-api-prod
 export KUMA_ATTACHMENT_HOST=mdn.mozillademos.org
 export KUMA_ATTACHMENT_ORIGIN=demos-origin.mdn.mozit.cloud
 export KUMA_CELERY_ALWAYS_EAGER=False

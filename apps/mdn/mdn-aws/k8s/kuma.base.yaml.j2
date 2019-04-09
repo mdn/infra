@@ -35,6 +35,17 @@
               value: {{ KUMA_ATTACHMENT_HOST }}
             - name: ATTACHMENT_ORIGIN
               value: {{ KUMA_ATTACHMENT_ORIGIN | default(KUMA_ATTACHMENT_HOST, True) }}
+            # AWS access keys for mdn-s3-api-(stage|prod)-uploader user:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: aws-access-key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: aws-secret-key
             - name: BROKER_URL
               valueFrom:
                 secretKeyRef:
@@ -105,6 +116,8 @@
               value: "{{ KUMA_LEGACY_ROOT }}"
             - name: MAINTENANCE_MODE
               value: "{{ KUMA_MAINTENANCE_MODE }}"
+            - name: MDN_API_S3_BUCKET_NAME
+              value: "{{ KUMA_API_S3_BUCKET_NAME }}"
             - name: MDN_CONTRIBUTION
               value: "{{ KUMA_ENABLE_CONTRIBUTIONS }}"
             - name: MDN_CONTRIBUTION_CONFIRMATION_EMAIL
