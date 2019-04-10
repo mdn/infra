@@ -73,6 +73,12 @@ module "mdn_cdn_prod" {
   cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.prod")}"
 }
 
+module "lambda-log" {
+  source             = "./modules/lambda-log-processor"
+  source_bucket      = "${module.mdn_cdn_prod.cdn-primary-logging-bucket}"
+  destination_bucket = "mdn-cdn-primary-processed"
+}
+
 # TODO: Split this up into multiple files other stuff can get messy quick
 # Multi region resources
 
