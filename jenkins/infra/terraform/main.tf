@@ -19,6 +19,17 @@ resource "aws_key_pair" "mdn" {
   public_key = "${var.ssh_pubkey}"
 }
 
+resource "aws_eip" "ci-eip" {
+  vpc = true
+
+  tags = {
+    Name      = "ci-eip"
+    Service   = "MDN"
+    Region    = "${var.region}"
+    Terraform = "true"
+  }
+}
+
 # Create a new load balancer
 resource "aws_elb" "ci" {
   name    = "ci-elb-${var.project}"
@@ -218,6 +229,8 @@ data template_file "user_data" {
     papertrail_port    = "${var.papertrail_port}"
     datadog_key        = "${var.datadog_key}"
     datadog_hostname   = "${var.datadog_hostname}"
+    eip_id             = "${aws_eip.ci-eip.id}"
+    region             = "${var.region}"
   }
 }
 
@@ -398,6 +411,21 @@ resource aws_iam_role_policy "mdn-dev-s3" {
   ]
 }
 EOF
+}
+
+data "aws_iam_policy_document" "associate-eip" {
+  statement {
+    sid       = "AllowEipAssociate"
+    effect    = "Allow"
+    actions   = ["ec2:AssociateAddress"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "associate-eip" {
+  name   = "eip-attach-${var.region}"
+  role   = "${aws_iam_role.ci.id}"
+  policy = "${data.aws_iam_policy_document.associate-eip.json}"
 }
 
 resource aws_iam_role_policy_attachment "ci-role" {

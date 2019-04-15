@@ -10,6 +10,7 @@ PAPERTRAIL_HOST="${papertrail_host}"
 PAPERTRAIL_PORT="${papertrail_port}"
 DATADOG_KEY="${datadog_key}"
 DATADOG_HOSTNAME="${datadog_hostname}"
+EIP_ID="${eip_id}"
 
 die() {
     echo "$*" 1>&2
@@ -56,6 +57,13 @@ lock() {
         || return 1
 }
 
+associate_eip() {
+    echo "$${EIP_ID}" > /etc/aws_eip_id
+    instance_id=$(/usr/bin/curl -fqs http://169.254.169.254/latest/meta-data/instance-id)
+
+    aws ec2 associate-address --instance-id "$${instance_id}" --allocation-id "$${EIP_ID}" --region ${region}
+}
+
 main() {
     # Make sure backups dont run when trying to restore
     lock "backup_jenkins"
@@ -72,6 +80,9 @@ main() {
                                         papertrail_host="$${PAPERTRAIL_HOST}" papertrail_port="$${PAPERTRAIL_PORT}" \
                                         datadog_key="$${DATADOG_KEY}" datadog_hostname="$${DATADOG_HOSTNAME}"" \
         || die "Failed to run ansible"
+
+    echo "Setting EIP"
+    associate_eip || die "Failed to associate EIP"
 
     echo "Restoring backup sets to $${BACKUP_DIR}"
     restore-backup-set || die "Failed to restore backup set to $${BACKUP_DIR}"
