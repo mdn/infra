@@ -41,3 +41,7 @@ variable "datadog_hostname" {}
 variable "ip_whitelist" {
   type = "list"
 }
+
+variable "mozilla_vpn_whitelist" {
+  type = "list"
+}

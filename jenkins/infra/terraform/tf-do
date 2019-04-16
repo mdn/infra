@@ -39,12 +39,12 @@ init() {
 
 plan() {
     local environment=$1
-    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars -var "environment=${environment}"
+    terraform plan -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars"
 }
 
 apply() {
     local environment=$1
-    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars -var "environment=${environment}"
+    terraform apply -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars"
 }
 
 while [ "$1" != "" ]; do
