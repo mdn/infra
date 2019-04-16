@@ -38,42 +38,50 @@ init() {
 }
 
 plan() {
-    local environment=$1
-    terraform plan -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars"
+    terraform plan -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 apply() {
-    local environment=$1
-    terraform apply -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars"
+    terraform apply -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
+}
+
+get() {
+    terraform get -update=true
+}
+
+output() {
+    terraform output
 }
 
 while [ "$1" != "" ]; do
-	case "$1" in
-		-x | --debug | --setx )
-			set -x
-		;;
-		-h | --help | help )
-			show_help
-			exit 0
-		;;
+    case "$1" in
+        -x | --debug | --setx )
+            set -x
+        ;;
+        -h | --help | help )
+            show_help
+            exit 0
+        ;;
         -e | --environment )
             export MY_ENVIRONMENT=${2:-stage}
             shift
         ;;
-		init )
-			init
-			GOT_COMMAND=1
+        init )
+            init
+            GOT_COMMAND=1
 		;;
-		plan )
-			plan "${MY_ENVIRONMENT:-stage}"
-			GOT_COMMAND=1
+        plan )
+            shift
+            plan "${@}"
+            GOT_COMMAND=1
 		;;
-		apply )
-            apply "${MY_ENVIRONMENT:-stage}"
-			GOT_COMMAND=1
-		;;
-	esac
-	shift
+        apply )
+            shift
+            apply "${@}"
+            GOT_COMMAND=1
+        ;;
+    esac
+    shift
 done
 
 # If we did not get a valid command print the help message
