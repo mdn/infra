@@ -38,11 +38,19 @@ init() {
 }
 
 plan() {
-    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars
+    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars "${@}"
 }
 
 apply() {
-    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars
+    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars "${@}"
+}
+
+get() {
+    terraform get -update=true
+}
+
+output() {
+    terraform output
 }
 
 while [ "$1" != "" ]; do
@@ -61,13 +69,15 @@ while [ "$1" != "" ]; do
         init )
             init
             GOT_COMMAND=1
-		;;
+        ;;
         plan )
-            plan
+            shift
+            plan "${@}"
             GOT_COMMAND=1
         ;;
         apply )
-            apply
+            shift
+            apply "${@}"
             GOT_COMMAND=1
         ;;
     esac
