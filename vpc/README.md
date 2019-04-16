@@ -7,5 +7,5 @@ If you need to create a VPC for another region you will need to create a separat
 The current setup will create 3 private subnets and a NAT instance.
 
 ## Current status
-Currently the module only the private subnets. This is because the VPC was create using `kops`. This is an issue
+Currently the module only creates the private subnets. This is because the VPC was create using `kops`. This is an issue
 to resolve, and going forward I hope to create the VPC using terraform
