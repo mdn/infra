@@ -2,27 +2,27 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "create_vpc" {
-  default = true
-}
-
 variable "vpc_name" {
   default = "main-vpc"
 }
 
-# Temporarily here
 variable "vpc_id" {}
+
+variable "igw_id" {}
+
+variable "tags" {
+  type = "map"
+}
 
 variable "azs" {
   type = "list"
 }
 
-# Temporary
-variable "public_subnets" {
+variable "public_subnet_cidrs" {
   type = "list"
 }
 
-variable "private_subnets_cidr" {
+variable "private_subnet_cidrs" {
   type    = "list"
   default = []
 }
