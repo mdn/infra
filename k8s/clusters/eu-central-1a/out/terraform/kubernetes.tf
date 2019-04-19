@@ -6,14 +6,13 @@ locals = {
   masters_role_name            = "${aws_iam_role.masters-k8s-eu-central-1a-mdn-mozit-cloud.name}"
   node_autoscaling_group_ids   = ["${aws_autoscaling_group.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
   node_security_group_ids      = ["${aws_security_group.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
-  node_subnet_ids              = ["${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
+  node_subnet_ids              = ["subnet-080386f93c0046219"]
   nodes_role_arn               = "${aws_iam_role.nodes-k8s-eu-central-1a-mdn-mozit-cloud.arn}"
   nodes_role_name              = "${aws_iam_role.nodes-k8s-eu-central-1a-mdn-mozit-cloud.name}"
   region                       = "eu-central-1"
-  route_table_public_id        = "${aws_route_table.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  subnet_eu-central-1a_id      = "${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  vpc_cidr_block               = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.cidr_block}"
-  vpc_id                       = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  subnet_eu-central-1a_id      = "subnet-080386f93c0046219"
+  subnet_ids                   = ["subnet-080386f93c0046219"]
+  vpc_id                       = "vpc-0a0645faca1563b3b"
 }
 
 output "cluster_name" {
@@ -45,7 +44,7 @@ output "node_security_group_ids" {
 }
 
 output "node_subnet_ids" {
-  value = ["${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
+  value = ["subnet-080386f93c0046219"]
 }
 
 output "nodes_role_arn" {
@@ -60,20 +59,16 @@ output "region" {
   value = "eu-central-1"
 }
 
-output "route_table_public_id" {
-  value = "${aws_route_table.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-}
-
 output "subnet_eu-central-1a_id" {
-  value = "${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  value = "subnet-080386f93c0046219"
 }
 
-output "vpc_cidr_block" {
-  value = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.cidr_block}"
+output "subnet_ids" {
+  value = ["subnet-080386f93c0046219"]
 }
 
 output "vpc_id" {
-  value = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  value = "vpc-0a0645faca1563b3b"
 }
 
 provider "aws" {
@@ -85,7 +80,7 @@ resource "aws_autoscaling_group" "master-eu-central-1a-masters-k8s-eu-central-1a
   launch_configuration = "${aws_launch_configuration.master-eu-central-1a-masters-k8s-eu-central-1a-mdn-mozit-cloud.id}"
   max_size             = 1
   min_size             = 1
-  vpc_zone_identifier  = ["${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
+  vpc_zone_identifier  = ["subnet-080386f93c0046219"]
 
   tag = {
     key                 = "KubernetesCluster"
@@ -120,7 +115,7 @@ resource "aws_autoscaling_group" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   launch_configuration = "${aws_launch_configuration.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"
   max_size             = 3
   min_size             = 3
-  vpc_zone_identifier  = ["${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
+  vpc_zone_identifier  = ["subnet-080386f93c0046219"]
 
   tag = {
     key                 = "KubernetesCluster"
@@ -212,16 +207,6 @@ resource "aws_iam_role_policy" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   policy = "${file("${path.module}/data/aws_iam_role_policy_nodes.k8s.eu-central-1a.mdn.mozit.cloud_policy")}"
 }
 
-resource "aws_internet_gateway" "k8s-eu-central-1a-mdn-mozit-cloud" {
-  vpc_id = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-
-  tags = {
-    KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
-    Name                                                      = "k8s.eu-central-1a.mdn.mozit.cloud"
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
-  }
-}
-
 resource "aws_key_pair" "kubernetes-k8s-eu-central-1a-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef" {
   key_name   = "kubernetes.k8s.eu-central-1a.mdn.mozit.cloud-44:ff:04:d0:bf:89:34:c5:c3:0d:25:3b:d7:df:3b:ef"
   public_key = "${file("${path.module}/data/aws_key_pair_kubernetes.k8s.eu-central-1a.mdn.mozit.cloud-44ff04d0bf8934c5c30d253bd7df3bef_public_key")}"
@@ -273,31 +258,9 @@ resource "aws_launch_configuration" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   enable_monitoring = false
 }
 
-resource "aws_route" "0-0-0-0--0" {
-  route_table_id         = "${aws_route_table.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-}
-
-resource "aws_route_table" "k8s-eu-central-1a-mdn-mozit-cloud" {
-  vpc_id = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-
-  tags = {
-    KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
-    Name                                                      = "k8s.eu-central-1a.mdn.mozit.cloud"
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
-    "kubernetes.io/kops/role"                                 = "public"
-  }
-}
-
-resource "aws_route_table_association" "eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud" {
-  subnet_id      = "${aws_subnet.eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  route_table_id = "${aws_route_table.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-}
-
 resource "aws_security_group" "masters-k8s-eu-central-1a-mdn-mozit-cloud" {
   name        = "masters.k8s.eu-central-1a.mdn.mozit.cloud"
-  vpc_id      = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  vpc_id      = "vpc-0a0645faca1563b3b"
   description = "Security group for masters"
 
   tags = {
@@ -309,7 +272,7 @@ resource "aws_security_group" "masters-k8s-eu-central-1a-mdn-mozit-cloud" {
 
 resource "aws_security_group" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   name        = "nodes.k8s.eu-central-1a.mdn.mozit.cloud"
-  vpc_id      = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  vpc_id      = "vpc-0a0645faca1563b3b"
   description = "Security group for nodes"
 
   tags = {
@@ -435,48 +398,6 @@ resource "aws_security_group_rule" "node-to-master-udp-1-65535" {
 #  protocol          = "tcp"
 #  cidr_blocks       = ["0.0.0.0/0"]
 #}
-
-resource "aws_subnet" "eu-central-1a-k8s-eu-central-1a-mdn-mozit-cloud" {
-  vpc_id            = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  cidr_block        = "172.20.32.0/19"
-  availability_zone = "eu-central-1a"
-
-  tags = {
-    KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
-    Name                                                      = "eu-central-1a.k8s.eu-central-1a.mdn.mozit.cloud"
-    SubnetType                                                = "Public"
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
-    "kubernetes.io/role/elb"                                  = "1"
-  }
-}
-
-resource "aws_vpc" "k8s-eu-central-1a-mdn-mozit-cloud" {
-  cidr_block           = "172.20.0.0/16"
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-
-  tags = {
-    KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
-    Name                                                      = "k8s.eu-central-1a.mdn.mozit.cloud"
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
-  }
-}
-
-resource "aws_vpc_dhcp_options" "k8s-eu-central-1a-mdn-mozit-cloud" {
-  domain_name         = "eu-central-1.compute.internal"
-  domain_name_servers = ["AmazonProvidedDNS"]
-
-  tags = {
-    KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
-    Name                                                      = "k8s.eu-central-1a.mdn.mozit.cloud"
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
-  }
-}
-
-resource "aws_vpc_dhcp_options_association" "k8s-eu-central-1a-mdn-mozit-cloud" {
-  vpc_id          = "${aws_vpc.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  dhcp_options_id = "${aws_vpc_dhcp_options.k8s-eu-central-1a-mdn-mozit-cloud.id}"
-}
 
 terraform = {
   required_version = ">= 0.9.3"

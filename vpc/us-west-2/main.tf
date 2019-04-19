@@ -17,11 +17,11 @@ locals {
   vpc_tags = {
     Name                                                   = "k8s.us-west-2a.mdn.mozit.cloud"
     KubernetesCluster                                      = "k8s.us-west-2a.mdn.mozit.cloud"
-    "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "owned"
+    "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "shared"
   }
 
   subnet_tags = {
-    "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "owned"
+    "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "shared"
   }
 }
 
