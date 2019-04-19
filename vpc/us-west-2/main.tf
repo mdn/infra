@@ -11,22 +11,34 @@ terraform {
 }
 
 locals {
-  vpc_id              = "vpc-8c768ef4"
-  private_subnet_cidr = ["172.20.128.0/19", "172.20.160.0/19", "172.20.192.0/19"]
+  public_subnet_cidrs  = ["172.20.32.0/19", "172.20.64.0/19", "172.20.96.0/19"]
+  private_subnet_cidrs = ["172.20.128.0/19", "172.20.160.0/19", "172.20.192.0/19"]
+
+  vpc_tags = {
+    Name                                                   = "k8s.us-west-2a.mdn.mozit.cloud"
+    KubernetesCluster                                      = "k8s.us-west-2a.mdn.mozit.cloud"
+    "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "owned"
+  }
+
+  subnet_tags = {
+    "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "owned"
+  }
 }
 
-data "aws_subnet_ids" "public_subnets" {
-  vpc_id = "${local.vpc_id}"
+module "vpc-us-west-2" {
+  source   = "../modules/vpc"
+  region   = "${var.region}"
+  vpc_cidr = "172.20.0.0/16"
 
-  tags = {
-    SubnetType = "Public"
-  }
+  tags = "${local.vpc_tags}"
 }
 
 module "subnets-us-west-2" {
   source               = "../modules/subnets"
-  vpc_id               = "vpc-8c768ef4"
+  vpc_id               = "${module.vpc-us-west-2.vpc_id}"
+  igw_id               = "${module.vpc-us-west-2.igw_id}"
   azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  public_subnets       = ["${data.aws_subnet_ids.public_subnets.ids}"]
-  private_subnets_cidr = "${local.private_subnet_cidr}"
+  public_subnet_cidrs  = "${local.public_subnet_cidrs}"
+  private_subnet_cidrs = "${local.private_subnet_cidrs}"
+  tags                 = "${local.subnet_tags}"
 }
