@@ -27,7 +27,7 @@ resource "aws_security_group" "mdn-samples" {
   name        = "mdn-samples-sg"
   description = "Allow inbound traffic to mdn-samples"
 
-  vpc_id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
 
   ingress {
     from_port   = 443
@@ -96,7 +96,7 @@ data "template_cloudinit_config" "config" {
 }
 
 resource "aws_autoscaling_group" "mdn-samples" {
-  vpc_zone_identifier = ["${data.aws_subnet_ids.subnet_id.ids}"]
+  vpc_zone_identifier = ["${data.terraform_remote_state.vpc-us-west-2.public_subnets}"]
 
   name = "mdn-samples - ${aws_launch_configuration.mdn-samples.name}"
 
