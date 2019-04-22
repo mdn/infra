@@ -28,7 +28,7 @@ module "rds-backups" {
 
 module "security" {
   source           = "./modules/security"
-  us-west-2-vpc-id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  us-west-2-vpc-id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
 }
 
 module "mdn_cdn" {
@@ -88,8 +88,8 @@ module "efs-us-west-2" {
   environment          = "stage"
   region               = "us-west-2"
   efs_name             = "stage"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
 }
 
 module "efs-us-west-2-prod" {
@@ -98,8 +98,8 @@ module "efs-us-west-2-prod" {
   environment          = "prod"
   region               = "us-west-2"
   efs_name             = "prod"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
 }
 
 module "efs-eu-central-1-prod" {
@@ -108,8 +108,8 @@ module "efs-eu-central-1-prod" {
   environment          = "prod"
   region               = "eu-central-1"
   efs_name             = "prod"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-eu-central-1.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-eu-central-1.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.eu-central-1-nodes_sg.ids}"
 }
 
 module "redis-us-west-2" {
@@ -120,8 +120,8 @@ module "redis-us-west-2" {
   redis_name           = "stage"
   redis_node_size      = "${lookup(var.redis, "node_size.stage")}"
   redis_num_nodes      = "${lookup(var.redis, "num_nodes.stage")}"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
 }
 
 module "redis-us-west-2-prod" {
@@ -132,8 +132,8 @@ module "redis-us-west-2-prod" {
   redis_name           = "prod"
   redis_node_size      = "${lookup(var.redis, "node_size.prod")}"
   redis_num_nodes      = "${lookup(var.redis, "num_nodes.prod")}"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
 }
 
 module "redis-eu-central-1-prod" {
@@ -144,8 +144,8 @@ module "redis-eu-central-1-prod" {
   redis_name           = "prod"
   redis_node_size      = "${lookup(var.redis, "node_size.prod")}"
   redis_num_nodes      = "${lookup(var.redis, "num_nodes.prod")}"
-  subnets              = "${join(",", data.terraform_remote_state.kubernetes-eu-central-1.node_subnet_ids)}"
-  nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-eu-central-1.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.eu-central-1-nodes_sg.ids}"
 }
 
 module "mysql-us-west-2" {
@@ -164,9 +164,9 @@ module "mysql-us-west-2" {
   mysql_security_group_name   = "mdn_rds_sg_stage"
   mysql_storage_gb            = "${lookup(var.rds, "storage_gb.stage")}"
   mysql_storage_type          = "${lookup(var.rds, "storage_type")}"
-  vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_id                      = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
-  subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
+  subnets                     = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
   monitoring_interval         = "60"
 }
 
@@ -186,9 +186,9 @@ module "mysql-us-west-2-prod" {
   mysql_security_group_name   = "mdn_rds_sg_prod"
   mysql_storage_gb            = "${lookup(var.rds, "storage_gb.prod")}"
   mysql_storage_type          = "${lookup(var.rds, "storage_type")}"
-  vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_id                      = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
-  subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
+  subnets                     = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
   monitoring_interval         = "60"
 }
 
@@ -197,10 +197,10 @@ module "mysql-eu-central-1-replica-prod" {
   source              = "./modules/multi_region/rds-replica"
   environment         = "prod"
   region              = "eu-central-1"
-  subnets             = "${join(",", data.aws_subnet_ids.eu-central-subnet_ids.ids)}"
+  subnets             = "${join(",", data.terraform_remote_state.vpc-eu-central-1.public_subnets)}"
   replica_source_db   = "${module.mysql-us-west-2-prod.rds_arn}"
-  vpc_id              = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
-  kms_key_id          = "${lookup(var.rds, "key_id.eu-central-1")}"                     # Less than ideal this key is copied from the console
+  vpc_id              = "${data.terraform_remote_state.vpc-eu-central-1.vpc_id}"
+  kms_key_id          = "${lookup(var.rds, "key_id.eu-central-1")}"                                 # Less than ideal this key is copied from the console
   instance_class      = "${lookup(var.rds, "instance_class.prod")}"
   monitoring_interval = "60"
 }

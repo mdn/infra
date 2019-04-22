@@ -33,7 +33,7 @@ resource "aws_eip" "ci-eip" {
 # Create a new load balancer
 resource "aws_elb" "ci" {
   name    = "ci-elb-${var.project}"
-  subnets = ["${data.aws_subnet_ids.subnet_id.ids}"]
+  subnets = ["${data.terraform_remote_state.vpc-us-west-2.public_subnets}"]
 
   listener {
     instance_port     = 80
@@ -74,7 +74,7 @@ resource "aws_security_group" "elb" {
   name        = "ci-elb-sg"
   description = "Allow inbound traffic from ELB to CI"
 
-  vpc_id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
 
   egress {
     from_port   = 0
@@ -113,7 +113,7 @@ resource "aws_security_group" "ci" {
   name        = "ci-sg"
   description = "Allow inbound traffic to CI from ELB"
 
-  vpc_id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
 
   ingress {
     from_port = 80
@@ -177,7 +177,7 @@ resource "aws_security_group_rule" "ingress_ssh" {
 }
 
 resource "aws_autoscaling_group" "ci" {
-  vpc_zone_identifier = ["${data.aws_subnet_ids.subnet_id.ids}"]
+  vpc_zone_identifier = ["${data.terraform_remote_state.vpc-us-west-2.public_subnets}"]
 
   # This is on purpose, when the LC changes, will force creation of a new ASG
   name = "ci-${var.project} - ${aws_launch_configuration.ci.name}"

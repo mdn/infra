@@ -1,15 +1,11 @@
-data terraform_remote_state "kubernetes-us-west-2" {
+data terraform_remote_state "vpc-us-west-2" {
   backend = "s3"
 
   config {
     bucket = "mdn-state-4e366a3ac64d1b4022c8b5e35efbd288"
-    key    = "terraform/kubernetes-us-west-2a"
+    key    = "terraform/us-west-2/vpc"
     region = "us-west-2"
   }
-}
-
-data aws_subnet_ids "subnet_id" {
-  vpc_id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
 }
 
 data aws_ami "centos" {
