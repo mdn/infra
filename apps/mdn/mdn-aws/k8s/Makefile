@@ -34,6 +34,12 @@ export KUMASCRIPT_SERVICE_PORT ?= 9080
 export KUMASCRIPT_SERVICE_TARGET_PORT ?= 9080
 export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
 
+export SSR_SERVICE_NAME ?= ssr
+export SSR_SERVICE_TYPE ?= ClusterIP
+export SSR_SERVICE_PORT ?= 80
+export SSR_SERVICE_TARGET_PORT ?= 8000
+export SSR_SERVICE_PROTOCOL ?= TCP
+
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
 export WEB_GUNICORN_WORKERS ?= 4
@@ -58,6 +64,14 @@ export API_CPU_REQUEST ?= 100m
 export API_MEMORY_LIMIT ?= 4Gi
 export API_MEMORY_REQUEST ?= 256Mi
 export API_ALLOWED_HOSTS ?= ${API_SERVICE_NAME}
+
+export SSR_NAME ?= ssr
+export SSR_REPLICAS ?= 1
+export SSR_CPU_LIMIT ?= 1
+export SSR_CPU_REQUEST ?= 100m
+export SSR_MEMORY_LIMIT ?= 2Gi
+export SSR_MEMORY_REQUEST ?= 256Mi
+export SSR_CONTAINER_PORT ?= ${SSR_SERVICE_TARGET_PORT}
 
 export CELERY_WORKERS_NAME ?= celery-worker
 export CELERY_WORKERS_REPLICAS ?= 1
@@ -126,6 +140,7 @@ export KUMA_PROTOCOL ?= "https://"
 export KUMA_SECURE_HSTS_SECONDS ?= 0
 export KUMA_SERVE_LEGACY ?= True
 export KUMA_SESSION_COOKIE_SECURE ?= True
+export KUMA_SSR_TIMEOUT ?= 5
 export KUMA_STATIC_URL ?= /static/
 export KUMA_STRIPE_PRODUCT_ID ?= ""
 export KUMA_STRIPE_PUBLIC_KEY ?= ""
@@ -134,6 +149,7 @@ export KUMA_WEB_CONCURRENCY ?= 4
 export INTERACTIVE_EXAMPLES_BASE_URL ?= https://interactive-examples.mdn.mozilla.net
 
 # Derived environment variables for both Kuma and Kumascript. These are always set.
+export KUMA_SSR_URL=http://${SSR_SERVICE_NAME}/ssr
 export KUMASCRIPT_DOCUMENT_URL=http://${API_SERVICE_NAME}
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=${KUMASCRIPT_DOCUMENT_URL}/en-US/docs/{path}?raw=1&redirect=no
@@ -248,19 +264,20 @@ k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
 k8s-delete-shared-storage: k8s-delete-efs-setup-job k8s-delete-pvc-shared \
 						   k8s-delete-pv-shared
 
-k8s-services: k8s-web-svc k8s-api-svc k8s-kumascript-svc
+k8s-services: k8s-web-svc k8s-api-svc k8s-kumascript-svc k8s-ssr-svc
 
 k8s-delete-services: k8s-delete-web-svc k8s-delete-api-svc \
-					 k8s-delete-kumascript-svc
+					 k8s-delete-kumascript-svc k8s-delete-ssr-svc
 
 k8s-deployments: k8s-kuma-deployments k8s-kumascript-deployments
 
 k8s-delete-deployments: k8s-delete-kuma-deployments \
 						k8s-delete-kumascript-deployments
 
-k8s-kuma-deployments: k8s-web k8s-api k8s-celery
+k8s-kuma-deployments: k8s-web k8s-api k8s-celery k8s-ssr
 
-k8s-delete-kuma-deployments: k8s-delete-web k8s-delete-api k8s-delete-celery
+k8s-delete-kuma-deployments: k8s-delete-web k8s-delete-api k8s-delete-celery \
+							 k8s-delete-ssr
 
 k8s-kumascript-deployments: k8s-kumascript
 
@@ -397,6 +414,18 @@ k8s-kumascript-svc: check-service-env
 k8s-delete-kumascript-svc: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${KUMASCRIPT_SERVICE_NAME}
+
+k8s-ssr-svc: check-service-env
+	env SERVICE_NAME=${SSR_SERVICE_NAME} \
+		SERVICE_TYPE=${SSR_SERVICE_TYPE} \
+		SERVICE_PORT=${SSR_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${SSR_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${SSR_SERVICE_PROTOCOL} \
+		j2 svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-ssr-svc: check-service-env
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		svc ${SSR_SERVICE_NAME}
 
 ###############################
 ### administrative tasks
@@ -599,6 +628,12 @@ k8s-delete-celery-cam:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_CAM_NAME}
 
+k8s-ssr:
+	j2 ssr.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-ssr:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${SSR_NAME}
+
 check-service-env:
 	./check_infra_lock.sh
 
@@ -612,9 +647,9 @@ k8s-get-kumascript-revision-hash:
 .PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
 		k8s-shared-storage k8s-delete-shared-storage \
-		k8s-web-svc k8s-delete-web-svc k8s-api-svc \
-		k8s-delete-api-svc k8s-kumascript-svc k8s-delete-kumascript-svc \
-		k8s-deployments k8s-delete-deployments \
+		k8s-web-svc k8s-delete-web-svc k8s-api-svc k8s-delete-api-svc \
+		k8s-ssr-svc k8s-delete-ssr-svc k8s-kumascript-svc \
+		k8s-delete-kumascript-svc k8s-deployments k8s-delete-deployments \
 		k8s-web k8s-delete-web k8s-api k8s-delete-api k8s-kumascript \
 		k8s-delete-kumascript k8s-celery k8s-delete-celery k8s-celery-workers \
 		k8s-delete-celery-workers k8s-celery-beat k8s-delete-celery-beat \
@@ -626,5 +661,5 @@ k8s-get-kumascript-revision-hash:
 		k8s-kuma-delete-record-deployment-job \
 		k8s-kumascript-delete-record-deployment-job \
 		k8s-get-kuma-revision-hash k8s-get-kumascript-revision-hash \
-		k8s-rds-backup-cron k8s-delete-rds-backup-cron \
+		k8s-rds-backup-cron k8s-delete-rds-backup-cron k8s-ssr k8s-delete-ssr \
 		check-service-env

@@ -56,6 +56,8 @@ spec:
                 secretKeyRef:
                   name: newrelic-secrets
                   key: NEW_RELIC_LICENSE_KEY
+            - name: NODE_ENV
+              value: "production"
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:

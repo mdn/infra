@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ SSR_NAME }}
+spec:
+  replicas: {{ SSR_REPLICAS }}
+  template:
+    metadata:
+      labels:
+        app: {{ SSR_SERVICE_NAME }}
+    spec:
+      containers:
+        - name: {{ SSR_NAME }}
+          image: "{{ KUMA_IMAGE }}:{{ KUMA_IMAGE_TAG }}"
+          imagePullPolicy: {{ KUMA_IMAGE_PULL_POLICY }}
+          command:
+            - node
+          args:
+            - kuma/javascript/ssr-server.js
+          ports:
+            - containerPort: {{ SSR_CONTAINER_PORT }}
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: SSR_PORT
+              value: "{{ SSR_CONTAINER_PORT }}"
+          resources:
+            requests:
+              cpu: {{ SSR_CPU_REQUEST }}
+              memory: {{ SSR_MEMORY_REQUEST }}
+            limits:
+              cpu: {{ SSR_CPU_LIMIT }}
+              memory: {{ SSR_MEMORY_LIMIT }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ SSR_CONTAINER_PORT }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: {{ SSR_CONTAINER_PORT }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
