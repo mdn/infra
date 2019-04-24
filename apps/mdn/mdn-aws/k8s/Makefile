@@ -66,7 +66,7 @@ export CELERY_WORKERS_CPU_REQUEST ?= 100m
 export CELERY_WORKERS_MEMORY_LIMIT ?= 4Gi
 export CELERY_WORKERS_MEMORY_REQUEST ?= 256Mi
 export CELERY_WORKERS_CONCURRENCY ?= 4
-export CELERY_WORKERS_QUEUES ?= mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
+export CELERY_WORKERS_QUEUES ?= mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,mdn_api,celery
 
 export CELERY_BEAT_NAME ?= celery-beat
 export CELERY_BEAT_REPLICAS ?= 1
