@@ -177,6 +177,10 @@
               value: "{{ KUMA_SESSION_COOKIE_SECURE }}"
             - name: SITE_URL
               value: {{ KUMA_PROTOCOL }}{{ KUMA_DOMAIN }}
+            - name: SSR_TIMEOUT
+              value: "{{ KUMA_SSR_TIMEOUT }}"
+            - name: SSR_URL
+              value: "{{ KUMA_SSR_URL }}"
             - name: STATIC_URL
               value: {{ KUMA_STATIC_URL }}
             - name: STRIPE_PRODUCT_ID
