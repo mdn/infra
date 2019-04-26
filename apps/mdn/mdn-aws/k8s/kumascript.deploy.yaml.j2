@@ -36,7 +36,7 @@ spec:
               value: {{ KUMASCRIPT_LIVE_SAMPLES_BASE_URL }}
             - name: NEW_RELIC_APP_NAME
               value: {{ NEW_RELIC_APP_NAME }}
-              # for Kumascript only, we rename NEW_RELIC_MONITOR_MODE to NEW_RELIC_ENABLED
+              # Node servers use ENABLED instead of MONITOR_MODE
             - name: NEW_RELIC_ENABLED
               value: "{{ NEW_RELIC_MONITOR_MODE }}"
             - name: NEW_RELIC_LABELS

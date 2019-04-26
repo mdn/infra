@@ -20,6 +20,28 @@ spec:
           ports:
             - containerPort: {{ SSR_CONTAINER_PORT }}
           env:
+            - name: NEW_RELIC_APP_NAME
+              value: {{ NEW_RELIC_SSR_NAME }}
+              # Node servers use ENABLED instead of MONITOR_MODE
+            - name: NEW_RELIC_ENABLED
+              value: "{{ NEW_RELIC_MONITOR_MODE }}"
+            - name: NEW_RELIC_LABELS
+              value: "{{ NEW_RELIC_LABELS }}"
+            - name: NEW_RELIC_LOG
+              value: "{{ NEW_RELIC_LOG }}"
+            - name: NEW_RELIC_BROWSER_MONITOR_ENABLE
+              value: "{{ NEW_RELIC_BROWSER_MONITOR_ENABLE }}"
+            - name: NEW_RELIC_HIGH_SECURITY
+              value: "true"
+            - name: NEW_RELIC_NO_CONFIG_FILE
+              value: "true"
+            - name: NEW_RELIC_LOG_LEVEL
+              value: "{{ NEW_RELIC_LOG_LEVEL }}"
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: newrelic-secrets
+                  key: NEW_RELIC_LICENSE_KEY
             - name: NODE_ENV
               value: "production"
             - name: SSR_PORT
