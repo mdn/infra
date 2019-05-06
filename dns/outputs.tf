@@ -21,3 +21,7 @@ output "us-west-2-zone-id" {
 output "us-west-2a-zone-id" {
   value = "${module.us-west-2a.hosted_zone_id}"
 }
+
+output "eu-central-1-zone-id" {
+  value = "${module.eu-central-1.hosted_zone_id}"
+}
