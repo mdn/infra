@@ -57,7 +57,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=6Gi
 export WEB_MEMORY_REQUEST=4Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,beta.developer.mozilla.org,wiki.developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,demos.mdn.mozit.cloud,demos-origin.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud"
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,beta.developer.mozilla.org,wiki.developer.mozilla.org,mdn.mozillademos.org,demos.mdn.mozit.cloud,demos-origin.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud"
 
 export API_NAME=api
 export API_REPLICAS=2
@@ -133,7 +133,6 @@ export KUMA_ENABLE_CONTRIBUTIONS_CONFIRMATION_EMAIL=True
 export KUMA_ES_INDEX_PREFIX=mdnprod
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_FOUNDATION_CALLOUT=False
-export KUMA_LEGACY_HOSTS="cdn.mdn.mozilla.net,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_MAINTENANCE_MODE=False
 export KUMA_MEDIA_ROOT=/mdn/www
