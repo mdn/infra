@@ -29,7 +29,7 @@ export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
-export WEB_SERVICE_CERT_ARN=arn:aws:acm:eu-central-1:178589013767:certificate/eb602c6b-4695-4c72-8a94-0e78c49b05b8
+export WEB_SERVICE_CERT_ARN=arn:aws:acm:eu-central-1:178589013767:certificate/fd5c782b-cf8a-421c-bb54-1fe699f8cc5d
 
 export API_SERVICE_NAME=api
 export API_SERVICE_TYPE=ClusterIP
