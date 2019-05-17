@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-drainer
+  namespace: kube-system
+  labels:
+    k8s-app: node-drainer
+data:
+  AWS_REGION: ${region}
+  LIFECYCLED_SNS_TOPIC: ${lifecycled_sns_topic}
+  LIFECYCLED_CLOUDWATCH_GROUP: ${lifecycled_log_group}
