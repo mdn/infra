@@ -7,17 +7,16 @@ terraform {
 }
 
 locals {
-  sandbox_cluster_name = "sandbox-${random_string.suffix.result}"
-
-  workers = [
+  developer_portal_workers = [
     {
-      name                 = "worker-a"
-      instance_type        = "t2.medium"
+      instance_type        = "m5.large"
       key_name             = "mdn"
       subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.private_subnets)}"
+      autoscaling_enabled  = true
       asg_desired_capacity = 3
+      asg_min_size         = 3
       asg_max_size         = 5
-      spot_price           = "0.04"
+      spot_price           = "0.07"
       additional_userdata  = "${data.template_file.additional_userdata.rendered}"
     },
   ]
@@ -30,59 +29,33 @@ locals {
     },
     {
       username = "rjohnson"
-      role_arn = "arn:aws:iam::178589013767:role/nubis/admin/rjohnson"
+      role_arn = "arn:aws:iam::178589013767:role/itsre/AdminRole"
       group    = "system:masters"
     },
   ]
 
   cluster_tags = {
-    Region      = "${var.region}"
-    Environment = "${var.environment}"
-    Terraform   = "true"
+    Region    = "${var.region}"
+    Terraform = "true"
   }
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
-  upper   = false
 }
 
 data "template_file" "additional_userdata" {
-  template = "${file("${path.module}/userdata/additional-userdata.sh")}"
+  template = "${file("${path.module}/templates/userdata/additional-userdata.sh")}"
 }
 
-resource "aws_security_group" "worker_group_mgmt_us-west-2" {
+module "k8s-developer-portal" {
+  source = "../modules/eks"
+
+  region      = "${var.region}"
   vpc_id      = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
-  description = "Allow management of worker groups"
+  eks_subnets = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
 
-  ingress {
-    to_port   = 22
-    from_port = 22
-    protocol  = "tcp"
-
-    cidr_blocks = ["${data.aws_vpc.us-west-2.cidr_block}"]
-  }
-
-  tags = "${merge(map("Name", "worker_sg"), local.cluster_tags)}"
-}
-
-module "sandbox-eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "3.0.0"
-
-  cluster_name    = "${local.sandbox_cluster_name}"
-  cluster_version = "${var.cluster_version}"
-  vpc_id          = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
-
-  worker_groups                        = "${local.workers}"
-  worker_group_count                   = "${length(local.workers)}"
-  tags                                 = "${local.cluster_tags}"
-  map_roles                            = "${local.map_roles}"
-  map_roles_count                      = "${length(local.map_roles)}"
-  worker_additional_security_group_ids = ["${aws_security_group.worker_group_mgmt_us-west-2.id}"]
-  write_kubeconfig                     = "false"
-  write_aws_auth_config                = "false"
-  manage_aws_auth                      = "true"
-  subnets                              = ["${data.terraform_remote_state.vpc-us-west-2.public_subnets}"]
+  cluster_name       = "k8s-developer-portal"
+  cluster_version    = "${var.cluster_version}"
+  worker_groups      = "${local.developer_portal_workers}"
+  worker_group_count = "1"
+  map_roles          = "${local.map_roles}"
+  map_roles_count    = "1"
+  tags               = "${local.cluster_tags}"
 }

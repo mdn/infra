@@ -5,7 +5,3 @@ variable "region" {
 variable "cluster_version" {
   default = "1.12"
 }
-
-variable "environment" {
-  default = "sandbox"
-}
