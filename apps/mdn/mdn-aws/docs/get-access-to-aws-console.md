@@ -1,17 +1,15 @@
-# Getting access to the MDN Nubis cluster
+# Getting access MDN AWS console
 
-[Nubis][nubis-project] uses Amazon Web Services (AWS)
+[MDN][mdn] uses Amazon Web Services (AWS)
 [Identify and Access Management][iam] (IAM) keys to grant access and
-permission. For more information, see the
-[nubis-deploy documentation][nubis-deploy-docs].
+permission.
 
-[nubis-project]: https://github.com/nubisproject
+[mdn]: https://github.com/mdn
 [iam]: https://aws.amazon.com/iam/
-[nubis-deploy-docs]: https://github.com/nubisproject/nubis-deploy/blob/develop/SECURITY.md
 
 ## IAM key installation with aws-vault
-As a developer, your IAM credentials would be created by a Nubis cluster
-administrator, and sent encrypted using your public PGP key. See
+As a developer, your IAM credentials would be created by an IT SRE, 
+and sent encrypted using your public PGP key. See
 [mana.mozilla.org][mana-gpg] for more information on generating and publishing a
 public PGP key.
 
@@ -50,7 +48,7 @@ keybase pgp decrypt --infile jwhitlock-iam.asc
 I used ``wget`` to fetch Ed's helper script [aws-vault-setup][setup-gist]:
 
 ```
-wget https://gist.githubusercontent.com/limed/de59cf0dfe4d42ce6d17dea8a08e82e3/raw/8cce9c4986604695dee5274dc93db201c69bd1fe/aws-vault-setup
+wget https://gist.githubusercontent.com/limed/de59cf0dfe4d42ce6d17dea8a08e82e3/raw/8b6dfd40a7b28521d1e3d869d09eacee3e85d031/aws-vault-setup
 bash aws-vault-setup
 ```
 
@@ -131,13 +129,3 @@ default       Active    1d
 kube-public   Active    1d
 kube-system   Active    1d
 ```
-
-# Access with the SSO dashboard
-
-The Single Sign-on (SSO) Dashboard can also be used to logs, graphs, reports, and AWS:
-
-https://sso.core.us-west-2.mozilla-mdn.nubis.allizom.org
-
-The dashboard is available through Mozilla's SSO login to users in the LDAP
-group ``team_mdn``. Logout may be required to apply LDAP changes to your
-account.
