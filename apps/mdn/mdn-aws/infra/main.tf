@@ -204,3 +204,8 @@ module "mysql-eu-central-1-replica-prod" {
   instance_class      = "${lookup(var.rds, "instance_class.prod")}"
   monitoring_interval = "60"
 }
+
+module "metrics" {
+  source           = "./modules/metrics"
+}
+
