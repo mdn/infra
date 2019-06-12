@@ -420,6 +420,39 @@ resource aws_iam_role_policy "mdn-dev-s3" {
 EOF
 }
 
+resource aws_iam_role_policy "mdn-insights-s3" {
+  name = "mdn-insights-s3-${var.region}"
+  role = "${aws_iam_role.ci.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::insights-prod-*",
+        "arn:aws:s3:::insights-stage-*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::insights-prod-*",
+        "arn:aws:s3:::insights-stage-*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 data "aws_iam_policy_document" "associate-eip" {
   statement {
     sid       = "AllowEipAssociate"
