@@ -31,12 +31,20 @@ exports.handler = (event, context, callback) => {
     headers['content-security-policy'] = [{
         key:   'Content-Security-Policy',
         value: ("default-src 'none'" +
-                "; img-src 'self'" +
-                "; script-src 'self'" +
+                "; img-src" +
+                  " 'self'" +
+                  " *.google-analytics.com" +
+                "; script-src" +
+                  " 'self'" +
+                  " *.google-analytics.com" +
+                  " 'sha256-tSAfTBDI9GnqRGwSZkJvYTf662VRLJNAXe5ccqzpauw='" +
                 "; style-src" +
                   " 'self'" +
                   // Hash of empty string, injected by webpack
                   " 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='" +
+                "; connect-src" +
+                  " 'self'" +
+                  " *.mozilla.org *.allizom.org *.mozit.cloud" +
                 "; font-src 'self'" +
                 // Observatory recommendations
                 "; frame-ancestors 'none'" +

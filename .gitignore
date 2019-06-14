@@ -4,3 +4,4 @@
 elbs/**/*.tfvars
 apps/**/Procfile
 /elb_automation/meaoelb/__pycache__/__init__.cpython-36.pyc
+apps/**/lambda-headers.zip
