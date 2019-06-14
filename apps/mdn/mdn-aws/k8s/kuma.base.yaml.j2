@@ -51,8 +51,8 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: redis-url
-            - name: CELERY_ALWAYS_EAGER
-              value: "{{ KUMA_CELERY_ALWAYS_EAGER }}"
+            - name: CELERY_TASK_ALWAYS_EAGER
+              value: "{{ KUMA_CELERY_TASK_ALWAYS_EAGER }}"
             - name: CELERY_RESULT_BACKEND
               valueFrom:
                 secretKeyRef:
