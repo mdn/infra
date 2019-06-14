@@ -6,15 +6,15 @@ This document does not describe the on-call or escalation process, but rather th
 
 ## Declaring an incident and the incident leader (IL) role
 
-The incident leader (IL) is a Mozilla staff member that serves as the primary point of contact and coordinator for an incident. This person may have been called by the moc, or just noticed that a service is broken.
+The incident leader (IL) is an MDN staff member that serves as the primary point of contact and coordinator for an incident. This person may have been called by the `IT-SRE` team, or just noticed that a service is broken.
 
-When an incident occurs, the IL posts messages in the primary developer IRC channel for the service stating:
+When an incident occurs, the IL posts messages in one of the service channels for MDN stating:
 
 - an incident has been declared and a few words about the incident
 - "I am the incident leader"
-- the main IRC channel for communication
+- the main service channel for communication
     - we'll call this the *incident comms channel* in this document
-- a Vidyo chat room if needed
+- a Zoom meeting room if needed
 - finally, decide if you need to notify the appropriate engineers that can help resolve the issue
 
 Our service channels are `#mdndev` (IRC), `#mdn` (Slack), and `#mdn-infra` (Slack).
@@ -25,69 +25,69 @@ Our service channels are `#mdndev` (IRC), `#mdn` (Slack), and `#mdn-infra` (Slac
 Example incident declaration:
 
 ```
-metadave>  MDN is experiencing an outage                          12:00 PM
-metadave>  I am declaring an incident and am incident leader      12:00 PM
-metadave>  updates will be posted in the #mdndev channel          12:00 PM
-metadave>  ping jwhitlock rjohnson there is an urgent MDN outage  12:00 PM
-metadave>  please meet in my Vidyo room                           12:01 PM
+limed>  MDN is experiencing an outage                          12:00 PM
+limed>  I am declaring an incident and am incident leader      12:00 PM
+limed>  updates will be posted in the #mdndev channel          12:00 PM
+limed>  ping rjohnson there is an urgent MDN outage            12:00 PM
+limed>  please meet in my zoom room                            12:01 PM
 ```
 
-> it's helpful to include a short description of the incident when mentioning IRC users. For example `ping metadave` is not very useful when it appears as a notification on my phone, but `ping metadave MDN infra is on fire` lets me know that the issue is urgent without having to open my IRC app.
+> It's helpful to include a short description of the incident when mentioning comms channel users. For example `ping rjohnson` is not very useful when it appears as a notification on my phone, but `ping rjohnson MDN infra is on fire` lets me know that the issue is urgent without having to open my IRC app.
 
 ### Acknowledge Incident In PagerDuty
 
-If you are responding to an incident that has been reported via pagerduty it is important to `acknowledge` the incident within the pagerduty system. Acknowledging the incident stops the automatic escalation process and informs folks who have access to pagerduty that the incident is being worked on.
+If you are responding to an incident that has been reported via PagerDuty it is important to `acknowledge` the incident within the PagerDuty system. Acknowledging the incident stops the automatic escalation process and informs folks who have access to PagerDuty that the incident is being worked on.
 
 ### Passing the baton
 
-Incident response can be stressful, and it's ok if you need a break. In the incident comms channel, you can hand off the IL role to someone else if they agree. The new IL should acknowlege that they are now IL.
+Incident response can be stressful, and it's ok if you need a break. In the incident comms channel, you can hand off the IL role to someone else if they agree. The new IL should acknowledge that they are now IL.
 
 Example:
 
 ```
-metadave>  I need a few minutes of downtime                        4:01 PM
-metadave> jgmize has agreed to take over IL                        4:01 PM
-jgmize> Confirmed, I am now IL                                     4:01 PM
+rjohnson> I need a few minutes of downtime                        4:01 PM
+rjohnson> peterbe has agreed to take over IL                      4:01 PM
+peterbe> Confirmed, I am now IL                                   4:01 PM
 ```
 
 ## Communications
 
-Notify the following IRC channels:
+Notify the following service channels:
 
 - `#mdn` (Slack)
 - `#mdn-infra` (Slack)
-- `#moc` (IRC)
-    - the moc maintains an incident respone guide [here](https://mana.mozilla.org/wiki/display/SECURITY/Incident+Response#IncidentResponse-IncidentResponseTemplate).
+- `#mdndev` (IRC)
+- `#it-sre` (Slack)
 
 Example:
 
 ```
-metadave>  there is an MDN outage, we are working in #mdndev       12:05 PM
-metadave>  I'll post an update here within the next 30 minutes     12:05 PM
+rjohnson>  there is an MDN outage, we are working in #mdndev       12:05 PM
+rjohnson>  I'll post an update here within the next 30 minutes     12:05 PM
 ```
 
 - Notify the appropriate lead(s) for the product.
 
-For extended outages, a bug should be filed and the #moc should be notified to update the status page.
+For extended outages, a bug should be filed and the `#it-sre` Slack channel should be notified to update the status page.
 
 > Don't post phone numbers in IRC!
 
 ### Frequency of updates
 
-For outages, status should be posted every 30 minutes *or less* in the incident channel.
+For outages, status should be posted every 30 minutes *or less* in the incident comms channel.
 
 ## Incident timeline
 
-To help write an incident report, it's very useful to include a `TL:` prefix on IRC messages when logging important events and decisions.
+To help write an incident report, it's very useful to include a `TL:` prefix on channel messages when logging important events and decisions.
 
 Example:
 
 ```
-metadave> TL: listeners appear to missing from the MDN ELB          3:11 PM
-            ...
-            ...
-metadave> TL: listeners have been manually added back to the ELB    4:05 PM
-metadave> TL: listeners have been overwritten by K8s                4:10 PM
+limed> TL: listeners appear to missing from the MDN ELB          3:11 PM
+           ...
+           ...
+limed> TL: listeners have been manually added back to the ELB    4:05 PM
+limed> TL: listeners have been overwritten by K8s                4:10 PM
 ```
 
 ## Incident resolution
@@ -95,17 +95,17 @@ metadave> TL: listeners have been overwritten by K8s                4:10 PM
 When an incident has been resolved, post a message in the incident comms channel stating so:
 
 ```
-metadave> TL: the MDN outage has been resolved                      5:00 PM
-metadave> we'll followup with an incident report                    5:00 PM
+limed> TL: the MDN outage has been resolved                      5:00 PM
+limed> we'll followup with an incident report                    5:00 PM
 ```
 
 ### Resolve Incident In PagerDuty
 
-Resolve the incident in pagerduty. Once an incident is resolved, no additional notifications are sent and the incident cannot be triggered again.
+Resolve the incident in PagerDuty. Once an incident is resolved, no additional notifications are sent and the incident cannot be triggered again.
 
 ## Incident report
 
-Please add an [incident report](https://mana.mozilla.org/wiki/pages/viewpage.action?pageId=52265112) to Mana within 48 hours of the incident.
+Please add an [incident report](https://mana.mozilla.org/wiki/display/MDN/Incidents+Reports) to Mana within 48 hours of the incident.
 
 ## Incident response tips
 
