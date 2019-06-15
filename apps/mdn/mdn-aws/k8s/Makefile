@@ -89,13 +89,6 @@ export CELERY_BEAT_CPU_REQUEST ?= 100m
 export CELERY_BEAT_MEMORY_LIMIT ?= 4Gi
 export CELERY_BEAT_MEMORY_REQUEST ?= 256Mi
 
-export CELERY_CAM_NAME ?= celery-cam
-export CELERY_CAM_REPLICAS ?= 1
-export CELERY_CAM_CPU_LIMIT ?= 2
-export CELERY_CAM_CPU_REQUEST ?= 100m
-export CELERY_CAM_MEMORY_LIMIT ?= 4Gi
-export CELERY_CAM_MEMORY_REQUEST ?= 256Mi
-
 export KUMASCRIPT_NAME ?= kumascript
 export KUMASCRIPT_REPLICAS ?= 1
 export KUMASCRIPT_CONTAINER_PORT ?= ${KUMASCRIPT_SERVICE_TARGET_PORT}
@@ -291,7 +284,6 @@ k8s-kuma-rollout-status:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${API_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_WORKERS_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_BEAT_NAME}
-	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_CAM_NAME}
 
 k8s-kumascript-rollout-status:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${KUMASCRIPT_NAME}
@@ -303,7 +295,6 @@ k8s-kuma-rollback:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${API_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_WORKERS_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_BEAT_NAME}
-	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_CAM_NAME}
 
 k8s-kumascript-rollback:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${KUMASCRIPT_NAME}
@@ -315,7 +306,6 @@ k8s-kuma-history:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${API_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_WORKERS_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_BEAT_NAME}
-	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_CAM_NAME}
 
 k8s-kumascript-history:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
@@ -573,10 +563,9 @@ k8s-delete-kumascript:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${KUMASCRIPT_NAME}
 
-k8s-celery: k8s-celery-workers k8s-celery-beat k8s-celery-cam
+k8s-celery: k8s-celery-workers k8s-celery-beat
 
-k8s-delete-celery: k8s-delete-celery-workers k8s-delete-celery-beat \
-				   k8s-delete-celery-cam
+k8s-delete-celery: k8s-delete-celery-workers k8s-delete-celery-beat
 
 k8s-celery-workers:
 	env KUMA_NAME=${CELERY_WORKERS_NAME} \
@@ -612,23 +601,6 @@ k8s-delete-celery-beat:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_BEAT_NAME}
 
-k8s-celery-cam:
-	env KUMA_NAME=${CELERY_CAM_NAME} \
-		KUMA_APP_LABEL=${CELERY_CAM_NAME} \
-		KUMA_REPLICAS=${CELERY_CAM_REPLICAS} \
-		KUMA_CPU_LIMIT=${CELERY_CAM_CPU_LIMIT} \
-		KUMA_MEMORY_LIMIT=${CELERY_CAM_MEMORY_LIMIT} \
-		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
-		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
-		KUMA_ALLOWED_HOSTS="" \
-		KUMA_RATELIMIT_ENABLE=False \
-		NEW_RELIC_APP_NAME="" \
-		j2 celery.cam.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-celery-cam:
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
-		deploy ${CELERY_CAM_NAME}
-
 k8s-ssr:
 	j2 ssr.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
@@ -654,7 +626,7 @@ k8s-get-kumascript-revision-hash:
 		k8s-web k8s-delete-web k8s-api k8s-delete-api k8s-kumascript \
 		k8s-delete-kumascript k8s-celery k8s-delete-celery k8s-celery-workers \
 		k8s-delete-celery-workers k8s-celery-beat k8s-delete-celery-beat \
-		k8s-celery-cam k8s-delete-celery-cam k8s-kuma-deployments \
+		k8s-kuma-deployments \
 		k8s-delete-kuma-deployments k8s-kumascript-deployments \
 		k8s-delete-kumascript-deployments k8s-rollout-status \
 		k8s-kuma-rollout-status k8s-kumascript-rollout-status \
