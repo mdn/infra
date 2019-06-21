@@ -46,7 +46,7 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: aws-secret-key
-            - name: BROKER_URL
+            - name: CELERY_BROKER_URL
               valueFrom:
                 secretKeyRef:
                   name: mdn-secrets
