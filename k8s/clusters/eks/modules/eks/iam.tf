@@ -151,7 +151,7 @@ data "aws_iam_policy_document" "kube2iam" {
       "sts:AssumeRole",
     ]
 
-    resources = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/k8s/*"]
+    resources = ["*"]
   }
 }
 
