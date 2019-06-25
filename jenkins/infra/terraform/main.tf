@@ -310,6 +310,13 @@ resource "aws_iam_role" "ci" {
       },
       "Effect": "Allow",
       "Sid": ""
+    },
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ci-${var.project}-${var.region}"
+      },
+      "Effect": "Allow"
     }
   ]
 }
@@ -447,6 +454,27 @@ resource aws_iam_role_policy "mdn-insights-s3" {
         "arn:aws:s3:::insights-prod-*",
         "arn:aws:s3:::insights-stage-*"
       ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "eks" {
+  name = "eks"
+  role = "${aws_iam_role.ci.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeCluster",
+        "eks:ListClusters"
+      ],
+      "Resource": "*"
     }
   ]
 }

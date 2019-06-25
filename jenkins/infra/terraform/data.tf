@@ -28,3 +28,5 @@ data aws_acm_certificate "ci" {
   domain   = "ci.us-west-2.mdn.mozit.cloud"
   statuses = ["ISSUED"]
 }
+
+data "aws_caller_identity" "current" {}

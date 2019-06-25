@@ -25,12 +25,12 @@ show_help() {
 }
 
 terraform_do() {
-	declare -a _ACTION; _ACTION=( "${@}" )
+    declare -a _ACTION; _ACTION=( "${@}" )
 
-	if ! terraform "${_ACTION[@]}" ; then
-		echo -e "\033[1;31mERROR: Failed running 'terraform ${_ACTION[*]}'\033[0m"
-		exit 1
-	fi
+    if ! terraform "${_ACTION[@]}" ; then
+        echo -e "\033[1;31mERROR: Failed running 'terraform ${_ACTION[*]}'\033[0m"
+        exit 1
+    fi
 }
 
 init() {
@@ -69,12 +69,12 @@ while [ "$1" != "" ]; do
         init )
             init
             GOT_COMMAND=1
-		;;
+        ;;
         plan )
             shift
             plan "${@}"
             GOT_COMMAND=1
-		;;
+        ;;
         apply )
             shift
             apply "${@}"
