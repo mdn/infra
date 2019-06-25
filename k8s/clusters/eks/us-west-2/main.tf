@@ -28,9 +28,18 @@ locals {
       group    = "system:masters"
     },
     {
-      username = "rjohnson"
-      role_arn = "arn:aws:iam::178589013767:role/itsre/AdminRole"
-      group    = "system:masters"
+      username = "AdminRole"
+
+      # This is a bug in k8s, the role in IAM will not match this
+      # file since k8s has issues parsing roles with paths
+      role_arn = "arn:aws:iam::178589013767:role/AdminRole"
+
+      group = "system:masters"
+    },
+    {
+      username = "jenkins"
+      role_arn = "arn:aws:iam::178589013767:role/ci-mdn-us-west-2"
+      group    = "jenkins-access"
     },
   ]
 
@@ -56,6 +65,6 @@ module "k8s-developer-portal" {
   worker_groups      = "${local.developer_portal_workers}"
   worker_group_count = "1"
   map_roles          = "${local.map_roles}"
-  map_roles_count    = "1"
+  map_roles_count    = "3"
   tags               = "${local.cluster_tags}"
 }

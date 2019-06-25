@@ -34,3 +34,25 @@ EOF
     endpoint                        = "${module.eks.cluster_endpoint}"
   }
 }
+
+resource "null_resource" "kube2iam" {
+  provisioner "local-exec" {
+    working_dir = "${path.module}"
+
+    command = <<EOF
+for i in `seq 1 10`; do \
+echo "${null_resource.kube2iam.triggers.kube_config_map_rendered}" > kube_config.yaml & \
+kubectl apply -f ./files/kube2iam.yml --kubeconfig kube_config.yaml && break ||
+sleep 10; \
+done; \
+rm kube_config.yaml;
+EOF
+
+    interpreter = ["/bin/sh", "-c"]
+  }
+
+  triggers {
+    kube_config_map_rendered = "${module.eks.kubeconfig}"
+    endpoint                 = "${module.eks.cluster_endpoint}"
+  }
+}
