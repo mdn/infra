@@ -1,7 +1,8 @@
 {% include 'kuma.base.deploy.yaml.j2' %}
           command:
-            - ./manage.py
+            - celery
           args:
-            - celerybeat
+            - "--app=kuma.celery:app"
+            - "beat"
             - "--loglevel=INFO"
             - "--logfile=/dev/stdout"

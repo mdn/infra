@@ -46,20 +46,20 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: aws-secret-key
-            - name: BROKER_URL
+            - name: CELERY_BROKER_URL
               valueFrom:
                 secretKeyRef:
                   name: mdn-secrets
                   key: redis-url
-            - name: CELERY_ALWAYS_EAGER
-              value: "{{ KUMA_CELERY_ALWAYS_EAGER }}"
+            - name: CELERY_TASK_ALWAYS_EAGER
+              value: "{{ KUMA_CELERY_TASK_ALWAYS_EAGER }}"
             - name: CELERY_RESULT_BACKEND
               valueFrom:
                 secretKeyRef:
                   name: mdn-secrets
                   key: redis-url-1
-            - name: CELERYD_MAX_TASKS_PER_CHILD
-              value: "{{ KUMA_CELERYD_MAX_TASKS_PER_CHILD }}"
+            - name: CELERY_WORKER_MAX_TASKS_PER_CHILD
+              value: "{{ KUMA_CELERY_WORKER_MAX_TASKS_PER_CHILD }}"
             - name: CSP_ENABLE_MIDDLEWARE
               value: "{{ KUMA_CSP_ENABLE_MIDDLEWARE }}"
             - name: CSP_REPORT_ENABLE

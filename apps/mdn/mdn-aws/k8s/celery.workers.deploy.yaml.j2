@@ -3,11 +3,9 @@
             - /usr/local/bin/newrelic-admin
           args:
             - run-program
-            - ./manage.py
             - celery
+            - "--app=kuma.celery:app"
             - worker
-            - "--events"
-            - "--autoreload"
             - "--loglevel=INFO"
             - "--logfile=/dev/stdout"
             - "--concurrency={{ CELERY_WORKERS_CONCURRENCY }}"
