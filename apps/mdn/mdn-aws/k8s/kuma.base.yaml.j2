@@ -116,6 +116,11 @@
               value: "{{ KUMA_MAINTENANCE_MODE }}"
             - name: MDN_API_S3_BUCKET_NAME
               value: "{{ KUMA_API_S3_BUCKET_NAME }}"
+            - name: MDN_API_CLOUDFRONT_DISTRIBUTIONID
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: aws-api-cloudfront-dist-id
             - name: MDN_CONTRIBUTION
               value: "{{ KUMA_ENABLE_CONTRIBUTIONS }}"
             - name: MDN_CONTRIBUTION_CONFIRMATION_EMAIL
