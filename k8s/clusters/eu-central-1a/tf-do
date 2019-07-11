@@ -12,6 +12,11 @@ if [ -z ${TF_SECRETS_PATH} ]; then
 	exit 1
 fi
 
+if [ ! -d "${TF_SECRETS_PATH}" ]; then
+    echo "Secrets path does not exists"
+    exit 1
+fi
+
 show_help() {
     echo -en "\nUsage: tf-do [options] [command]\n\n"
     echo -en "Options:\n"
@@ -38,11 +43,11 @@ init() {
 }
 
 plan() {
-    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars "${@}"
+    terraform plan -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 apply() {
-    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars "${@}"
+    terraform apply -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 get() {

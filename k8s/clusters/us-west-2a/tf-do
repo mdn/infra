@@ -1,15 +1,20 @@
 #!/bin/bash
 
 if [ ! -f ./config.sh ]; then
-	echo "Config file not found"
-	exit 1
+    echo "Config file not found"
+    exit 1
 fi
 
 source ./config.sh
 
 if [ -z ${TF_SECRETS_PATH} ]; then
-	echo "Secrets path is not set"
-	exit 1
+    echo "Secrets path is not set"
+    exit 1
+fi
+
+if [ ! -d "${TF_SECRETS_PATH}" ]; then
+    echo "Secrets path does not exists"
+    exit 1
 fi
 
 show_help() {
@@ -38,11 +43,11 @@ init() {
 }
 
 plan() {
-    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars "${@}"
+    terraform plan -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 apply() {
-    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars "${@}"
+    terraform apply -input=false -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 get() {
