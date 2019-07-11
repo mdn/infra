@@ -7,7 +7,7 @@ locals {
 
 resource "aws_s3_bucket" "this" {
   bucket = "${local.bucket_name}"
-  acl    = "private"
+  acl    = "${var.bucket_acl}"
 
   tags {
     Name      = "${local.bucket_name}"
