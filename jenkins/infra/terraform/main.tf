@@ -76,13 +76,6 @@ resource "aws_security_group" "elb" {
 
   vpc_id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name      = "ci-elb-sg"
     Region    = "${var.region}"
@@ -109,55 +102,20 @@ resource "aws_security_group_rule" "https-mozilla-vpn-ingress" {
   cidr_blocks       = "${var.mozilla_vpn_whitelist}"
 }
 
+resource "aws_security_group_rule" "elb_egress_all" {
+  type              = "egress"
+  security_group_id = "${aws_security_group.elb.id}"
+  from_port         = "0"
+  to_port           = "0"
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group" "ci" {
   name        = "ci-sg"
   description = "Allow inbound traffic to CI from ELB"
 
   vpc_id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
-
-  ingress {
-    from_port = 80
-    to_port   = 80
-    protocol  = "tcp"
-
-    security_groups = [
-      "${aws_security_group.elb.id}",
-    ]
-  }
-
-  ingress {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
-
-    security_groups = [
-      "${aws_security_group.elb.id}",
-    ]
-  }
-
-  ingress {
-    from_port = 4443
-    to_port   = 4443
-    protocol  = "tcp"
-
-    security_groups = [
-      "${aws_security_group.elb.id}",
-    ]
-  }
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   tags = {
     Name      = "ci-sg"
@@ -167,13 +125,49 @@ resource "aws_security_group" "ci" {
   }
 }
 
-resource "aws_security_group_rule" "ingress_ssh" {
+resource "aws_security_group_rule" "ci_ingress_https" {
+  type                     = "ingress"
+  security_group_id        = "${aws_security_group.ci.id}"
+  from_port                = "443"
+  to_port                  = "443"
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.elb.id}"
+}
+
+resource "aws_security_group_rule" "ci_ingress_http" {
+  type                     = "ingress"
+  security_group_id        = "${aws_security_group.ci.id}"
+  from_port                = "80"
+  to_port                  = "80"
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.elb.id}"
+}
+
+resource "aws_security_group_rule" "ci_ingress_4443" {
+  type                     = "ingress"
+  security_group_id        = "${aws_security_group.ci.id}"
+  from_port                = "4443"
+  to_port                  = "4443"
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.elb.id}"
+}
+
+resource "aws_security_group_rule" "ci_ingress_ssh" {
   type              = "ingress"
   security_group_id = "${aws_security_group.ci.id}"
   from_port         = "22"
   to_port           = "22"
   protocol          = "TCP"
   cidr_blocks       = "${var.ip_whitelist}"
+}
+
+resource "aws_security_group_rule" "ci_egress_all" {
+  type              = "egress"
+  security_group_id = "${aws_security_group.ci.id}"
+  from_port         = "0"
+  to_port           = "0"
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_autoscaling_group" "ci" {
