@@ -8,7 +8,19 @@ locals {
 resource "aws_s3_bucket" "this" {
   bucket = "${local.bucket_name}"
   acl    = "${var.bucket_acl}"
+  policy = "${data.aws_iam_policy_document.bucket_public_policy.json}"
 
+  #cors_rule {
+  #  allowed_headers = ["*"]
+  #  allowed_methods = ["GET"]
+  #  allowed_origins = ["*"]
+  #  max_age_seconds = 3000
+  #}
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
   tags {
     Name      = "${local.bucket_name}"
     Region    = "${var.region}"
@@ -26,6 +38,44 @@ resource "aws_iam_role_policy" "this" {
   name   = "${local.identifier}-${var.region}-policy"
   role   = "${aws_iam_role.this.id}"
   policy = "${data.aws_iam_policy_document.bucket_policy.json}"
+}
+
+data "aws_iam_policy_document" "bucket_public_policy" {
+  statement {
+    sid    = "AllowListBucket"
+    effect = "Allow"
+
+    actions = [
+      "s3:ListBucket",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    resources = [
+      "arn:aws:s3:::${local.bucket_name}",
+    ]
+  }
+
+  statement {
+    sid    = "AllowIndexHTML"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    resources = [
+      "arn:aws:s3:::${local.bucket_name}/*",
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "bucket_role" {
@@ -84,9 +134,7 @@ data "aws_iam_policy_document" "bucket_policy" {
     effect = "Allow"
 
     actions = [
-      "s3:PutObject",
-      "s3:GetObject",
-      "s3:DeleteObject",
+      "s3:*",
     ]
 
     resources = ["arn:aws:s3:::${local.bucket_name}/*"]

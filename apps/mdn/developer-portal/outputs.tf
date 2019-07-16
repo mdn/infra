@@ -6,6 +6,10 @@ output "bucket_stage_name" {
   value = "${module.bucket_stage.bucket_id}"
 }
 
+output "bucket_stage_website_endpoint" {
+  value = "${module.bucket_stage.bucket_website_endpoint}"
+}
+
 output "bucket_stage_role_arn" {
   value = "${module.bucket_stage.bucket_iam_role_arn}"
 }
