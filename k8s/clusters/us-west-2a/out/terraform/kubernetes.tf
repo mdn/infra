@@ -6,12 +6,14 @@ locals = {
   masters_role_name            = "${aws_iam_role.masters-k8s-us-west-2a-mdn-mozit-cloud.name}"
   node_autoscaling_group_ids   = ["${aws_autoscaling_group.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"]
   node_security_group_ids      = ["${aws_security_group.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"]
-  node_subnet_ids              = ["subnet-4890e603"]
+  node_subnet_ids              = ["subnet-0a496f50", "subnet-4890e603", "subnet-aca6f2d5"]
   nodes_role_arn               = "${aws_iam_role.nodes-k8s-us-west-2a-mdn-mozit-cloud.arn}"
   nodes_role_name              = "${aws_iam_role.nodes-k8s-us-west-2a-mdn-mozit-cloud.name}"
   region                       = "us-west-2"
-  subnet_ids                   = ["subnet-4890e603"]
+  subnet_ids                   = ["subnet-0a496f50", "subnet-4890e603", "subnet-aca6f2d5"]
   subnet_us-west-2a_id         = "subnet-4890e603"
+  subnet_us-west-2b_id         = "subnet-aca6f2d5"
+  subnet_us-west-2c_id         = "subnet-0a496f50"
   vpc_id                       = "vpc-8c768ef4"
 }
 
@@ -44,7 +46,7 @@ output "node_security_group_ids" {
 }
 
 output "node_subnet_ids" {
-  value = ["subnet-4890e603"]
+  value = ["subnet-0a496f50", "subnet-4890e603", "subnet-aca6f2d5"]
 }
 
 output "nodes_role_arn" {
@@ -60,11 +62,19 @@ output "region" {
 }
 
 output "subnet_ids" {
-  value = ["subnet-4890e603"]
+  value = ["subnet-0a496f50", "subnet-4890e603", "subnet-aca6f2d5"]
 }
 
 output "subnet_us-west-2a_id" {
   value = "subnet-4890e603"
+}
+
+output "subnet_us-west-2b_id" {
+  value = "subnet-aca6f2d5"
+}
+
+output "subnet_us-west-2c_id" {
+  value = "subnet-0a496f50"
 }
 
 output "vpc_id" {
@@ -115,7 +125,7 @@ resource "aws_autoscaling_group" "nodes-k8s-us-west-2a-mdn-mozit-cloud" {
   launch_configuration = "${aws_launch_configuration.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"
   max_size             = 15
   min_size             = 12
-  vpc_zone_identifier  = ["subnet-4890e603"]
+  vpc_zone_identifier  = ["subnet-4890e603", "subnet-aca6f2d5", "subnet-0a496f50"]
 
   tag = {
     key                 = "KubernetesCluster"
