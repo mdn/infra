@@ -70,23 +70,6 @@ BASHEOF
     sed -ri "s/max_size(\s*)=(\s*)$KOPS_NODE_COUNT/max_size\\1=\2$DEFAULT_MAX/" ./out/terraform/kubernetes.tf
 }
 
-install_mig() {
-    echo "Install mig"
-    kubectl create -f "${KOPS_INSTALLER}/services/mig/mig-namespace.yaml"
-
-    # Export mqpassword
-    MQPASSWORD=$(cat ${SECRETS_PATH}/k8s/secrets/mig/mqpassword)
-    ( cd ${KOPS_INSTALLER}/services/mig && make MQPASSWORD=${MQPASSWORD} )
-    kubectl -n mig create secret generic mig-agent-secrets \
-        --from-file=${SECRETS_PATH}/k8s/secrets/mig/agent.key \
-        --from-file=${SECRETS_PATH}/k8s/secrets/mig/agent.crt \
-        --from-file=${SECRETS_PATH}/k8s/secrets/mig/ca.crt \
-        --from-file=${KOPS_INSTALLER}/services/mig/mig-agent.cfg
-    kubectl -n mig create -f ${KOPS_INSTALLER}/services/mig/migdaemonset.yaml
-    rm -f "${KOPS_INSTALLER}/services/mig/mig-agent.cfg"
-    unset MQPASSWORD
-}
-
 install_newrelic() {
     echo "Installing New Relic"
     kubectl create -f "${KOPS_INSTALLER}/services/newrelic/newrelic-namespace.yaml"
@@ -169,7 +152,6 @@ install_services() {
     install_cluster_autoscaler
     install_calico_rbac
     install_fluentd
-    install_mig
     install_datadog
     install_redirector_service
     install_block-aws
