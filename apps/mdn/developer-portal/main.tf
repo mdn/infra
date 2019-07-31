@@ -21,8 +21,12 @@ module "bucket_stage" {
 }
 
 module "efs_stage" {
-  source               = "./modules/storage"
-  environment          = "stage"
-  subnets              = "${data.terraform_remote_state.vpc-us-west-2.private_subnets}"
-  nodes_security_group = ["${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}"]
+  source      = "./modules/storage"
+  environment = "stage"
+  subnets     = "${data.terraform_remote_state.vpc-us-west-2.private_subnets}"
+
+  nodes_security_group = [
+    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}",
+    "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
+  ]
 }
