@@ -89,13 +89,15 @@ resource "aws_nat_gateway" "nat_gw" {
   tags = "${merge(map("Name", "${var.vpc_name}-nat"), local.default_tags)}"
 }
 
-resource "aws_route_table" "private" {
+resource "aws_route_table" "private-az" {
+  count  = "${length(var.azs)}"
   vpc_id = "${var.vpc_id}"
-  tags   = "${merge(map("Name", "${var.vpc_name}-rt-private"), local.default_tags, local.private_subnet_tags, var.tags)}"
+  tags   = "${merge(map("Name", "${var.vpc_name}-rt-private-${var.azs[count.index]}"),  local.default_tags, local.private_subnet_tags, var.tags)}"
 }
 
-resource "aws_route" "private" {
-  route_table_id         = "${aws_route_table.private.id}"
+resource "aws_route" "private-az" {
+  count                  = "${length(var.private_subnet_cidrs)}"
+  route_table_id         = "${element(aws_route_table.private-az.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${aws_nat_gateway.nat_gw.id}"
 
@@ -107,10 +109,10 @@ resource "aws_route" "private" {
   depends_on = ["aws_nat_gateway.nat_gw"]
 }
 
-resource "aws_route_table_association" "private" {
+resource "aws_route_table_association" "private-az" {
   count          = "${length(var.private_subnet_cidrs)}"
   subnet_id      = "${element(aws_subnet.private.*.id, count.index)}"
-  route_table_id = "${element(aws_route_table.private.*.id, 0)}"
+  route_table_id = "${element(aws_route_table.private-az.*.id, count.index)}"
 
   lifecycle {
     create_before_destroy = true
