@@ -40,6 +40,23 @@ resource "aws_iam_role_policy" "this" {
   policy = "${data.aws_iam_policy_document.bucket_policy.json}"
 }
 
+resource "aws_iam_user" "this" {
+  count = "${var.create_user}"
+  name  = "developer-portal-publish-user-${var.environment}"
+}
+
+resource "aws_iam_user_policy" "this" {
+  count  = "${var.create_user}"
+  name   = "developer-portal-publis-policy-${var.environment}"
+  user   = "${element(aws_iam_user.this.*.name, count.index)}"
+  policy = "${data.aws_iam_policy_document.bucket_policy.json}"
+}
+
+resource "aws_iam_access_key" "this" {
+  count = "${var.create_user}"
+  user  = "${element(aws_iam_user.this.*.name, count.index)}"
+}
+
 data "aws_iam_policy_document" "bucket_public_policy" {
   statement {
     sid    = "AllowListBucket"

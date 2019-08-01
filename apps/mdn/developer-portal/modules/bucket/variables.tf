@@ -8,6 +8,10 @@ variable "bucket_name" {}
 
 variable "eks_worker_role_arn" {}
 
+variable "create_user" {
+  default = false
+}
+
 variable "bucket_acl" {
   default = "public-read"
 }
