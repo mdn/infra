@@ -9,14 +9,14 @@ terraform {
 locals {
   developer_portal_workers = [
     {
-      instance_type        = "m5.large"
+      instance_type        = "m4.xlarge"
       key_name             = "mdn"
       subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.private_subnets)}"
       autoscaling_enabled  = true
       asg_desired_capacity = 3
       asg_min_size         = 3
       asg_max_size         = 5
-      spot_price           = "0.07"
+      spot_price           = "0.08"
       additional_userdata  = "${data.template_file.additional_userdata.rendered}"
     },
   ]
