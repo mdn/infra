@@ -31,3 +31,11 @@ module "efs_stage" {
     "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
   ]
 }
+
+module "cdn_stage" {
+  source          = "./modules/cdn"
+  environment     = "stage"
+  cdn_aliases     = ["developer-portal-stage.mdn.mozit.cloud"]
+  origin_bucket   = "${module.bucket_stage.bucket_id}"
+  certificate_arn = "arn:aws:acm:us-east-1:178589013767:certificate/26d329f6-aa7d-4999-af62-de573772585b"
+}
