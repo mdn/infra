@@ -35,7 +35,7 @@ module "efs_stage" {
 module "cdn_stage" {
   source          = "./modules/cdn"
   environment     = "stage"
-  cdn_aliases     = ["developer-portal-stage.mdn.mozit.cloud"]
+  cdn_aliases     = ["developer-portal-stage.mdn.mozit.cloud", "developer-portal.stage.mdn.mozit.cloud", "developer-portal-published.stage.mdn.mozit.cloud"]
   origin_bucket   = "${module.bucket_stage.bucket_id}"
-  certificate_arn = "arn:aws:acm:us-east-1:178589013767:certificate/26d329f6-aa7d-4999-af62-de573772585b"
+  certificate_arn = "arn:aws:acm:us-east-1:178589013767:certificate/40e7292e-b7af-44ea-8206-410e846393e7"
 }

@@ -10,8 +10,9 @@ locals {
 
 resource "aws_cloudfront_distribution" "this" {
   enabled             = "${var.enabled}"
-  comment             = "Cloudfront distrbution for ${var.origin_bucket} (${var.environment})"
+  comment             = "developer-portal ${var.environment} CDN"
   default_root_object = "index.html"
+  aliases             = "${var.cdn_aliases}"
 
   origin {
     domain_name = "${data.aws_s3_bucket.selected.bucket_domain_name}"
