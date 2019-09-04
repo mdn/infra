@@ -135,7 +135,6 @@ export KUMA_PROTOCOL="https://"
 export KUMA_SECURE_HSTS_SECONDS=63072000
 export KUMA_SERVE_LEGACY=True
 export KUMA_SESSION_COOKIE_SECURE=True
-export KUMA_STATIC_URL=https://developer.mozilla.org/static/
 export KUMA_STRIPE_PUBLIC_KEY=pk_live_GZl4tCi8J5mWhKbJeRey4DSy
 export KUMA_WEB_CONCURRENCY=4
 
