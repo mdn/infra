@@ -139,6 +139,7 @@ export KUMA_STATIC_URL ?= /static/
 export KUMA_STRIPE_PRODUCT_ID ?= ""
 export KUMA_STRIPE_PUBLIC_KEY ?= ""
 export KUMA_WEB_CONCURRENCY ?= 4
+export KUMA_WIKI_HOST ?= wiki.${KUMA_DOMAIN}
 
 export INTERACTIVE_EXAMPLES_BASE_URL ?= https://interactive-examples.mdn.mozilla.net
 
@@ -549,6 +550,7 @@ k8s-api:
 		KUMA_MEMORY_REQUEST=${API_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
 		KUMA_RATELIMIT_ENABLE=False \
+		KUMA_WIKI_HOST=${API_SERVICE_NAME} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
 		j2 kuma.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 

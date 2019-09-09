@@ -197,6 +197,8 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: stripe-secret-key
+            - name: WIKI_HOST
+              value: {{ KUMA_WIKI_HOST }}
             # Other environment overrides
             - name: PYTHONUNBUFFERED
               value: "True"
