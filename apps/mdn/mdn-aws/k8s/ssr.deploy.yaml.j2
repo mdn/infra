@@ -44,6 +44,13 @@ spec:
                   key: NEW_RELIC_LICENSE_KEY
             - name: NODE_ENV
               value: "production"
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: sentry-dsn
+            - name: SENTRY_ENVIRONMENT
+              value: "{{ K8S_CLUSTER_SHORT_NAME }}:{{ TARGET_ENVIRONMENT }}"
             - name: SSR_PORT
               value: "{{ SSR_CONTAINER_PORT }}"
           resources:
