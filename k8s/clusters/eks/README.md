@@ -21,6 +21,10 @@ $ aws eks list-clusters --region <Your region>
 $ aws eks update-kubeconfig --name <Name of your cluster> --region <Your region>
 ```
 
+## Things to do once cluster has been setup
+1. Install cluster autoscaler
+2. Install metrics server
+
 
 ## Tips and tricks
 The context name that you get from `aws eks update-kubeconfig` is just an ARN, and it might be helpful to just name to something more recognizable

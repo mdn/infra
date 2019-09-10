@@ -11,6 +11,21 @@ locals {
     {
       instance_type        = "m4.xlarge"
       key_name             = "mdn"
+      ami_id               = "ami-03a55127c613349a7"
+      subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.private_subnets)}"
+      autoscaling_enabled  = true
+      asg_desired_capacity = 3
+      asg_min_size         = 3
+      asg_max_size         = 5
+      spot_price           = "0.08"
+      additional_userdata  = "${data.template_file.additional_userdata.rendered}"
+    },
+  ]
+
+  mdn_apps_workers = [
+    {
+      instance_type        = "m5.large"
+      key_name             = "mdn"
       subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.private_subnets)}"
       autoscaling_enabled  = true
       asg_desired_capacity = 3
@@ -66,5 +81,21 @@ module "k8s-developer-portal" {
   worker_group_count = "1"
   map_roles          = "${local.map_roles}"
   map_roles_count    = "3"
+  tags               = "${local.cluster_tags}"
+}
+
+module "mdn-apps-a" {
+  source = "../modules/eks"
+
+  region      = "${var.region}"
+  vpc_id      = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
+  eks_subnets = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
+
+  cluster_name       = "mdn-apps-a"
+  cluster_version    = "${var.cluster_version}"
+  worker_groups      = "${local.mdn_apps_workers}"
+  worker_group_count = "1"
+  map_roles          = "${local.map_roles}"
+  map_roles_count    = "2"
   tags               = "${local.cluster_tags}"
 }
