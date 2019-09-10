@@ -286,6 +286,7 @@ k8s-kuma-rollout-status:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${API_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_WORKERS_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_BEAT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${SSR_NAME}
 
 k8s-kumascript-rollout-status:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${KUMASCRIPT_NAME}
@@ -297,6 +298,7 @@ k8s-kuma-rollback:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${API_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_WORKERS_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_BEAT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${SSR_NAME}
 
 k8s-kumascript-rollback:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${KUMASCRIPT_NAME}
@@ -308,6 +310,7 @@ k8s-kuma-history:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${API_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_WORKERS_NAME}
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_BEAT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${SSR_NAME}
 
 k8s-kumascript-history:
 	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
