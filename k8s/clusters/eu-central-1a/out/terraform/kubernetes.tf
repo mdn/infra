@@ -6,12 +6,14 @@ locals = {
   masters_role_name            = "${aws_iam_role.masters-k8s-eu-central-1a-mdn-mozit-cloud.name}"
   node_autoscaling_group_ids   = ["${aws_autoscaling_group.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
   node_security_group_ids      = ["${aws_security_group.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
-  node_subnet_ids              = ["subnet-080386f93c0046219"]
+  node_subnet_ids              = ["subnet-012fffef17ed175c5", "subnet-080386f93c0046219", "subnet-08043f4b65faf6d05"]
   nodes_role_arn               = "${aws_iam_role.nodes-k8s-eu-central-1a-mdn-mozit-cloud.arn}"
   nodes_role_name              = "${aws_iam_role.nodes-k8s-eu-central-1a-mdn-mozit-cloud.name}"
   region                       = "eu-central-1"
   subnet_eu-central-1a_id      = "subnet-080386f93c0046219"
-  subnet_ids                   = ["subnet-080386f93c0046219"]
+  subnet_eu-central-1b_id      = "subnet-08043f4b65faf6d05"
+  subnet_eu-central-1c_id      = "subnet-012fffef17ed175c5"
+  subnet_ids                   = ["subnet-012fffef17ed175c5", "subnet-080386f93c0046219", "subnet-08043f4b65faf6d05"]
   vpc_id                       = "vpc-0a0645faca1563b3b"
 }
 
@@ -44,7 +46,7 @@ output "node_security_group_ids" {
 }
 
 output "node_subnet_ids" {
-  value = ["subnet-080386f93c0046219"]
+  value = ["subnet-012fffef17ed175c5", "subnet-080386f93c0046219", "subnet-08043f4b65faf6d05"]
 }
 
 output "nodes_role_arn" {
@@ -63,8 +65,16 @@ output "subnet_eu-central-1a_id" {
   value = "subnet-080386f93c0046219"
 }
 
+output "subnet_eu-central-1b_id" {
+  value = "subnet-08043f4b65faf6d05"
+}
+
+output "subnet_eu-central-1c_id" {
+  value = "subnet-012fffef17ed175c5"
+}
+
 output "subnet_ids" {
-  value = ["subnet-080386f93c0046219"]
+  value = ["subnet-012fffef17ed175c5", "subnet-080386f93c0046219", "subnet-08043f4b65faf6d05"]
 }
 
 output "vpc_id" {
@@ -115,7 +125,7 @@ resource "aws_autoscaling_group" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   launch_configuration = "${aws_launch_configuration.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"
   max_size             = 3
   min_size             = 3
-  vpc_zone_identifier  = ["subnet-080386f93c0046219"]
+  vpc_zone_identifier  = ["subnet-080386f93c0046219", "subnet-08043f4b65faf6d05", "subnet-012fffef17ed175c5"]
 
   tag = {
     key                 = "KubernetesCluster"
