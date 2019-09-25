@@ -21,3 +21,19 @@ output "bucket_iam_user_access_key" {
 output "bucket_iam_user_secret_key" {
   value = "${module.bucket_stage.bucket_iam_user_secret_key}"
 }
+
+output "mail_stage_smtp_host" {
+  value = "${module.mail_stage.smtp_host}"
+}
+
+output "mail_stage_user" {
+  value = "${module.mail_stage.smtp_user}"
+}
+
+output "mail_stage_secret" {
+  value = "${module.mail_stage.secret}"
+}
+
+output "mail_stage_password" {
+  value = "${module.mail_stage.smtp_password}"
+}
