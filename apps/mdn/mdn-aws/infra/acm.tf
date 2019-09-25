@@ -7,17 +7,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "acm_star_mdn" {
-  source = "./modules/acm"
-
-  providers = {
-    aws = "aws.acm"
-  }
-
-  domain_name = "*.mdn.mozit.cloud"
-  zone_id     = "${data.terraform_remote_state.dns.master-zone}"
-}
-
 module "acm_ci" {
   source = "./modules/acm"
 
@@ -35,8 +24,8 @@ data aws_acm_certificate "stage-primary-cdn-cert" {
   provider = "aws.acm"
   domain   = "developer.allizom.org"
   statuses = ["ISSUED"]
-
 }
+
 data aws_acm_certificate "attachment-cdn-cert" {
   provider = "aws.acm"
   domain   = "mdn.mozillademos.org"

@@ -46,7 +46,7 @@ module "mdn_cdn" {
 
   # attachment CDN
   cloudfront_attachments_enabled           = "0"                                                                  # Disable for stage
-  acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
+  acm_attachments_cert_arn                 = "${data.aws_acm_certificate.attachment-cdn-cert.arn}"
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.stage"))}"
   cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.stage")}"
@@ -206,6 +206,5 @@ module "mysql-eu-central-1-replica-prod" {
 }
 
 module "metrics" {
-  source           = "./modules/metrics"
+  source = "./modules/metrics"
 }
-

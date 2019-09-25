@@ -78,3 +78,7 @@ variable "subnets" {}
 variable "monitoring_interval" {
   default = "0"
 }
+
+variable "performance_insights_enabled" {
+  default = true
+}
