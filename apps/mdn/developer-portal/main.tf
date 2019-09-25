@@ -39,3 +39,9 @@ module "cdn_stage" {
   origin_bucket   = "${module.bucket_stage.bucket_id}"
   certificate_arn = "arn:aws:acm:us-east-1:178589013767:certificate/40e7292e-b7af-44ea-8206-410e846393e7"
 }
+
+module "mail_stage" {
+  source       = "./modules/mail"
+  service_name = "dev-portal"
+  environment  = "stage"
+}

@@ -20,8 +20,8 @@ fi
 show_help() {
     echo -en "\nUsage: tf-do [options] [command]\n\n"
     echo -en "Options:\n"
-    echo -en "	--help		    Print usage\n"
-    echo -en " 	--debug		    set -x this script\n"
+    echo -en "  --help          Print usage\n"
+    echo -en "  --debug         set -x this script\n"
     echo -en "  --environment   Sets environment. Defaults to stage\n"
     echo -en "Commands:\n"
     echo -en "	init		Terraform init\n"
