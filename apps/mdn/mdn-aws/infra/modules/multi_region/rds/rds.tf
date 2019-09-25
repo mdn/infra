@@ -49,22 +49,23 @@ resource "aws_db_instance" "mdn_rds" {
   depends_on = ["aws_security_group.mdn_rds_sg"]
   engine     = "${var.mysql_engine}"
 
-  engine_version         = "${var.mysql_engine_version}"
-  identifier             = "${var.mysql_identifier}"
-  instance_class         = "${var.mysql_instance_class}"
-  maintenance_window     = "${var.mysql_maintenance_window}"
-  multi_az               = true
-  name                   = "${var.mysql_db_name}"
-  parameter_group_name   = "${aws_db_parameter_group.mdn-params.name}"
-  password               = "${var.mysql_password}"
-  publicly_accessible    = false
-  storage_encrypted      = "${var.mysql_storage_encrypted}"
-  storage_type           = "${var.mysql_storage_type}"
-  username               = "${var.mysql_username}"
-  vpc_security_group_ids = ["${aws_security_group.mdn_rds_sg.id}"]
-  skip_final_snapshot    = true
-  apply_immediately      = true
-  monitoring_interval    = "${var.monitoring_interval}"
+  engine_version               = "${var.mysql_engine_version}"
+  identifier                   = "${var.mysql_identifier}"
+  instance_class               = "${var.mysql_instance_class}"
+  maintenance_window           = "${var.mysql_maintenance_window}"
+  multi_az                     = true
+  name                         = "${var.mysql_db_name}"
+  parameter_group_name         = "${aws_db_parameter_group.mdn-params.name}"
+  password                     = "${var.mysql_password}"
+  publicly_accessible          = false
+  storage_encrypted            = "${var.mysql_storage_encrypted}"
+  storage_type                 = "${var.mysql_storage_type}"
+  username                     = "${var.mysql_username}"
+  vpc_security_group_ids       = ["${aws_security_group.mdn_rds_sg.id}"]
+  skip_final_snapshot          = true
+  apply_immediately            = true
+  monitoring_interval          = "${var.monitoring_interval}"
+  performance_insights_enabled = "${var.performance_insights_enabled}"
 
   tags {
     Name        = "MDN-rds-${var.environment}"

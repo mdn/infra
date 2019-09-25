@@ -11,8 +11,9 @@ resource aws_acm_certificate "cert" {
   }
 
   tags {
-    Region      = "${data.aws_region.current.name}"
-    Service     = "MDN ACM certificate"
+    Name    = "${var.domain_name}"
+    Region  = "${data.aws_region.current.name}"
+    Service = "MDN ACM certificate"
   }
 }
 
