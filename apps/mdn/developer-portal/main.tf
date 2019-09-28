@@ -7,7 +7,7 @@ module "db_stage" {
   environment    = "stage"
   vpc_id         = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
   identifier     = "developer-portal"
-  instance_class = "db.t2.large"
+  instance_class = "db.t3.medium"
   db_name        = "developer_portal"
   db_user        = "${lookup(var.rds, "user.stage")}"
   db_password    = "${lookup(var.rds, "password.stage")}"
