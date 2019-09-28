@@ -123,7 +123,7 @@ resource "aws_autoscaling_group" "master-eu-central-1a-masters-k8s-eu-central-1a
 resource "aws_autoscaling_group" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   name                 = "nodes.k8s.eu-central-1a.mdn.mozit.cloud"
   launch_configuration = "${aws_launch_configuration.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"
-  max_size             = 3
+  max_size             = 6
   min_size             = 3
   vpc_zone_identifier  = ["subnet-080386f93c0046219", "subnet-08043f4b65faf6d05", "subnet-012fffef17ed175c5"]
 
@@ -224,8 +224,8 @@ resource "aws_key_pair" "kubernetes-k8s-eu-central-1a-mdn-mozit-cloud-44ff04d0bf
 
 resource "aws_launch_configuration" "master-eu-central-1a-masters-k8s-eu-central-1a-mdn-mozit-cloud" {
   name_prefix                 = "master-eu-central-1a.masters.k8s.eu-central-1a.mdn.mozit.cloud-"
-  image_id                    = "ami-a92b43c6"
-  instance_type               = "m4.large"
+  image_id                    = "ami-0a3ab64153dea449d"
+  instance_type               = "m5.large"
   key_name                    = "${aws_key_pair.kubernetes-k8s-eu-central-1a-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.masters-k8s-eu-central-1a-mdn-mozit-cloud.id}"
   security_groups             = ["${aws_security_group.masters-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
@@ -247,8 +247,8 @@ resource "aws_launch_configuration" "master-eu-central-1a-masters-k8s-eu-central
 
 resource "aws_launch_configuration" "nodes-k8s-eu-central-1a-mdn-mozit-cloud" {
   name_prefix                 = "nodes.k8s.eu-central-1a.mdn.mozit.cloud-"
-  image_id                    = "ami-a92b43c6"
-  instance_type               = "m4.xlarge"
+  image_id                    = "ami-0a3ab64153dea449d"
+  instance_type               = "m5.xlarge"
   key_name                    = "${aws_key_pair.kubernetes-k8s-eu-central-1a-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"
   security_groups             = ["${aws_security_group.nodes-k8s-eu-central-1a-mdn-mozit-cloud.id}"]
