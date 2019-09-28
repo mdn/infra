@@ -17,8 +17,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-NODEUP_URL=https://kubeupv2.s3.amazonaws.com/kops/1.13.0/linux/amd64/nodeup
-NODEUP_HASH=7786f99cc0e8cb6c71825880448a8c80f98951d0
+NODEUP_URL=https://kubeupv2.s3.amazonaws.com/kops/1.11.1/linux/amd64/nodeup
+NODEUP_HASH=d4119d57e89b0a2b6c1200178d9efa890cf2f6b2
 
 export AWS_REGION=eu-central-1
 
@@ -276,8 +276,8 @@ cat > kube_env.yaml << '__EOF_KUBE_ENV'
 Assets:
 - be55c02936004fb54487e65a18650d9ec17585cb@https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/linux/amd64/kubelet
 - 142b72418855b985b8a89e81f17df9d5fb88f1a9@https://storage.googleapis.com/kubernetes-release/release/v1.11.7/bin/linux/amd64/kubectl
-- 52e9d2de8a5f927307d9397308735658ee44ab8d@https://storage.googleapis.com/kubernetes-release/network-plugins/cni-plugins-amd64-v0.7.5.tgz
-- 5464a1b8ce49134e9ec5b3b66767a6f22e7afd15@https://github.com/kubernetes/kops/releases/download/1.13.0/linux-amd64-utils.tar.gz,https://kubeupv2.s3.amazonaws.com/kops/1.13.0/linux/amd64/utils.tar.gz
+- d595d3ded6499a64e8dac02466e2f5f2ce257c9f@https://storage.googleapis.com/kubernetes-release/network-plugins/cni-plugins-amd64-v0.6.0.tgz
+- b8fef14d3b0594d4c02d6bf94c4fe7329fb7da73@https://kubeupv2.s3.amazonaws.com/kops/1.11.1/linux/amd64/utils.tar.gz
 ClusterName: k8s.eu-central-1a.mdn.mozit.cloud
 ConfigBase: s3://kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.eu-central-1a.mdn.mozit.cloud
 InstanceGroupName: master-eu-central-1a
@@ -287,11 +287,9 @@ Tags:
 channels:
 - s3://kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.eu-central-1a.mdn.mozit.cloud/addons/bootstrap-channel.yaml
 protokubeImage:
-  hash: 50e41fa7b84cf0c405887276066ed09d66675e69
-  name: protokube:1.13.0
-  sources:
-  - https://github.com/kubernetes/kops/releases/download/1.13.0/images-protokube.tar.gz
-  - https://kubeupv2.s3.amazonaws.com/kops/1.13.0/images/protokube.tar.gz
+  hash: 93cc7561bc965e9c754312ed660d6c209586c7a6
+  name: protokube:1.11.1
+  source: https://kubeupv2.s3.amazonaws.com/kops/1.11.1/images/protokube.tar.gz
 
 __EOF_KUBE_ENV
 
