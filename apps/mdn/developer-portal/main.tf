@@ -45,3 +45,12 @@ module "mail_stage" {
   service_name = "dev-portal"
   environment  = "stage"
 }
+
+module "redis_stage" {
+  source          = "./modules/redis"
+  redis_id        = "developer-portal"
+  environment     = "stage"
+  redis_nodes     = "3"
+  subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
+  security_groups = ["${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}"]
+}

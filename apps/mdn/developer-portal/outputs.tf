@@ -37,3 +37,7 @@ output "mail_stage_secret" {
 output "mail_stage_password" {
   value = "${module.mail_stage.smtp_password}"
 }
+
+output "redis_stage_endpoint" {
+  value = "${module.redis_stage.redis_endpoint}"
+}
