@@ -28,6 +28,7 @@ module "efs_stage" {
 
   nodes_security_group = [
     "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
     "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
   ]
 }
@@ -51,6 +52,7 @@ module "redis_stage" {
   redis_id        = "developer-portal"
   environment     = "stage"
   redis_nodes     = "3"
+  redis_node_type = "cache.t2.micro"
   subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
   security_groups = ["${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}"]
 }
