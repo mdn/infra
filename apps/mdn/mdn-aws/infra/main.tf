@@ -93,13 +93,17 @@ module "efs-us-west-2" {
 }
 
 module "efs-us-west-2-prod" {
-  source               = "./modules/multi_region/efs"
-  enabled              = "${lookup(var.features, "efs")}"
-  environment          = "prod"
-  region               = "us-west-2"
-  efs_name             = "prod"
-  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
-  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
+  source      = "./modules/multi_region/efs"
+  enabled     = "${lookup(var.features, "efs")}"
+  environment = "prod"
+  region      = "us-west-2"
+  efs_name    = "prod"
+  subnets     = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+
+  nodes_security_group = [
+    "${data.aws_security_groups.us-west-2-nodes_sg.ids}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
+  ]
 }
 
 module "efs-eu-central-1-prod" {
