@@ -64,7 +64,7 @@ variable rds {
     engine_version.stage        = "5.6.41"
     engine_version.prod         = "5.6.41"
     instance_class.stage        = "db.t3.large"
-    instance_class.prod         = "db.m4.xlarge"
+    instance_class.prod         = "db.m5.xlarge"
     backup_retention_days.stage = "1"
     backup_retention_days.prod  = "7"
     storage_gb.stage            = "100"
