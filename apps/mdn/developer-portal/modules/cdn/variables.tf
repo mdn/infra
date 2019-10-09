@@ -27,3 +27,7 @@ variable "cloudfront_protocol_policy" {
 variable "event_trigger" {
   default = "lambda-headers.handler"
 }
+
+variable "minimum_protocol_version" {
+  default = "TLSv1.1_2016"
+}
