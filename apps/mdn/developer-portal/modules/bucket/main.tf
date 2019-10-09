@@ -2,7 +2,8 @@ locals {
   bucket_name = "${var.bucket_name}-${var.environment}-${data.aws_caller_identity.current.account_id}"
 
   # All other things reference this
-  identifier = "${var.bucket_name}-${var.environment}"
+  identifier   = "${var.bucket_name}-${var.environment}"
+  media_bucket = "${var.bucket_name}-${var.environment}-media-${data.aws_caller_identity.current.account_id}"
 }
 
 resource "aws_s3_bucket" "this" {
@@ -22,16 +23,45 @@ resource "aws_s3_bucket" "this" {
     error_document = "error.html"
   }
   tags {
-    Name      = "${local.bucket_name}"
-    Region    = "${var.region}"
-    Project   = "developer-portal"
-    Terraform = "true"
+    Name        = "${local.bucket_name}"
+    Region      = "${var.region}"
+    environment = "${var.environment}"
+    Project     = "developer-portal"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_s3_bucket" "media" {
+  bucket = "${local.media_bucket}"
+  acl    = "public-read"
+  policy = "${data.aws_iam_policy_document.media_bucket_public_policy.json}"
+
+  cors_rule {
+    allowed_origins = ["*"]
+    allowed_methods = ["GET"]
+    allowed_headers = ["Authorization"]
+    max_age_seconds = 3000
+  }
+
+  tags {
+    name        = "${local.media_bucket}"
+    Region      = "${var.region}"
+    Environment = "${var.environment}"
+    Project     = "developer-portal"
+    Terraform   = "true"
   }
 }
 
 resource "aws_iam_role" "this" {
   name               = "${local.identifier}-${var.region}-role"
   assume_role_policy = "${data.aws_iam_policy_document.bucket_role.json}"
+
+  tags {
+    Name        = "${local.identifier}-${var.region}-role"
+    Environment = "${var.environment}"
+    Project     = "developer-portal"
+    Terraform   = "true"
+  }
 }
 
 resource "aws_iam_role_policy" "this" {
@@ -95,6 +125,44 @@ data "aws_iam_policy_document" "bucket_public_policy" {
   }
 }
 
+data "aws_iam_policy_document" "media_bucket_public_policy" {
+  statement {
+    sid    = "AllowListBucket"
+    effect = "Allow"
+
+    actions = [
+      "s3:ListBucket",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    resources = [
+      "arn:aws:s3:::${local.media_bucket}",
+    ]
+  }
+
+  statement {
+    sid    = "AllowIndexHTML"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    resources = [
+      "arn:aws:s3:::${local.media_bucket}/*",
+    ]
+  }
+}
+
 data "aws_iam_policy_document" "bucket_role" {
   statement {
     effect = "Allow"
@@ -144,7 +212,10 @@ data "aws_iam_policy_document" "bucket_policy" {
       "s3:ListBucket",
     ]
 
-    resources = ["arn:aws:s3:::${local.bucket_name}"]
+    resources = [
+      "arn:aws:s3:::${local.bucket_name}",
+      "arn:aws:s3:::${local.media_bucket}",
+    ]
   }
 
   statement {
@@ -154,6 +225,9 @@ data "aws_iam_policy_document" "bucket_policy" {
       "s3:*",
     ]
 
-    resources = ["arn:aws:s3:::${local.bucket_name}/*"]
+    resources = [
+      "arn:aws:s3:::${local.bucket_name}/*",
+      "arn:aws:s3:::${local.media_bucket}/*",
+    ]
   }
 }
