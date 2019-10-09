@@ -15,7 +15,7 @@ resource "aws_cloudfront_distribution" "this" {
   aliases             = "${var.cdn_aliases}"
 
   origin {
-    domain_name = "${data.aws_s3_bucket.selected.bucket_domain_name}"
+    domain_name = "${data.aws_s3_bucket.selected.website_endpoint}"
     origin_id   = "origin-${var.origin_bucket}"
 
     custom_origin_config {
@@ -52,8 +52,9 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "${var.certificate_arn}"
-    ssl_support_method  = "sni-only"
+    acm_certificate_arn      = "${var.certificate_arn}"
+    minimum_protocol_version = "${var.minimum_protocol_version}"
+    ssl_support_method       = "sni-only"
   }
 }
 
