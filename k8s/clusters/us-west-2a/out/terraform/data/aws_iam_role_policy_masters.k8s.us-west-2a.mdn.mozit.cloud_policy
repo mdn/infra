@@ -55,8 +55,7 @@
       "Action": [
         "autoscaling:DescribeAutoScalingGroups",
         "autoscaling:DescribeLaunchConfigurations",
-        "autoscaling:DescribeTags",
-        "ec2:DescribeLaunchTemplateVersions"
+        "autoscaling:DescribeTags"
       ],
       "Resource": [
         "*"
