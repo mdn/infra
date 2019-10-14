@@ -69,3 +69,10 @@ module "stage" {
   domain_name = "${var.domain_name}"
   zone_id     = "${aws_route53_zone.master-zone.id}"
 }
+
+module "prod" {
+  source      = "./hosted_zone"
+  zone_name   = "prod"
+  domain_name = "${var.domain_name}"
+  zone_id     = "${aws_route53_zone.master-zone.id}"
+}
