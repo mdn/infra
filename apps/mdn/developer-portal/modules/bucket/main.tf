@@ -127,25 +127,6 @@ data "aws_iam_policy_document" "bucket_public_policy" {
 
 data "aws_iam_policy_document" "media_bucket_public_policy" {
   statement {
-    sid    = "AllowListBucket"
-    effect = "Allow"
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-
-    resources = [
-      "arn:aws:s3:::${local.media_bucket}",
-    ]
-  }
-
-  statement {
-    sid    = "AllowIndexHTML"
     effect = "Allow"
 
     actions = [
@@ -228,6 +209,21 @@ data "aws_iam_policy_document" "bucket_policy" {
     resources = [
       "arn:aws:s3:::${local.bucket_name}/*",
       "arn:aws:s3:::${local.media_bucket}/*",
+    ]
+  }
+
+  statement {
+    sid    = "AllowCDNInvalidate"
+    effect = "Allow"
+
+    actions = [
+      "cloudfront:CreateInvalidation",
+      "cloudfront:GetInvalidation",
+      "cloudfront:ListInvalidation",
+    ]
+
+    resources = [
+      "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${var.distribution_id}",
     ]
   }
 }

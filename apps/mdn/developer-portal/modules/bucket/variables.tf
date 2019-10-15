@@ -15,3 +15,5 @@ variable "create_user" {
 variable "bucket_acl" {
   default = "public-read"
 }
+
+variable "distribution_id" {}
