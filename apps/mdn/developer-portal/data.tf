@@ -27,3 +27,20 @@ data terraform_remote_state "kops-us-west-2" {
     region = "us-west-2"
   }
 }
+
+provider "aws" {
+  alias  = "acm"
+  region = "us-east-1"
+}
+
+data aws_acm_certificate "developer-portal-cdn-stage" {
+  provider = "aws.acm"
+  domain   = "developer-portal.stage.mdn.mozit.cloud"
+  statuses = ["ISSUED"]
+}
+
+data aws_acm_certificate "developer-portal-cdn-prod" {
+  provider = "aws.acm"
+  domain   = "developer-portal.prod.mdn.mozit.cloud"
+  statuses = ["ISSUED"]
+}
