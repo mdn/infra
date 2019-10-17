@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "this" {
 
   website {
     index_document = "index.html"
-    error_document = "error.html"
+    error_document = "404.html"
   }
   tags {
     Name        = "${local.bucket_name}"
