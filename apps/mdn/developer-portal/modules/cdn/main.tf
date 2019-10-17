@@ -14,6 +14,13 @@ resource "aws_cloudfront_distribution" "this" {
   default_root_object = "index.html"
   aliases             = "${var.cdn_aliases}"
 
+  custom_error_response {
+    error_code            = "404"
+    error_caching_min_ttl = "300"
+    response_code         = "404"
+    response_page_path    = "/404.html"
+  }
+
   origin {
     domain_name = "${data.aws_s3_bucket.selected.website_endpoint}"
     origin_id   = "origin-${var.origin_bucket}"
