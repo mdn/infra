@@ -31,9 +31,9 @@ output "bucket_iam_user_secret_key" {
 }
 
 output "media_bucket_id" {
-  value = "${element(concat(aws_s3_bucket.media.*.id, list("")),0)}"
+  value = "${element(concat(aws_s3_bucket.attachments.*.id, list("")),0)}"
 }
 
 output "media_bucket_domain_name" {
-  value = "${element(concat(aws_s3_bucket.media.*.bucket_domain_name, list("")),0)}"
+  value = "${element(concat(aws_s3_bucket.attachments.*.bucket_domain_name, list("")),0)}"
 }
