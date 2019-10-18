@@ -33,27 +33,6 @@ resource "aws_s3_bucket" "this" {
   }
 }
 
-resource "aws_s3_bucket" "media" {
-  bucket = "${local.media_bucket}"
-  acl    = "public-read"
-  policy = "${data.aws_iam_policy_document.media_bucket_public_policy.json}"
-
-  cors_rule {
-    allowed_origins = ["*"]
-    allowed_methods = ["GET"]
-    allowed_headers = ["Authorization"]
-    max_age_seconds = 3000
-  }
-
-  tags {
-    name        = "${local.media_bucket}"
-    Region      = "${var.region}"
-    Environment = "${var.environment}"
-    Project     = "developer-portal"
-    Terraform   = "true"
-  }
-}
-
 resource "aws_s3_bucket" "attachments" {
   bucket = "${local.attachments}"
   acl    = "public-read"
@@ -148,25 +127,6 @@ data "aws_iam_policy_document" "bucket_public_policy" {
   }
 }
 
-data "aws_iam_policy_document" "media_bucket_public_policy" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "s3:GetObject",
-    ]
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-
-    resources = [
-      "arn:aws:s3:::${local.media_bucket}/*",
-    ]
-  }
-}
-
 data "aws_iam_policy_document" "attachment_bucket_public_policy" {
   statement {
     effect = "Allow"
@@ -237,7 +197,6 @@ data "aws_iam_policy_document" "bucket_policy" {
 
     resources = [
       "arn:aws:s3:::${local.bucket_name}",
-      "arn:aws:s3:::${local.media_bucket}",
       "arn:aws:s3:::${local.attachments}",
     ]
   }
@@ -251,7 +210,6 @@ data "aws_iam_policy_document" "bucket_policy" {
 
     resources = [
       "arn:aws:s3:::${local.bucket_name}/*",
-      "arn:aws:s3:::${local.media_bucket}/*",
       "arn:aws:s3:::${local.attachments}/*",
     ]
   }

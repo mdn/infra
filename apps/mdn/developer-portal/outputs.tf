@@ -14,11 +14,11 @@ output "bucket_stage_role_arn" {
   value = "${module.bucket_stage.bucket_iam_role_arn}"
 }
 
-output "bucket_iam_user_access_key" {
+output "bucket_stage_iam_user_access_key" {
   value = "${module.bucket_stage.bucket_iam_user_access_key}"
 }
 
-output "bucket_iam_user_secret_key" {
+output "bucket_stage_iam_user_secret_key" {
   value = "${module.bucket_stage.bucket_iam_user_secret_key}"
 }
 
@@ -40,4 +40,32 @@ output "mail_stage_password" {
 
 output "redis_stage_endpoint" {
   value = "${module.redis_stage.redis_endpoint}"
+}
+
+output "db_prod_hostname" {
+  value = "${module.db_prod.hostname}"
+}
+
+output "bucket_prod_name" {
+  value = "${module.bucket_prod.bucket_id}"
+}
+
+output "bucket_prod_website_endpoint" {
+  value = "${module.bucket_prod.bucket_website_endpoint}"
+}
+
+output "bucket_prod_role_arn" {
+  value = "${module.bucket_prod.bucket_iam_role_arn}"
+}
+
+output "bucket_prod_iam_user_access_key" {
+  value = "${module.bucket_prod.bucket_iam_user_access_key}"
+}
+
+output "bucket_prod_iam_user_secret_key" {
+  value = "${module.bucket_prod.bucket_iam_user_secret_key}"
+}
+
+output "redis_prod_endpoint" {
+  value = "${module.redis_prod.redis_endpoint}"
 }
