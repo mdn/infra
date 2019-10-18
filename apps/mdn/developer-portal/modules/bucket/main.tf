@@ -4,6 +4,7 @@ locals {
   # All other things reference this
   identifier   = "${var.bucket_name}-${var.environment}"
   media_bucket = "${var.bucket_name}-${var.environment}-media-${data.aws_caller_identity.current.account_id}"
+  attachments  = "devportal-media-${var.environment}"
 }
 
 resource "aws_s3_bucket" "this" {
@@ -46,6 +47,27 @@ resource "aws_s3_bucket" "media" {
 
   tags {
     name        = "${local.media_bucket}"
+    Region      = "${var.region}"
+    Environment = "${var.environment}"
+    Project     = "developer-portal"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_s3_bucket" "attachments" {
+  bucket = "${local.attachments}"
+  acl    = "public-read"
+  policy = "${data.aws_iam_policy_document.attachment_bucket_public_policy.json}"
+
+  cors_rule {
+    allowed_origins = ["*"]
+    allowed_methods = ["GET"]
+    allowed_headers = ["Authorization"]
+    max_age_seconds = 3000
+  }
+
+  tags {
+    name        = "${local.attachments}"
     Region      = "${var.region}"
     Environment = "${var.environment}"
     Project     = "developer-portal"
@@ -145,6 +167,25 @@ data "aws_iam_policy_document" "media_bucket_public_policy" {
   }
 }
 
+data "aws_iam_policy_document" "attachment_bucket_public_policy" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    resources = [
+      "arn:aws:s3:::${local.attachments}/*",
+    ]
+  }
+}
+
 data "aws_iam_policy_document" "bucket_role" {
   statement {
     effect = "Allow"
@@ -197,6 +238,7 @@ data "aws_iam_policy_document" "bucket_policy" {
     resources = [
       "arn:aws:s3:::${local.bucket_name}",
       "arn:aws:s3:::${local.media_bucket}",
+      "arn:aws:s3:::${local.attachments}",
     ]
   }
 
@@ -210,6 +252,7 @@ data "aws_iam_policy_document" "bucket_policy" {
     resources = [
       "arn:aws:s3:::${local.bucket_name}/*",
       "arn:aws:s3:::${local.media_bucket}/*",
+      "arn:aws:s3:::${local.attachments}/*",
     ]
   }
 
