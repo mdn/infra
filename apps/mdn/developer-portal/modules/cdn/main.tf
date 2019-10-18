@@ -113,7 +113,7 @@ resource "aws_lambda_function" "lambda-headers" {
   source_code_hash = "${data.archive_file.lambda-zip.output_base64sha256}"
   role             = "${aws_iam_role.lambda-edge-role.arn}"
   handler          = "${var.event_trigger}"
-  runtime          = "nodejs8.10"
+  runtime          = "nodejs10.x"
 
   tags {
     Name        = "${local.servicename}-headers"
