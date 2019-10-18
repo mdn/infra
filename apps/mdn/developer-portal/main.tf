@@ -2,6 +2,13 @@ provider "aws" {
   region = "${var.region}"
 }
 
+module "mail_stage" {
+  source       = "./modules/mail"
+  service_name = "dev-portal"
+  environment  = "stage"
+}
+
+## Stage resources
 module "db_stage" {
   source         = "./modules/db"
   environment    = "stage"
@@ -42,12 +49,6 @@ module "cdn_stage" {
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-stage.arn}"
 }
 
-module "mail_stage" {
-  source       = "./modules/mail"
-  service_name = "dev-portal"
-  environment  = "stage"
-}
-
 module "redis_stage" {
   source          = "./modules/redis"
   redis_id        = "developer-portal"
@@ -62,6 +63,7 @@ module "redis_stage" {
   ]
 }
 
+## Prod resources
 module "db_prod" {
   source         = "./modules/db"
   environment    = "prod"
