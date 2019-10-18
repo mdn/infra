@@ -38,6 +38,11 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "origin-${var.origin_bucket}"
 
+    lambda_function_association {
+      event_type = "viewer-response"
+      lambda_arn = "${aws_lambda_function.lambda-headers.qualified_arn}"
+    }
+
     forwarded_values {
       query_string = true
 

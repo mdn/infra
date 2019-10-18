@@ -11,17 +11,18 @@ resource "aws_s3_bucket" "this" {
   acl    = "${var.bucket_acl}"
   policy = "${data.aws_iam_policy_document.bucket_public_policy.json}"
 
-  #cors_rule {
-  #  allowed_headers = ["*"]
-  #  allowed_methods = ["GET"]
-  #  allowed_origins = ["*"]
-  #  max_age_seconds = 3000
-  #}
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+    max_age_seconds = 3000
+  }
 
   website {
     index_document = "index.html"
     error_document = "404.html"
   }
+
   tags {
     Name        = "${local.bucket_name}"
     Region      = "${var.region}"
