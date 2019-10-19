@@ -31,3 +31,15 @@ data aws_acm_certificate "attachment-cdn-cert" {
   domain   = "mdn.mozillademos.org"
   statuses = ["ISSUED"]
 }
+
+data aws_acm_certificate "stage-wiki-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "developer.allizom.org"
+  statuses = ["ISSUED"]
+}
+
+data aws_acm_certificate "prod-wiki-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "developer.mozilla.org"
+  statuses = ["ISSUED"]
+}

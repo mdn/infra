@@ -44,6 +44,17 @@ variable cloudfront_attachments {
   }
 }
 
+variable "cloudfront_wiki" {
+  default = {
+    enabled           = "1"
+    distribution_name = "mdn-wiki-cdn"
+    domain.stage      = "stage.mdn.mozit.cloud"
+    domain.prod       = "prod.mdn.mozit.cloud"
+    aliases.stage     = "wiki.developer.allizom.org"
+    aliases.prod      = "wiki.developer.mozilla.org"
+  }
+}
+
 variable redis {
   default = {
     node_size.stage = "cache.t2.small"

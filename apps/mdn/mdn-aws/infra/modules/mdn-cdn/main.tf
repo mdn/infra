@@ -32,3 +32,14 @@ module "cloudfront-attachments" {
   aliases           = ["${var.cloudfront_attachments_aliases}"]
   domain_name       = "${var.cloudfront_attachments_domain_name}"
 }
+
+# Wiki CDN
+module "wiki-cdn" {
+  source            = "./cloudfront_wiki"
+  enabled           = "${var.enabled * var.cloudfront_wiki_enabled}"
+  environment       = "${var.environment}"
+  distribution_name = "${var.cloudfront_wiki_distribution_name}"
+  acm_cert_arn      = "${var.acm_wiki_cert_arn}"
+  aliases           = ["${var.cloudfront_wiki_aliases}"]
+  origin_domain     = "${var.cloudfront_wiki_origin_domain}"
+}
