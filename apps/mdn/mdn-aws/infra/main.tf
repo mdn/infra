@@ -50,6 +50,13 @@ module "mdn_cdn" {
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.stage"))}"
   cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.stage")}"
+
+  # wiki CDN
+  cloudfront_wiki_enabled           = "${lookup(var.cloudfront_wiki, "enabled")}"
+  acm_wiki_cert_arn                 = "${data.aws_acm_certificate.stage-wiki-cdn-cert.arn}"
+  cloudfront_wiki_distribution_name = "${lookup(var.cloudfront_wiki, "distribution_name")}"
+  cloudfront_wiki_aliases           = "${split(",", lookup(var.cloudfront_wiki, "aliases.stage"))}"
+  cloudfront_wiki_origin_domain     = "${lookup(var.cloudfront_wiki, "domain.stage")}"
 }
 
 module "mdn_cdn_prod" {
@@ -71,6 +78,13 @@ module "mdn_cdn_prod" {
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.prod"))}"
   cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.prod")}"
+
+  # wiki CDN
+  cloudfront_wiki_enabled           = "${lookup(var.cloudfront_wiki, "enabled")}"
+  acm_wiki_cert_arn                 = "${data.aws_acm_certificate.prod-wiki-cdn-cert.arn}"
+  cloudfront_wiki_distribution_name = "${lookup(var.cloudfront_wiki, "distribution_name")}"
+  cloudfront_wiki_aliases           = "${split(",", lookup(var.cloudfront_wiki, "aliases.prod"))}"
+  cloudfront_wiki_origin_domain     = "${lookup(var.cloudfront_wiki, "domain.prod")}"
 }
 
 module "lambda-log" {

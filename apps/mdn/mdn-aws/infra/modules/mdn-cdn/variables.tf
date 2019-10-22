@@ -33,3 +33,17 @@ variable cloudfront_attachments_distribution_name {
 variable cloudfront_attachments_domain_name {}
 
 variable acm_attachments_cert_arn {}
+
+variable "cloudfront_wiki_enabled" {}
+
+variable "cloudfront_wiki_distribution_name" {
+  default = "mdn-wiki-cdn"
+}
+
+variable "acm_wiki_cert_arn" {}
+
+variable "cloudfront_wiki_aliases" {
+  type = "list"
+}
+
+variable "cloudfront_wiki_origin_domain" {}
