@@ -45,7 +45,7 @@ brew install jq
 
 #### Deploying MDN with Kuma updates only
 
-- Specify the Kuma image tag you want to deploy. It must be available from DockerHub (see https://hub.docker.com/r/mdnwebdocs/kuma/tags/ for a list of available tags). New Kuma images are built and registered on DockerHub after every commit to the `master` branch of https://github.com/mozilla/kuma.
+- Specify the Kuma image tag you want to deploy. It must be available from DockerHub (see https://hub.docker.com/r/mdnwebdocs/kuma/tags/ for a list of available tags). New Kuma images are built and registered on DockerHub after every commit to the `master` branch of https://github.com/mdn/kuma.
 ```sh
 export KUMA_IMAGE_TAG=<tag-from-dockerhub>
 ```
