@@ -1,3 +1,3 @@
 #!/bin/bash
-docker build . -t quay.io/mozmar/blockaws:${GIT_COMMIT:=$(git rev-parse --short HEAD)}
-docker push quay.io/mozmar/blockaws:${GIT_COMMIT}
+docker build . -t mdnwebdocs/blockaws:${GIT_COMMIT:=$(git rev-parse --short HEAD)}
+docker push mdnwebdocs/blockaws:${GIT_COMMIT}

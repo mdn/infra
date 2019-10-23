@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Install kubectl
 # to get latest version: "curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt"
-ENV KUBECTL_VERSION="v1.10.1"
+ENV KUBECTL_VERSION="v1.11.7"
 ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
 
