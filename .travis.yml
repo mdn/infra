@@ -1,0 +1,20 @@
+language: bash
+
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - TERRAFORM_VERSION="0.11.14"
+    - IMAGE="hashicorp/terraform"
+
+before_install:
+  - docker pull ${IMAGE}:${TERRAFORM_VERSION}
+
+jobs:
+  include:
+  - stage: Lint
+    script:
+      - docker run --rm -w /code --mount type=bind,source="$(pwd)",target=/code ${IMAGE}:${TERRAFORM_VERSION} fmt -diff=true -check=true -write=false
