@@ -24,9 +24,10 @@ show_help() {
     echo -en "  --debug         set -x this script\n"
     echo -en "  --environment   Sets environment. Defaults to stage\n"
     echo -en "Commands:\n"
-    echo -en "	init		Terraform init\n"
-    echo -en "	plan		Terraform plan\n"
-    echo -en "	apply		Terraform apply\n"
+    echo -en "  init    Terraform init\n"
+    echo -en "  plan    Terraform plan\n"
+    echo -en "  apply   Terraform apply\n"
+    echo -en "  output  Terraform output\n"
 }
 
 terraform_do() {
@@ -55,7 +56,7 @@ get() {
 }
 
 output() {
-    terraform output
+    terraform output "${@}"
 }
 
 while [ "$1" != "" ]; do
@@ -83,6 +84,11 @@ while [ "$1" != "" ]; do
         apply )
             shift
             apply "${@}"
+            GOT_COMMAND=1
+        ;;
+        output )
+            shift
+            output "${@}"
             GOT_COMMAND=1
         ;;
     esac
