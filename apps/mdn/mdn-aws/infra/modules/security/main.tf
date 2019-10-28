@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 data "aws_network_acls" "us-west-2-nacl" {
-  vpc_id   = "${var.us-west-2-vpc-id}"
+  vpc_id = "${var.us-west-2-vpc-id}"
 
   tags {
     Service = "MDN"
@@ -27,8 +27,8 @@ data "template_file" "worf_policy" {
 
   # Not ideal, data provider returns a list
   vars {
-    account_id           = "${data.aws_caller_identity.current.account_id}"
-    us-west-2-nacl-id    = "${element(concat(data.aws_network_acls.us-west-2-nacl.ids, list("")), 0)}"
+    account_id        = "${data.aws_caller_identity.current.account_id}"
+    us-west-2-nacl-id = "${element(concat(data.aws_network_acls.us-west-2-nacl.ids, list("")), 0)}"
   }
 }
 

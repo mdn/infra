@@ -1,4 +1,3 @@
-
 locals {
   log_bucket = "${var.distribution_name}-logs"
 }
@@ -28,7 +27,7 @@ resource "aws_s3_bucket" "logging" {
     }
 
     transition {
-      days  = "${var.glacier_transition_days}"
+      days          = "${var.glacier_transition_days}"
       storage_class = "GLACIER"
     }
 
@@ -43,7 +42,6 @@ resource "aws_s3_bucket" "logging" {
     Service     = "MDN"
     Purpose     = "Cloudfront logging bucket"
   }
-
 }
 
 resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
@@ -71,16 +69,16 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
     compress        = true
 
-    default_ttl     = 86400
-    max_ttl         = 432000
-    min_ttl         = 0
+    default_ttl = 86400
+    max_ttl     = 432000
+    min_ttl     = 0
 
     smooth_streaming       = false
     target_origin_id       = "${var.distribution_name}"
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
-      query_string = true
+      query_string            = true
       query_string_cache_keys = ["revision"]
 
       cookies {

@@ -1,4 +1,3 @@
-
 output "rds-backup-bucket-users" {
   value = "${aws_iam_access_key.backup-user-key.id}"
 }
