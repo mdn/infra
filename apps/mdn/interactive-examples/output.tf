@@ -1,4 +1,3 @@
-
 output "interactive-example-bucket" {
   value = "${module.interactive-example.interactive-example-bucket}"
 }
