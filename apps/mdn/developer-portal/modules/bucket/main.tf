@@ -91,25 +91,6 @@ resource "aws_iam_access_key" "this" {
 
 data "aws_iam_policy_document" "bucket_public_policy" {
   statement {
-    sid    = "AllowListBucket"
-    effect = "Allow"
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-
-    resources = [
-      "arn:aws:s3:::${local.bucket_name}",
-    ]
-  }
-
-  statement {
-    sid    = "AllowIndexHTML"
     effect = "Allow"
 
     actions = [
@@ -205,7 +186,11 @@ data "aws_iam_policy_document" "bucket_policy" {
     effect = "Allow"
 
     actions = [
-      "s3:*",
+      "s3:*PutObject",
+      "s3:PutObjectAcl",
+      "s3:GetObject",
+      "s3:GetObjectAcl",
+      "s3:DeleteObject",
     ]
 
     resources = [
