@@ -32,3 +32,5 @@ variable "cloudfront_log_prefix" {
 variable "origin_read_timeout" {
   default = "60"
 }
+
+variable "api_bucket" {}

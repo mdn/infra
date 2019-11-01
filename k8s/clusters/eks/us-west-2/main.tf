@@ -96,6 +96,6 @@ module "mdn-apps-a" {
   worker_groups      = "${local.mdn_apps_workers}"
   worker_group_count = "1"
   map_roles          = "${local.map_roles}"
-  map_roles_count    = "2"
+  map_roles_count    = "3"
   tags               = "${local.cluster_tags}"
 }

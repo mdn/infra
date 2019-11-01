@@ -2,6 +2,10 @@ locals {
   log_bucket = "${var.distribution_name}-logs"
 }
 
+data "aws_s3_bucket" "api_bucket" {
+  bucket = "${var.api_bucket}"
+}
+
 resource "random_id" "rand-var" {
   keepers = {
     bucket_name = "${local.log_bucket}"
@@ -166,294 +170,6 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 3
   ordered_cache_behavior {
-    path_pattern = "*/docs/new"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 4
-  ordered_cache_behavior {
-    path_pattern = "*/docs/preview-wiki-content"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 5
-  ordered_cache_behavior {
-    path_pattern = "*$edit"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 6
-  ordered_cache_behavior {
-    path_pattern = "*$subscribe"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 7
-  ordered_cache_behavior {
-    path_pattern = "*$subscribe_to_tree"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 8
-  ordered_cache_behavior {
-    path_pattern = "*$translate"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 9
-  ordered_cache_behavior {
-    path_pattern = "*$quick-review"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 10
-  ordered_cache_behavior {
-    path_pattern = "*$move"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 11
-  ordered_cache_behavior {
-    path_pattern = "*$delete"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 12
-  ordered_cache_behavior {
-    path_pattern = "*$revert/*"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 13
-  ordered_cache_behavior {
-    path_pattern = "*$purge"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 14
-  ordered_cache_behavior {
-    path_pattern = "*$files"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 15
-  ordered_cache_behavior {
     path_pattern = "*/docs/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
@@ -472,87 +188,12 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward           = "whitelist"
-        whitelisted_names = ["django_language", "dwf_contrib_beta", "dwf_sg_task_completion", "sessionid"]
-      }
-    }
-  }
-
-  # 16
-  ordered_cache_behavior {
-    path_pattern = "*/dashboards/revisions"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["Host", "Accept-Language", "X-Requested-With"]
-
-      cookies {
-        forward           = "whitelist"
-        whitelisted_names = ["django_language", "sessionid"]
-      }
-    }
-  }
-
-  # 17
-  ordered_cache_behavior {
-    path_pattern = "*/dashboards/topic_lookup"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["Host", "Accept-Language", "X-Requested-With"]
-
-      cookies {
-        forward           = "whitelist"
         whitelisted_names = ["django_language"]
       }
     }
   }
 
-  # 18
-  ordered_cache_behavior {
-    path_pattern = "*/dashboards/user_lookup"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["Host", "Accept-Language", "X-Requested-With"]
-
-      cookies {
-        forward           = "whitelist"
-        whitelisted_names = ["django_language"]
-      }
-    }
-  }
-
-  # 19
+  # 4
   ordered_cache_behavior {
     path_pattern = "users/*"
 
@@ -576,7 +217,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 20
+  # 5
   ordered_cache_behavior {
     path_pattern = "*/users/*"
 
@@ -600,7 +241,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 21
+  # 6
   ordered_cache_behavior {
     path_pattern = "*/profile/*"
 
@@ -624,7 +265,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 22
+  # 7
   ordered_cache_behavior {
     path_pattern = "*/profiles/*"
 
@@ -648,55 +289,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 23
-  ordered_cache_behavior {
-    path_pattern = "*/unsubscribe/*"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 24
-  ordered_cache_behavior {
-    path_pattern = "*/payments/*"
-
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      headers      = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-  }
-
-  # 25
+  # 8
   ordered_cache_behavior {
     path_pattern = "admin/*"
 
@@ -720,7 +313,30 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 26
+  # 9
+  ordered_cache_behavior {
+    path_pattern = "api/v1/doc/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 3600
+    max_ttl                = 3600
+    min_ttl                = 3600
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 10
   ordered_cache_behavior {
     path_pattern = "api/*"
 
@@ -761,8 +377,22 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward           = "whitelist"
-        whitelisted_names = ["django_language", "dwf_contrib_beta", "dwf_sg_task_completion", "sessionid"]
+        whitelisted_names = ["django_language"]
       }
+    }
+  }
+
+  origin {
+    domain_name = "${data.aws_s3_bucket.api_bucket.website_endpoint}"
+    origin_id   = "S3-${var.api_bucket}"
+
+    custom_origin_config {
+      http_port                = "80"
+      https_port               = "443"
+      origin_protocol_policy   = "https-only"
+      origin_read_timeout      = "30"
+      origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+      origin_keepalive_timeout = 5
     }
   }
 

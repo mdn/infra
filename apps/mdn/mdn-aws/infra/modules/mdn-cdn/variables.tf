@@ -16,6 +16,8 @@ variable cloudfront_primary_distribution_name {
   default = "mdn-primary-cdn"
 }
 
+variable "cloudfront_primary_api_bucket" {}
+
 variable acm_primary_cert_arn {}
 
 variable cloudfront_primary_domain_name {}
