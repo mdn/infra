@@ -11,6 +11,7 @@ resource "random_id" "rand-var" {
 }
 
 resource "aws_s3_bucket" "logging" {
+  count  = "${var.enabled}"
   bucket = "${local.log_bucket}-${random_id.rand-var.hex}"
   acl    = "log-delivery-write"
 

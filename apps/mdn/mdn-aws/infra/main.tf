@@ -43,6 +43,7 @@ module "mdn_cdn" {
   cloudfront_primary_distribution_name = "${lookup(var.cloudfront_primary, "distribution_name")}"
   cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.stage"))}"
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.stage")}"
+  cloudfront_primary_api_bucket        = "${lookup(var.cloudfront_primary, "api_bucket.stage")}"
 
   # attachment CDN
   cloudfront_attachments_enabled           = "0"                                                                  # Disable for stage
@@ -71,6 +72,7 @@ module "mdn_cdn_prod" {
   cloudfront_primary_distribution_name = "${lookup(var.cloudfront_primary, "distribution_name")}"
   cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.prod"))}"
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.prod")}"
+  cloudfront_primary_api_bucket        = "${lookup(var.cloudfront_primary, "api_bucket.prod")}"
 
   # attachment CDN
   cloudfront_attachments_enabled           = "${lookup(var.cloudfront_attachments, "enabled")}"

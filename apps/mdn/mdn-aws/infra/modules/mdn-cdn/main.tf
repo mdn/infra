@@ -16,6 +16,7 @@ module "primary-cloudfront" {
   aliases             = ["${var.cloudfront_primary_aliases}"]
   domain_name         = "${var.cloudfront_primary_domain_name}"
   origin_read_timeout = "120"
+  api_bucket          = "${var.cloudfront_primary_api_bucket}"
 }
 
 ########################################
