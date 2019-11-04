@@ -89,7 +89,7 @@ module "cdn_prod" {
   source          = "./modules/cdn"
   environment     = "prod"
   cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-published.prod.mdn.mozit.cloud", "developer.mozilla.com"]
-  origin_bucket   = "${module.bucket_stage.bucket_id}"
+  origin_bucket   = "${module.bucket_prod.bucket_id}"
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-prod.arn}"
 }
 
