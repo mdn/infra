@@ -7,6 +7,5 @@
             - "--app=kuma.celery:app"
             - worker
             - "--loglevel=INFO"
-            - "--logfile=/dev/stdout"
             - "--concurrency={{ CELERY_WORKERS_CONCURRENCY }}"
             - "--queues={{ CELERY_WORKERS_QUEUES }}"
