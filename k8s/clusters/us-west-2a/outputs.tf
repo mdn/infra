@@ -10,6 +10,10 @@ output "node_security_group_ids" {
   value = ["${module.kubernetes.node_security_group_ids}"]
 }
 
+output "nodes_role_arn" {
+  value = "${module.kubernetes.nodes_role_arn}"
+}
+
 output "node_subnet_ids" {
   value = ["${module.kubernetes.node_subnet_ids}"]
 }

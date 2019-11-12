@@ -228,3 +228,27 @@ module "mysql-eu-central-1-replica-prod" {
 module "metrics" {
   source = "./modules/metrics"
 }
+
+# Media buckets
+module "media-bucket-stage" {
+  source      = "./modules/mdn-media"
+  bucket_name = "mdn-media"
+  environment = "stage"
+}
+
+module "upload-user-stage" {
+  source      = "./modules/mdn-uploader"
+  name        = "mdn-uploader"
+  environment = "stage"
+
+  iam_policies = [
+    "${module.media-bucket-stage.bucket_iam_policy}",
+  ]
+
+  eks_worker_role_arn = [
+    "arn:aws:iam::178589013767:role/nodes.k8s.us-west-2a.mdn.mozit.cloud",
+    "arn:aws:iam::178589013767:role/nodes.k8s.eu-central-1a.mdn.mozit.cloud",
+    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
+  ]
+}
