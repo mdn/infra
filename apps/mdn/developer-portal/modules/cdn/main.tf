@@ -37,6 +37,7 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "origin-${var.origin_bucket}"
+    compress         = "${var.cdn_compress}"
 
     lambda_function_association {
       event_type = "viewer-response"
