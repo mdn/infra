@@ -4,6 +4,10 @@ data "aws_s3_bucket" "selected" {
   bucket = "${var.origin_bucket}"
 }
 
+data "aws_s3_bucket" "logging" {
+  bucket = "${var.logging_bucket}"
+}
+
 locals {
   servicename = "${var.servicename}-${var.environment}"
 }
@@ -13,6 +17,12 @@ resource "aws_cloudfront_distribution" "this" {
   comment             = "developer-portal ${var.environment} CDN"
   default_root_object = "index.html"
   aliases             = "${var.cdn_aliases}"
+
+  logging_config {
+    include_cookies = false
+    bucket          = "${data.aws_s3_bucket.logging.bucket_domain_name}"
+    prefix          = "cdn/"
+  }
 
   custom_error_response {
     error_code            = "404"

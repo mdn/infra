@@ -18,6 +18,8 @@ variable "cdn_aliases" {
 
 variable "origin_bucket" {}
 
+variable "logging_bucket" {}
+
 variable "certificate_arn" {}
 
 variable "cloudfront_protocol_policy" {

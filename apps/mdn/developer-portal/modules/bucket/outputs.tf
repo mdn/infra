@@ -37,3 +37,11 @@ output "media_bucket_id" {
 output "media_bucket_domain_name" {
   value = "${element(concat(aws_s3_bucket.attachments.*.bucket_domain_name, list("")),0)}"
 }
+
+output "logging_bucket_id" {
+  value = "${element(concat(aws_s3_bucket.logging.*.id, list("")),0)}"
+}
+
+output "logging_bucket_domain_name" {
+  value = "${element(concat(aws_s3_bucket.logging.*.bucket_domain_name, list("")),0)}"
+}
