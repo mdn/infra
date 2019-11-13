@@ -46,6 +46,7 @@ module "cdn_stage" {
   environment     = "stage"
   cdn_aliases     = ["developer-portal-stage.mdn.mozit.cloud", "developer-portal.stage.mdn.mozit.cloud", "developer-portal-published.stage.mdn.mozit.cloud"]
   origin_bucket   = "${module.bucket_stage.bucket_id}"
+  logging_bucket  = "${module.bucket_stage.logging_bucket_id}"
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-stage.arn}"
 }
 
@@ -90,6 +91,7 @@ module "cdn_prod" {
   environment     = "prod"
   cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-published.prod.mdn.mozit.cloud", "developer.mozilla.com"]
   origin_bucket   = "${module.bucket_prod.bucket_id}"
+  logging_bucket  = "${module.bucket_prod.logging_bucket_id}"
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-prod.arn}"
 }
 

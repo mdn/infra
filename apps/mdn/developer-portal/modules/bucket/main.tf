@@ -4,6 +4,7 @@ locals {
   # All other things reference this
   identifier   = "${var.bucket_name}-${var.environment}"
   media_bucket = "${var.bucket_name}-${var.environment}-media-${data.aws_caller_identity.current.account_id}"
+  log_bucket   = "${var.bucket_name}-${var.environment}-logs-${data.aws_caller_identity.current.account_id}"
   attachments  = "devportal-media-${var.environment}"
 }
 
@@ -22,6 +23,11 @@ resource "aws_s3_bucket" "this" {
   website {
     index_document = "index.html"
     error_document = "404.html"
+  }
+
+  logging {
+    target_bucket = "${aws_s3_bucket.logging.id}"
+    target_prefix = "bucket/"
   }
 
   tags {
@@ -46,7 +52,20 @@ resource "aws_s3_bucket" "attachments" {
   }
 
   tags {
-    name        = "${local.attachments}"
+    Name        = "${local.attachments}"
+    Region      = "${var.region}"
+    Environment = "${var.environment}"
+    Project     = "developer-portal"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_s3_bucket" "logging" {
+  bucket = "${local.log_bucket}"
+  acl    = "log-delivery-write"
+
+  tags {
+    Name        = "${local.log_bucket}"
     Region      = "${var.region}"
     Environment = "${var.environment}"
     Project     = "developer-portal"
