@@ -31,3 +31,7 @@ variable "event_trigger" {
 variable "minimum_protocol_version" {
   default = "TLSv1.1_2016"
 }
+
+variable "cdn_compress" {
+  default = true
+}
