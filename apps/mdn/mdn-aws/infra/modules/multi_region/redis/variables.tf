@@ -15,6 +15,10 @@ variable "redis_num_nodes" {
   default = 1
 }
 
+variable "redis_automatic_failover" {
+  default = true
+}
+
 variable "redis_param_group" {
   default = "default.redis3.2"
 }
@@ -30,3 +34,7 @@ variable "nodes_security_group" {
 }
 
 variable "enabled" {}
+
+variable "azs" {
+  type = "list"
+}

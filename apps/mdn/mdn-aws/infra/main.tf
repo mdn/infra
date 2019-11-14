@@ -149,9 +149,36 @@ module "redis-us-west-2" {
   enabled              = "${lookup(var.features, "redis")}"
   environment          = "stage"
   region               = "us-west-2"
-  redis_name           = "stage"
+  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  redis_name           = "mdn-redis-stage"
   redis_node_size      = "${lookup(var.redis, "node_size.stage")}"
   redis_num_nodes      = "${lookup(var.redis, "num_nodes.stage")}"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
+}
+
+module "redis-stage-us-west-2" {
+  source               = "./modules/multi_region/redis"
+  enabled              = "${lookup(var.features, "redis")}"
+  environment          = "stage"
+  region               = "us-west-2"
+  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  redis_name           = "mdn-stage"
+  redis_node_size      = "cache.t3.medium"
+  redis_num_nodes      = "3"
+  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
+}
+
+module "redis-prod-us-west-2" {
+  source               = "./modules/multi_region/redis"
+  enabled              = "${lookup(var.features, "redis")}"
+  environment          = "prod"
+  region               = "us-west-2"
+  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  redis_name           = "mdn-prod"
+  redis_node_size      = "cache.m5.large"
+  redis_num_nodes      = "3"
   subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
   nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
 }
@@ -161,7 +188,8 @@ module "redis-us-west-2-prod" {
   enabled              = "${lookup(var.features, "redis")}"
   environment          = "prod"
   region               = "us-west-2"
-  redis_name           = "prod"
+  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  redis_name           = "mdn-redis-prod"
   redis_node_size      = "${lookup(var.redis, "node_size.prod")}"
   redis_num_nodes      = "${lookup(var.redis, "num_nodes.prod")}"
   subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
@@ -173,7 +201,8 @@ module "redis-eu-central-1-prod" {
   enabled              = "${lookup(var.features, "redis")}"
   environment          = "prod"
   region               = "eu-central-1"
-  redis_name           = "prod"
+  azs                  = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
+  redis_name           = "mdn-redis-prod"
   redis_node_size      = "${lookup(var.redis, "node_size.prod")}"
   redis_num_nodes      = "${lookup(var.redis, "num_nodes.prod")}"
   subnets              = "${join(",", data.terraform_remote_state.vpc-eu-central-1.public_subnets)}"
