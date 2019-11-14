@@ -58,6 +58,12 @@ module "mdn_cdn" {
   cloudfront_wiki_distribution_name = "${lookup(var.cloudfront_wiki, "distribution_name")}"
   cloudfront_wiki_aliases           = "${split(",", lookup(var.cloudfront_wiki, "aliases.stage"))}"
   cloudfront_wiki_origin_domain     = "${lookup(var.cloudfront_wiki, "domain.stage")}"
+
+  # media CDN
+  cloudfront_media_enabled = "${lookup(var.cloudfront_media, "enabled")}"
+  acm_media_cert_arn       = "${data.aws_acm_certificate.stage-media-cdn-cert.arn}"
+  cloudfront_media_aliases = "${split(",", lookup(var.cloudfront_media, "aliases.stage"))}"
+  cloudfront_media_bucket  = "${module.media-bucket-stage.bucket_name}"
 }
 
 module "mdn_cdn_prod" {
@@ -87,6 +93,12 @@ module "mdn_cdn_prod" {
   cloudfront_wiki_distribution_name = "${lookup(var.cloudfront_wiki, "distribution_name")}"
   cloudfront_wiki_aliases           = "${split(",", lookup(var.cloudfront_wiki, "aliases.prod"))}"
   cloudfront_wiki_origin_domain     = "${lookup(var.cloudfront_wiki, "domain.prod")}"
+
+  # media CDN
+  cloudfront_media_enabled = "${lookup(var.cloudfront_media, "enabled")}"
+  acm_media_cert_arn       = "${data.aws_acm_certificate.prod-media-cdn-cert.arn}"
+  cloudfront_media_aliases = "${split(",", lookup(var.cloudfront_media, "aliases.prod"))}"
+  cloudfront_media_bucket  = "${module.media-bucket-prod.bucket_name}"
 }
 
 module "lambda-log" {
@@ -227,4 +239,53 @@ module "mysql-eu-central-1-replica-prod" {
 
 module "metrics" {
   source = "./modules/metrics"
+}
+
+# Media buckets
+module "media-bucket-stage" {
+  source      = "./modules/mdn-media"
+  bucket_name = "mdn-media"
+  environment = "stage"
+}
+
+module "media-bucket-prod" {
+  source      = "./modules/mdn-media"
+  bucket_name = "mdn-media"
+  environment = "prod"
+}
+
+module "upload-user-stage" {
+  source      = "./modules/mdn-uploader"
+  name        = "mdn-uploader"
+  environment = "stage"
+
+  iam_policies = [
+    "${module.media-bucket-stage.bucket_iam_policy}",
+    "${module.mdn_cdn.cdn-media-iam-policy}",
+  ]
+
+  eks_worker_role_arn = [
+    "${data.terraform_remote_state.kops-us-west-2.nodes_role_arn}",
+    "${data.terraform_remote_state.kops-eu-central-1.nodes_role_arn}",
+    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
+  ]
+}
+
+module "upload-user-prod" {
+  source      = "./modules/mdn-uploader"
+  name        = "mdn-uploader"
+  environment = "prod"
+
+  iam_policies = [
+    "${module.media-bucket-prod.bucket_iam_policy}",
+    "${module.mdn_cdn_prod.cdn-media-iam-policy}",
+  ]
+
+  eks_worker_role_arn = [
+    "${data.terraform_remote_state.kops-us-west-2.nodes_role_arn}",
+    "${data.terraform_remote_state.kops-eu-central-1.nodes_role_arn}",
+    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
+  ]
 }

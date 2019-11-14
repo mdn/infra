@@ -43,3 +43,13 @@ data aws_acm_certificate "prod-wiki-cdn-cert" {
   domain   = "developer.mozilla.org"
   statuses = ["ISSUED"]
 }
+
+data aws_acm_certificate "stage-media-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "media.stage.mdn.mozit.cloud"
+}
+
+data aws_acm_certificate "prod-media-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "media.prod.mdn.mozit.cloud"
+}

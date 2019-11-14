@@ -14,6 +14,10 @@ output "node_subnet_ids" {
   value = ["${module.kubernetes.node_subnet_ids}"]
 }
 
+output "nodes_role_arn" {
+  value = "${module.kubernetes.nodes_role_arn}"
+}
+
 output "vpc_id" {
   value = "${module.kubernetes.vpc_id}"
 }

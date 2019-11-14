@@ -57,6 +57,14 @@ variable "cloudfront_wiki" {
   }
 }
 
+variable "cloudfront_media" {
+  default = {
+    enabled       = "1"
+    aliases.stage = "media.stage.mdn.mozit.cloud,attachments.stage.mdn.mozit.cloud"
+    aliases.prod  = "media.prod.mdn.mozit.cloud,attachments.prod.mdn.mozit.cloud"
+  }
+}
+
 variable redis {
   default = {
     node_size.stage = "cache.t2.small"
