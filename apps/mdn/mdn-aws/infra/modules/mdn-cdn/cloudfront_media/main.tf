@@ -9,6 +9,7 @@ locals {
 }
 
 resource "aws_cloudfront_distribution" "this" {
+  count   = "${var.enabled}"
   aliases = "${var.aliases}"
   comment = "MDN ${var.environment} Media CDN"
   enabled = true
@@ -35,6 +36,14 @@ resource "aws_cloudfront_distribution" "this" {
     default_ttl            = 86400
     max_ttl                = 432000
     min_ttl                = 0
+
+    forwarded_values {
+      query_string = true
+
+      cookies {
+        forward = "none"
+      }
+    }
   }
 
   restrictions {
@@ -73,6 +82,7 @@ data "aws_iam_policy_document" "cdn-policy" {
 }
 
 resource "aws_iam_policy" "cdn-invalidate" {
+  count  = "${var.enabled}"
   name   = "${var.media_bucket}-${var.environment}-cdn-policy"
   path   = "/"
   policy = "${data.aws_iam_policy_document.cdn-policy.json}"

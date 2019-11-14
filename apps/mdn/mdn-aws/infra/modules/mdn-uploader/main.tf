@@ -18,7 +18,7 @@ resource "aws_iam_role" "this" {
 resource "aws_iam_role_policy_attachment" "this" {
   count      = "${length(var.iam_policies)}"
   role       = "${aws_iam_role.this.name}"
-  policy_arn = "${element(var.iam_policies, count.index)}"
+  policy_arn = "${var.iam_policies[count.index]}"
 }
 
 data "aws_iam_policy_document" "assume_role" {

@@ -32,6 +32,32 @@ resource "aws_s3_bucket" "media" {
 resource "aws_s3_bucket" "logging" {
   bucket = "${local.bucket_name}-logs"
   acl    = "log-delivery-write"
+
+  lifecycle_rule {
+    enabled = true
+
+    transition {
+      days          = "60"
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = "90"
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = "180"
+    }
+  }
+
+  tags {
+    Name        = "${local.bucket_name}-logs"
+    Region      = "${var.region}"
+    Service     = "MDN"
+    Environment = "${var.environment}"
+    Terraform   = "true"
+  }
 }
 
 data "aws_iam_policy_document" "public-read" {

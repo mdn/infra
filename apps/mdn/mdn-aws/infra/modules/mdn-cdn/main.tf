@@ -44,3 +44,12 @@ module "wiki-cdn" {
   aliases           = ["${var.cloudfront_wiki_aliases}"]
   origin_domain     = "${var.cloudfront_wiki_origin_domain}"
 }
+
+module "media-cdn" {
+  source          = "./cloudfront_media"
+  enabled         = "${var.enabled * var.cloudfront_media_enabled}"
+  environment     = "${var.environment}"
+  aliases         = ["${var.cloudfront_media_aliases}"]
+  certificate_arn = "${var.acm_media_cert_arn}"
+  media_bucket    = "${var.cloudfront_media_bucket}"
+}

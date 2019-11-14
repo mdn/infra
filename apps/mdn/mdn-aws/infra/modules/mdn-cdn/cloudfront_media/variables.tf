@@ -2,6 +2,8 @@ variable "region" {
   default = "us-west-2"
 }
 
+variable "enabled" {}
+
 variable "environment" {}
 
 variable "aliases" {
@@ -9,3 +11,5 @@ variable "aliases" {
 }
 
 variable "media_bucket" {}
+
+variable "certificate_arn" {}

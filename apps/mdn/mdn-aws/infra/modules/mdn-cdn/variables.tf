@@ -49,3 +49,13 @@ variable "cloudfront_wiki_aliases" {
 }
 
 variable "cloudfront_wiki_origin_domain" {}
+
+variable "cloudfront_media_enabled" {}
+
+variable "cloudfront_media_aliases" {
+  type = "list"
+}
+
+variable "acm_media_cert_arn" {}
+
+variable "cloudfront_media_bucket" {}
