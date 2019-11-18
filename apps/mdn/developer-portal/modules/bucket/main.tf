@@ -25,10 +25,10 @@ resource "aws_s3_bucket" "this" {
     error_document = "404.html"
   }
 
-  logging {
-    target_bucket = "${aws_s3_bucket.logging.id}"
-    target_prefix = "bucket/"
-  }
+  #logging {
+  #  target_bucket = "${aws_s3_bucket.logging.id}"
+  #  target_prefix = "bucket/"
+  #}
 
   tags {
     Name        = "${local.bucket_name}"

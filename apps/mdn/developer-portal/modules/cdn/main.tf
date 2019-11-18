@@ -18,11 +18,11 @@ resource "aws_cloudfront_distribution" "this" {
   default_root_object = "index.html"
   aliases             = "${var.cdn_aliases}"
 
-  logging_config {
-    include_cookies = false
-    bucket          = "${data.aws_s3_bucket.logging.bucket_domain_name}"
-    prefix          = "cdn/"
-  }
+  #logging_config {
+  #  include_cookies = false
+  #  bucket          = "${data.aws_s3_bucket.logging.bucket_domain_name}"
+  #  prefix          = "cdn/"
+  #}
 
   custom_error_response {
     error_code            = "404"
@@ -30,7 +30,6 @@ resource "aws_cloudfront_distribution" "this" {
     response_code         = "404"
     response_page_path    = "/404.html"
   }
-
   origin {
     domain_name = "${data.aws_s3_bucket.selected.website_endpoint}"
     origin_id   = "origin-${var.origin_bucket}"
@@ -42,7 +41,6 @@ resource "aws_cloudfront_distribution" "this" {
       origin_ssl_protocols   = ["TLSv1.2", "TLSv1.1", "TLSv1"]
     }
   }
-
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
@@ -67,13 +65,11 @@ resource "aws_cloudfront_distribution" "this" {
     default_ttl            = 600
     max_ttl                = 600
   }
-
   restrictions {
     geo_restriction {
       restriction_type = "none"
     }
   }
-
   viewer_certificate {
     acm_certificate_arn      = "${var.certificate_arn}"
     minimum_protocol_version = "${var.minimum_protocol_version}"
