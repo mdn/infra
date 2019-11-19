@@ -98,7 +98,7 @@ resource "aws_iam_user" "this" {
 
 resource "aws_iam_user_policy" "this" {
   count  = "${var.create_user}"
-  name   = "developer-portal-publis-policy-${var.environment}"
+  name   = "developer-portal-publish-policy-${var.environment}"
   user   = "${element(aws_iam_user.this.*.name, count.index)}"
   policy = "${data.aws_iam_policy_document.bucket_policy.json}"
 }
