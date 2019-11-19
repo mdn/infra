@@ -2,9 +2,10 @@ FROM python:3
 
 # FIXME: Should really discover the distro version instead of hardcoding
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main"  > /etc/apt/sources.list.d/postgres.list && \
+	curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
 	apt-get update && \
 	apt-get -y upgrade && \
-	apt-get install -y curl openssl mysql-client postgresql-client-11 && \
+	apt-get install -y curl openssl default-mysql-client postgresql-client-11 && \
 	apt-get clean -y && \
 	apt-get autoclean -y && \
 	apt-get autoremove -y && \
