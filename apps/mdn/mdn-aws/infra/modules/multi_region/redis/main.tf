@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_elasticache_subnet_group" "mdn-redis-subnet-group" {
   count = "${var.enabled}"
-  name  = "redis-${var.environment}-subnet-group"
+  name  = "${var.redis_name}-subnet-group"
 
   # https://github.com/hashicorp/terraform/issues/57#issuecomment-100372002
   subnet_ids = ["${split(",", var.subnets)}"]

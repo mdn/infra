@@ -144,43 +144,38 @@ module "efs-eu-central-1-prod" {
   nodes_security_group = "${data.aws_security_groups.eu-central-1-nodes_sg.ids}"
 }
 
-module "redis-us-west-2" {
-  source               = "./modules/multi_region/redis"
-  enabled              = "${lookup(var.features, "redis")}"
-  environment          = "stage"
-  region               = "us-west-2"
-  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  redis_name           = "mdn-redis-stage"
-  redis_node_size      = "${lookup(var.redis, "node_size.stage")}"
-  redis_num_nodes      = "${lookup(var.redis, "num_nodes.stage")}"
-  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
-  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
-}
-
 module "redis-stage-us-west-2" {
-  source               = "./modules/multi_region/redis"
-  enabled              = "${lookup(var.features, "redis")}"
-  environment          = "stage"
-  region               = "us-west-2"
-  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  redis_name           = "mdn-stage"
-  redis_node_size      = "cache.t3.medium"
-  redis_num_nodes      = "3"
-  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
-  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
+  source          = "./modules/multi_region/redis"
+  enabled         = "${lookup(var.features, "redis")}"
+  environment     = "stage"
+  region          = "us-west-2"
+  azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  redis_name      = "mdn-stage"
+  redis_node_size = "cache.t3.medium"
+  redis_num_nodes = "3"
+  subnets         = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+
+  nodes_security_group = [
+    "${data.aws_security_groups.us-west-2-nodes_sg.ids}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
+  ]
 }
 
 module "redis-prod-us-west-2" {
-  source               = "./modules/multi_region/redis"
-  enabled              = "${lookup(var.features, "redis")}"
-  environment          = "prod"
-  region               = "us-west-2"
-  azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  redis_name           = "mdn-prod"
-  redis_node_size      = "cache.m5.large"
-  redis_num_nodes      = "3"
-  subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
-  nodes_security_group = "${data.aws_security_groups.us-west-2-nodes_sg.ids}"
+  source          = "./modules/multi_region/redis"
+  enabled         = "${lookup(var.features, "redis")}"
+  environment     = "prod"
+  region          = "us-west-2"
+  azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  redis_name      = "mdn-prod"
+  redis_node_size = "cache.m5.large"
+  redis_num_nodes = "3"
+  subnets         = "${join(",", data.terraform_remote_state.vpc-us-west-2.public_subnets)}"
+
+  nodes_security_group = [
+    "${data.aws_security_groups.us-west-2-nodes_sg.ids}",
+    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
+  ]
 }
 
 module "redis-us-west-2-prod" {
