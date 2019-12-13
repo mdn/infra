@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "${var.region}"
-}
-
 resource "aws_efs_file_system" "this" {
   performance_mode = "generalPurpose"
 

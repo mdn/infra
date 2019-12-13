@@ -7,7 +7,8 @@ terraform {
 }
 
 provider "aws" {
-  region = "${var.region}"
+  version = "~> 2"
+  region  = "${var.region}"
 }
 
 resource aws_route53_delegation_set "delegation-set" {
@@ -59,6 +60,13 @@ module "eu-central-1" {
 module "us-west-2a" {
   source      = "./hosted_zone"
   zone_name   = "us-west-2a"
+  domain_name = "${var.domain_name}"
+  zone_id     = "${aws_route53_zone.master-zone.id}"
+}
+
+module "dev" {
+  source      = "./hosted_zone"
+  zone_name   = "dev"
   domain_name = "${var.domain_name}"
   zone_id     = "${aws_route53_zone.master-zone.id}"
 }
