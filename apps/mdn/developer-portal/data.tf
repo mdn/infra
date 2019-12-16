@@ -33,6 +33,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data aws_acm_certificate "developer-portal-cdn-dev" {
+  provider = "aws.acm"
+  domain   = "developer-portal.dev.mdn.mozit.cloud"
+  statuses = ["ISSUED"]
+}
+
 data aws_acm_certificate "developer-portal-cdn-stage" {
   provider = "aws.acm"
   domain   = "developer-portal.stage.mdn.mozit.cloud"

@@ -26,6 +26,10 @@ output "eu-central-1-zone-id" {
   value = "${module.eu-central-1.hosted_zone_id}"
 }
 
+output "dev-zone-id" {
+  value = "${module.dev.hosted_zone_id}"
+}
+
 output "stage-zone-id" {
   value = "${module.stage.hosted_zone_id}"
 }
