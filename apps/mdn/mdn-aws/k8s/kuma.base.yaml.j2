@@ -36,6 +36,23 @@
             - name: ATTACHMENT_ORIGIN
               value: {{ KUMA_ATTACHMENT_ORIGIN | default(KUMA_ATTACHMENT_HOST, True) }}
             # AWS access keys for mdn-s3-api-(stage|prod)-uploader user:
+            - name: ATTACHMENTS_AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: aws-access-key
+            - name: ATTACHMENTS_AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: aws-secret-key
+            - name: ATTACHMENTS_AWS_STORAGE_BUCKET_NAME
+              value: "{{ KUMA_ATTACHMENTS_AWS_STORAGE_BUCKET_NAME }}"
+            - name: ATTACHMENTS_AWS_S3_REGION_NAME
+              value: "{{ KUMA_ATTACHMENTS_AWS_S3_REGION_NAME }}"
+            - name: ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN
+              value: "{{ KUMA_ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN }}"
+            # AWS access keys for mdn-s3-api-(stage|prod)-uploader user:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
