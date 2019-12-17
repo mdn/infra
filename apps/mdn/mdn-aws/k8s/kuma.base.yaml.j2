@@ -52,6 +52,8 @@
               value: "{{ KUMA_ATTACHMENTS_AWS_S3_REGION_NAME }}"
             - name: ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN
               value: "{{ KUMA_ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN }}"
+            - name: ATTACHMENTS_USE_S3
+              value: "{{ KUMA_ATTACHMENTS_USE_S3 }}"
             # AWS access keys for mdn-s3-api-(stage|prod)-uploader user:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
