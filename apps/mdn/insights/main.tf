@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "${var.region}"
+  version = "~> 2"
+  region  = "${var.region}"
 }
 
 provider "aws" {
@@ -35,6 +36,10 @@ data "aws_acm_certificate" "insights-prod" {
   provider = "aws.aws-acm"
   domain   = "insights.developer.mozilla.org"
   statuses = ["ISSUED"]
+}
+
+module "bucket" {
+  source = "./modules/bucket"
 }
 
 module "insights-dns-stage" {
