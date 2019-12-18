@@ -116,6 +116,7 @@ data "aws_iam_policy_document" "bucket-policy" {
     ]
 
     resources = [
+      "arn:aws:s3:::${local.bucket_name}",
       "arn:aws:s3:::${local.bucket_name}/*",
     ]
   }
