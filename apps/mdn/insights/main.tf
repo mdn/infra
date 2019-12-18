@@ -45,9 +45,8 @@ module "bucket" {
 module "insights-dns-stage" {
   source            = "./modules/dns"
   domain-zone-id    = "${data.terraform_remote_state.dns.master-zone}"
-  domain-name       = "insights-stage.mdn.mozit.cloud"
+  domain-name       = "insights-stage"
   domain-name-alias = "${module.insights-stage.cloudfront_domain}"
-  alias-zone-id     = "${module.insights-stage.cloudfront_hosted_zone_id}"
 }
 
 module "insights-stage" {
@@ -60,9 +59,8 @@ module "insights-stage" {
 module "insights-dns-prod" {
   source            = "./modules/dns"
   domain-zone-id    = "${data.terraform_remote_state.dns.master-zone}"
-  domain-name       = "insights-prod.mdn.mozit.cloud"
-  domain-name-alias = "${module.insights-stage.cloudfront_domain}"
-  alias-zone-id     = "${module.insights-stage.cloudfront_hosted_zone_id}"
+  domain-name       = "insights-prod"
+  domain-name-alias = "${module.insights-prod.cloudfront_domain}"
 }
 
 module "insights-prod" {
