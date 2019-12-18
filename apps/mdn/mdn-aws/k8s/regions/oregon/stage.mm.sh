@@ -119,6 +119,10 @@ export KUMA_ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN="media.stage.mdn.mozit.cloud"
 export KUMA_ATTACHMENTS_USE_S3=True
 export KUMA_CELERY_TASK_ALWAYS_EAGER=False
 export KUMA_CELERY_WORKER_MAX_TASKS_PER_CHILD=0
+export KUMA_CSP_ENABLE_MIDDLEWARE=True
+export KUMA_CSP_REPORT_ENABLE=True
+export KUMA_CSP_REPORT_ONLY=True
+export KUMA_CSP_REPORT_URI=https://sentry.prod.mozaws.net/api/72/security/?sentry_key=25e652a045b642dfaa310e92e800058a
 export KUMA_CSRF_COOKIE_SECURE=True
 export KUMA_DEBUG=False
 export KUMA_DEBUG_TOOLBAR=False
