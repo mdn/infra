@@ -21,6 +21,7 @@ resource "aws_s3_bucket" "site-bucket" {
   bucket = "${local.site-bucket}"
   acl    = "public-read"
   region = "${var.region}"
+  policy = "${data.aws_iam_policy_document.bucket_policy.json}"
 
   cors_rule {
     allowed_headers = ["*"]
@@ -43,33 +44,48 @@ resource "aws_s3_bucket" "site-bucket" {
     enabled = "${var.s3_versioning}"
   }
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Id": "${var.servicename} policy",
-  "Statement": [
-    {
-     	"Sid": "AllowListBucket",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::${local.site-bucket}"
-    },
-    {
-      "Sid": "AllowIndexDotHTML",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${local.site-bucket}/*"
-    }
-  ]
-}
-EOF
-
   tags {
     Name      = "${local.site-bucket}"
     Service   = "${var.servicename}"
     Terraform = "true"
+  }
+}
+
+data "aws_iam_policy_document" "bucket_policy" {
+  statement {
+    sid    = "AllowListBucket"
+    effect = "Allow"
+
+    actions = [
+      "s3:ListBucket",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.site-bucket}",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+
+  statement {
+    sid    = "AllowIndexDotHTML"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.site-bucket}/*",
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
   }
 }
 
@@ -111,9 +127,10 @@ resource "aws_cloudfront_distribution" "site-distribution" {
     }
 
     viewer_protocol_policy = "${var.cloudfront_protocol_policy}"
+    compress               = true
     min_ttl                = 0
-    default_ttl            = 600
-    max_ttl                = 600
+    default_ttl            = 3600
+    max_ttl                = 86400
   }
 
   restrictions {

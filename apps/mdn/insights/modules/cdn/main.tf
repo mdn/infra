@@ -131,9 +131,10 @@ resource "aws_cloudfront_distribution" "site-distribution" {
     }
 
     viewer_protocol_policy = "${var.cloudfront_protocol_policy}"
+    compress               = true
+    default_ttl            = 3600
     min_ttl                = 0
-    default_ttl            = 600
-    max_ttl                = 600
+    max_ttl                = 86400
   }
 
   restrictions {
