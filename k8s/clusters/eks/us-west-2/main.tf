@@ -28,9 +28,9 @@ locals {
       key_name             = "mdn"
       subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.private_subnets)}"
       autoscaling_enabled  = true
-      asg_desired_capacity = 3
-      asg_min_size         = 3
-      asg_max_size         = 5
+      asg_desired_capacity = 4
+      asg_min_size         = 4
+      asg_max_size         = 10
       spot_price           = "0.08"
       additional_userdata  = "${data.template_file.additional_userdata.rendered}"
     },

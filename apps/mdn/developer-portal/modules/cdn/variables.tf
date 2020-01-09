@@ -37,3 +37,13 @@ variable "minimum_protocol_version" {
 variable "cdn_compress" {
   default = true
 }
+
+variable "origin_domain_name" {
+  description = "Domain name of the origin, typically a DNS name to the ELB"
+  default     = ""
+}
+
+variable "origin_id" {
+  description = "Just an origin identifier"
+  default     = ""
+}

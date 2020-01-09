@@ -44,7 +44,7 @@ module "bucket_dev" {
 module "cdn_dev" {
   source          = "./modules/cdn"
   environment     = "dev"
-  cdn_aliases     = ["developer-portal.dev.mdn.mozit.cloud", "developer-portal-published.dev.mdn.mozit.cloud"]
+  cdn_aliases     = ["developer-portal.dev.mdn.mozit.cloud", "developer-portal-cdn.dev.mdn.mozit.cloud"]
   origin_bucket   = "${module.bucket_dev.bucket_id}"
   logging_bucket  = "${module.bucket_dev.logging_bucket_id}"
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-dev.arn}"
@@ -89,7 +89,7 @@ module "bucket_stage" {
 module "cdn_stage" {
   source          = "./modules/cdn"
   environment     = "stage"
-  cdn_aliases     = ["developer-portal-stage.mdn.mozit.cloud", "developer-portal.stage.mdn.mozit.cloud", "developer-portal-published.stage.mdn.mozit.cloud"]
+  cdn_aliases     = ["developer-portal.stage.mdn.mozit.cloud", "developer-portal-cdn.stage.mdn.mozit.cloud"]
   origin_bucket   = "${module.bucket_stage.bucket_id}"
   logging_bucket  = "${module.bucket_stage.logging_bucket_id}"
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-stage.arn}"
@@ -134,7 +134,7 @@ module "bucket_prod" {
 module "cdn_prod" {
   source          = "./modules/cdn"
   environment     = "prod"
-  cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-published.prod.mdn.mozit.cloud", "developer.mozilla.com"]
+  cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-cdn.prod.mdn.mozit.cloud", "developer.mozilla.com"]
   origin_bucket   = "${module.bucket_prod.bucket_id}"
   logging_bucket  = "${module.bucket_prod.logging_bucket_id}"
   certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-prod.arn}"
@@ -145,7 +145,7 @@ module "redis_prod" {
   redis_id        = "developer-portal"
   environment     = "prod"
   redis_nodes     = "3"
-  redis_node_type = "cache.t2.medium"
+  redis_node_type = "cache.t3.small"
   subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
 
   security_groups = [
