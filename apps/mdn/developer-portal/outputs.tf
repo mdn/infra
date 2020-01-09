@@ -2,6 +2,14 @@ output "db_stage_hostname" {
   value = "${module.db_stage.hostname}"
 }
 
+output "bucket_dev_name" {
+  value = "${module.bucket_dev.bucket_id}"
+}
+
+output "db_dev_hostname" {
+  value = "${module.db_dev.hostname}"
+}
+
 output "bucket_stage_name" {
   value = "${module.bucket_stage.bucket_id}"
 }
