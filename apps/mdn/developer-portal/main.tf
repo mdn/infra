@@ -10,7 +10,6 @@ module "backup_bucket" {
 
   eks_worker_role_arn = [
     "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
-    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}",
   ]
 }
 
@@ -37,7 +36,7 @@ module "bucket_dev" {
   environment         = "dev"
   create_user         = true
   bucket_name         = "developer-portal"
-  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}"
+  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}"
   distribution_id     = "${module.cdn_dev.cloudfront_id}"
 }
 
@@ -59,7 +58,6 @@ module "redis_dev" {
   subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
 
   security_groups = [
-    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}",
     "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
     "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
   ]
@@ -82,7 +80,7 @@ module "bucket_stage" {
   environment         = "stage"
   create_user         = true
   bucket_name         = "developer-portal"
-  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}"
+  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}"
   distribution_id     = "${module.cdn_stage.cloudfront_id}"
 }
 
@@ -104,7 +102,6 @@ module "redis_stage" {
   subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
 
   security_groups = [
-    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}",
     "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
     "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
   ]
@@ -127,7 +124,7 @@ module "bucket_prod" {
   environment         = "prod"
   create_user         = true
   bucket_name         = "developer-portal"
-  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}"
+  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}"
   distribution_id     = "${module.cdn_prod.cloudfront_id}"
 }
 
@@ -149,7 +146,6 @@ module "redis_prod" {
   subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
 
   security_groups = [
-    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_security_group_id}",
     "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
     "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
   ]

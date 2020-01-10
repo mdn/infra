@@ -104,6 +104,11 @@ resource "aws_cloudfront_distribution" "this" {
     minimum_protocol_version = "${var.minimum_protocol_version}"
     ssl_support_method       = "sni-only"
   }
+  tags {
+    Name        = "developer-portal ${var.environment} CDN"
+    Environment = "${var.environment}"
+    Terraform   = "true"
+  }
 }
 
 data "aws_iam_policy_document" "lambda-exec-role" {
