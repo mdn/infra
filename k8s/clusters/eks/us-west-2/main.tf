@@ -43,6 +43,14 @@ locals {
     },
   ]
 
+  map_users = [
+    {
+      username = "sjalim"
+      user_arn = "arn:aws:iam::178589013767:user/sjalim"
+      group    = "jenkins-access"
+    },
+  ]
+
   cluster_tags = {
     Region    = "${var.region}"
     Terraform = "true"
@@ -66,5 +74,7 @@ module "mdn-apps-a" {
   worker_group_count = "1"
   map_roles          = "${local.map_roles}"
   map_roles_count    = "3"
+  map_users          = "${local.map_users}"
+  map_users_count    = "1"
   tags               = "${local.cluster_tags}"
 }

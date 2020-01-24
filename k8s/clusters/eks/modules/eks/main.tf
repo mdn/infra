@@ -30,6 +30,8 @@ module "eks" {
   tags                  = "${var.tags}"
   map_roles             = "${var.map_roles}"
   map_roles_count       = "${var.map_roles_count}"
+  map_users             = "${var.map_users}"
+  map_users_count       = "${var.map_users_count}"
   kubeconfig_name       = "${var.cluster_name}"
   write_kubeconfig      = "false"
   write_aws_auth_config = "false"
