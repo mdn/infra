@@ -47,6 +47,18 @@ variable "map_roles_count" {
   default     = 0
 }
 
+variable "map_users" {
+  description = "Additional IAM users to add to the aws-auth configmap. See examples/basic/variables.tf for example format."
+  type        = "list"
+  default     = []
+}
+
+variable "map_users_count" {
+  description = "The count of roles in the map_users list."
+  type        = "string"
+  default     = 0
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources."
   type        = "map"
