@@ -42,14 +42,6 @@ output "ci_acm_arn" {
   value = "${module.acm_ci.certificate_arn}"
 }
 
-output "aws_account_id" {
-  value = "${module.datadog.aws_account_id}"
-}
-
-output "datadog_role_arn" {
-  value = "${module.datadog.integration_role_arn}"
-}
-
 output "rds_backup_bucket" {
   value = "${module.rds-backups.rds-backup-bucket-name}"
 }
