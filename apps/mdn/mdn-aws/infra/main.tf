@@ -10,11 +10,6 @@ terraform {
   }
 }
 
-module "datadog" {
-  source      = "./modules/datadog"
-  external_id = "${var.datadog_external_id}"
-}
-
 module "mdn_shared" {
   source  = "./modules/shared"
   enabled = "${lookup(var.features, "shared-infra")}"
@@ -281,7 +276,6 @@ module "upload-user-stage" {
   eks_worker_role_arn = [
     "${data.terraform_remote_state.kops-us-west-2.nodes_role_arn}",
     "${data.terraform_remote_state.kops-eu-central-1.nodes_role_arn}",
-    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}",
     "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
   ]
 }
@@ -299,7 +293,6 @@ module "upload-user-prod" {
   eks_worker_role_arn = [
     "${data.terraform_remote_state.kops-us-west-2.nodes_role_arn}",
     "${data.terraform_remote_state.kops-eu-central-1.nodes_role_arn}",
-    "${data.terraform_remote_state.eks-us-west-2.developer_portal_worker_iam_role_arn}",
     "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
   ]
 }
