@@ -19,7 +19,7 @@ variable "cloudfront_enable" {
 }
 
 variable "cloudfront_aliases" {
-  type = "list"
+  type = list(string)
 }
 
 variable "cloudfront_protocol_policy" {
@@ -30,8 +30,10 @@ variable "enable_ipv6" {
   default = "true"
 }
 
-variable "acm_certificate_arn" {}
+variable "acm_certificate_arn" {
+}
 
 variable "event_trigger" {
   default = "lambda-headers.handler"
 }
+

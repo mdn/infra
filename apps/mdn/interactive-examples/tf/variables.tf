@@ -8,7 +8,7 @@ variable "interactive-example-bucket" {
 
 variable "hosted-zone-id-defs" {
   # See: https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_website_region_endpoints
-  type = "map"
+  type = map(string)
 
   default = {
     us-east-1 = "Z3AQBSTGFYJSTF"
@@ -16,12 +16,14 @@ variable "hosted-zone-id-defs" {
   }
 }
 
-variable "acm_certificate_arn" {}
+variable "acm_certificate_arn" {
+}
 
 variable "origin_id" {
   default = "MDNInteractive"
 }
 
 variable "cdn_aliases" {
-  type = "list"
+  type = list(string)
 }
+

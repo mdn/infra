@@ -1,14 +1,14 @@
-data terraform_remote_state "vpc-us-west-2" {
+data "terraform_remote_state" "vpc-us-west-2" {
   backend = "s3"
 
-  config {
+  config = {
     bucket = "mdn-state-4e366a3ac64d1b4022c8b5e35efbd288"
     key    = "terraform/us-west-2/vpc"
     region = "us-west-2"
   }
 }
 
-data aws_ami "centos" {
+data "aws_ami" "centos" {
   most_recent = true
 
   filter {
@@ -24,9 +24,4 @@ data aws_ami "centos" {
   }
 
   owners = ["aws-marketplace"]
-}
-
-data aws_acm_certificate "mdn-samples" {
-  domain   = "mdn-samples.us-west-2.mdn.mozit.cloud"
-  statuses = ["ISSUED"]
 }

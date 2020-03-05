@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "${var.region}"
+  region  = var.region
+  version = "~> 2"
 }
 
 terraform {
@@ -16,7 +17,7 @@ resource "aws_key_pair" "mdn-samples" {
   }
 
   key_name   = "mdn-samples"
-  public_key = "${var.ssh_pubkey}"
+  public_key = var.ssh_pubkey
 }
 
 resource "aws_eip" "mdn-samples" {
@@ -27,54 +28,93 @@ resource "aws_security_group" "mdn-samples" {
   name        = "mdn-samples-sg"
   description = "Allow inbound traffic to mdn-samples"
 
-  vpc_id = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  vpc_id = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
 
   tags = {
     Name      = "mdn-samples-sg"
-    Region    = "${var.region}"
+    Region    = var.region
     Service   = "mdn-samples"
     Terraform = "true"
   }
 }
 
+resource "aws_security_group_rule" "allow_ingress_ssh" {
+  security_group_id = aws_security_group.mdn-samples.id
+  type              = "ingress"
+  from_port         = "22"
+  to_port           = "22"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "0.0.0.0/0"
+  ]
+}
+resource "aws_security_group_rule" "allow_ingress_https" {
+  security_group_id = aws_security_group.mdn-samples.id
+  type              = "ingress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "0.0.0.0/0"
+  ]
+}
+
+resource "aws_security_group_rule" "allow_ingress_http" {
+  security_group_id = aws_security_group.mdn-samples.id
+  type              = "ingress"
+  from_port         = "80"
+  to_port           = "80"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "0.0.0.0/0"
+  ]
+}
+
+resource "aws_security_group_rule" "allow_ingress_tcp_mdn_samples" {
+  security_group_id = aws_security_group.mdn-samples.id
+  description       = "MDN samples requirement"
+  type              = "ingress"
+  from_port         = "6500"
+  to_port           = "6999"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "0.0.0.0/0"
+  ]
+}
+
+resource "aws_security_group_rule" "allow_ingress_udp_mdn_samples" {
+  security_group_id = aws_security_group.mdn-samples.id
+  description       = "MDN samples requirement"
+  type              = "ingress"
+  from_port         = "6500"
+  to_port           = "6999"
+  protocol          = "udp"
+  cidr_blocks = [
+    "0.0.0.0/0"
+  ]
+}
+
+resource "aws_security_group_rule" "allow_egress_all" {
+  security_group_id = aws_security_group.mdn-samples.id
+  type              = "egress"
+  from_port         = "0"
+  to_port           = "0"
+  protocol          = "-1"
+  cidr_blocks = [
+    "0.0.0.0/0"
+  ]
+}
+
 data "template_file" "user-data" {
-  template = "${file("${path.module}/templates/user-data.sh")}"
+  template = file("${path.module}/templates/user-data.sh")
 }
 
 data "template_file" "terraform-data" {
-  template = "${file("${path.module}/templates/terraform-data.sh")}"
+  template = file("${path.module}/templates/terraform-data.sh")
 
   vars = {
-    eip_id = "${aws_eip.mdn-samples.id}"
-    region = "${var.region}"
+    eip_id = aws_eip.mdn-samples.id
+    region = var.region
   }
 }
 
@@ -85,18 +125,19 @@ data "template_cloudinit_config" "config" {
   part {
     filename     = "01-terraform-data.sh"
     content_type = "text/x-shellscript"
-    content      = "${data.template_file.terraform-data.rendered}"
+    content      = data.template_file.terraform-data.rendered
   }
 
   part {
     filename     = "02-user-data.sh"
     content_type = "text/x-shellscript"
-    content      = "${data.template_file.user-data.rendered}"
+    content      = data.template_file.user-data.rendered
   }
 }
 
 resource "aws_autoscaling_group" "mdn-samples" {
-  vpc_zone_identifier = ["${data.terraform_remote_state.vpc-us-west-2.public_subnets}"]
+
+  vpc_zone_identifier = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   name = "mdn-samples - ${aws_launch_configuration.mdn-samples.name}"
 
@@ -112,7 +153,7 @@ resource "aws_autoscaling_group" "mdn-samples" {
   # Less than ideal but the initial sync takes such a long time
   health_check_type    = "EC2"
   force_delete         = true
-  launch_configuration = "${aws_launch_configuration.mdn-samples.name}"
+  launch_configuration = aws_launch_configuration.mdn-samples.name
 
   enabled_metrics = [
     "GroupMinSize",
@@ -133,7 +174,7 @@ resource "aws_autoscaling_group" "mdn-samples" {
 
   tag {
     key                 = "Region"
-    value               = "${var.region}"
+    value               = var.region
     propagate_at_launch = true
   }
 
@@ -153,27 +194,27 @@ resource "aws_autoscaling_group" "mdn-samples" {
 resource "aws_launch_configuration" "mdn-samples" {
   name_prefix = "mdn-samples-"
 
-  image_id = "${data.aws_ami.centos.id}"
+  image_id = data.aws_ami.centos.id
 
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${aws_key_pair.mdn-samples.key_name}"
+  instance_type               = var.instance_type
+  key_name                    = aws_key_pair.mdn-samples.key_name
   associate_public_ip_address = true
 
   #user_data     = "${data.template_file.user-data.rendered}"
-  user_data            = "${data.template_cloudinit_config.config.rendered}"
-  iam_instance_profile = "${aws_iam_instance_profile.mdn-samples.name}"
+  user_data            = data.template_cloudinit_config.config.rendered
+  iam_instance_profile = aws_iam_instance_profile.mdn-samples.name
 
   lifecycle {
     create_before_destroy = true
   }
 
   security_groups = [
-    "${aws_security_group.mdn-samples.id}",
+    aws_security_group.mdn-samples.id,
   ]
 
   enable_monitoring = false
 
-  root_block_device = {
+  root_block_device {
     volume_size           = "80"
     volume_type           = "gp2"
     delete_on_termination = false
@@ -202,18 +243,19 @@ data "aws_iam_policy_document" "associate-eip" {
 
 resource "aws_iam_instance_profile" "mdn-samples" {
   name = "mdn-samples-${var.region}"
-  role = "${aws_iam_role.mdn-samples.name}"
+  role = aws_iam_role.mdn-samples.name
 }
 
 resource "aws_iam_role" "mdn-samples" {
   name = "mdn-samples-${var.region}"
   path = "/"
 
-  assume_role_policy = "${data.aws_iam_policy_document.mdn-samples.json}"
+  assume_role_policy = data.aws_iam_policy_document.mdn-samples.json
 }
 
 resource "aws_iam_role_policy" "mdn-samples" {
   name   = "eip-allow-${var.region}"
-  role   = "${aws_iam_role.mdn-samples.id}"
-  policy = "${data.aws_iam_policy_document.associate-eip.json}"
+  role   = aws_iam_role.mdn-samples.id
+  policy = data.aws_iam_policy_document.associate-eip.json
 }
+

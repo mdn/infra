@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "${var.region}"
+  region  = var.region
+  version = "~> 2"
 }
 
 terraform {
@@ -16,13 +17,14 @@ provider "aws" {
 }
 
 data "aws_acm_certificate" "interactive-example" {
-  provider = "aws.aws-acm"
+  provider = aws.aws-acm
   domain   = "interactive-examples.mdn.mozilla.net"
   statuses = ["ISSUED"]
 }
 
 module "interactive-example" {
   source              = "./tf"
-  acm_certificate_arn = "${data.aws_acm_certificate.interactive-example.arn}"
+  acm_certificate_arn = data.aws_acm_certificate.interactive-example.arn
   cdn_aliases         = ["interactive-examples.mdn.mozit.cloud", "interactive-examples.mdn.mozilla.net"]
 }
+
