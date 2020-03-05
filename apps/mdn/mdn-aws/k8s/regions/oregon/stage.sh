@@ -138,7 +138,6 @@ export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_MAINTENANCE_MODE=False
 export KUMA_MEDIA_ROOT=/mdn/www
 export KUMA_MEDIA_URL=https://developer.allizom.org/media/
-export KUMA_MULTI_AUTH_ENABLED=True
 export KUMA_PROTOCOL="https://"
 export KUMA_SECURE_HSTS_SECONDS=63072000
 export KUMA_SERVE_LEGACY=True
