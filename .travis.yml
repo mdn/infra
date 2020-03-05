@@ -7,7 +7,7 @@ services:
 
 env:
   global:
-    - TERRAFORM_VERSION="0.11.14"
+    - TERRAFORM_VERSION="0.12.21"
     - IMAGE="hashicorp/terraform"
 
 before_install:
