@@ -1,4 +1,5 @@
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+}
 
 locals {
   site-bucket      = "${var.bucket_name}-${var.environment}-${data.aws_caller_identity.current.account_id}"
@@ -7,14 +8,14 @@ locals {
 }
 
 resource "aws_s3_bucket" "site-bucket-logs" {
-  bucket = "${local.site-bucket-logs}"
-  region = "${var.region}"
+  bucket = local.site-bucket-logs
+  region = var.region
   acl    = "log-delivery-write"
 
   tags = {
-    Name      = "${local.site-bucket-logs}"
-    Service   = "${local.servicename}"
-    Region    = "${var.region}"
+    Name      = local.site-bucket-logs
+    Service   = local.servicename
+    Region    = var.region
     Terraform = "true"
   }
 }
@@ -58,9 +59,9 @@ data "aws_iam_policy_document" "bucket_policy" {
 }
 
 resource "aws_s3_bucket" "site-bucket" {
-  bucket = "${local.site-bucket}"
+  bucket = local.site-bucket
   acl    = "public-read"
-  region = "${var.region}"
+  region = var.region
 
   cors_rule {
     allowed_headers = ["*"]
@@ -70,7 +71,7 @@ resource "aws_s3_bucket" "site-bucket" {
   }
 
   logging {
-    target_bucket = "${aws_s3_bucket.site-bucket-logs.id}"
+    target_bucket = aws_s3_bucket.site-bucket-logs.id
     target_prefix = "logs/"
   }
 
@@ -80,28 +81,28 @@ resource "aws_s3_bucket" "site-bucket" {
   }
 
   versioning {
-    enabled = "${var.s3_versioning}"
+    enabled = var.s3_versioning
   }
 
-  policy = "${data.aws_iam_policy_document.bucket_policy.json}"
+  policy = data.aws_iam_policy_document.bucket_policy.json
 
-  tags {
-    Name        = "${local.site-bucket}"
-    ServiceName = "${local.servicename}"
-    Region      = "${var.region}"
+  tags = {
+    Name        = local.site-bucket
+    ServiceName = local.servicename
+    Region      = var.region
     Terraform   = "true"
   }
 }
 
 resource "aws_cloudfront_distribution" "site-distribution" {
-  enabled             = "${var.cloudfront_enabled}"
+  enabled             = var.cloudfront_enabled
   comment             = "Cloudfront distribution for ${local.site-bucket}"
   default_root_object = "index.html"
-  aliases             = "${var.cloudfront_aliases}"
-  is_ipv6_enabled     = "${var.enable_ipv6}"
+  aliases             = var.cloudfront_aliases
+  is_ipv6_enabled     = var.enable_ipv6
 
   origin {
-    domain_name = "${aws_s3_bucket.site-bucket.website_endpoint}"
+    domain_name = aws_s3_bucket.site-bucket.website_endpoint
     origin_id   = "origin-${local.site-bucket}"
 
     custom_origin_config {
@@ -119,7 +120,7 @@ resource "aws_cloudfront_distribution" "site-distribution" {
 
     lambda_function_association {
       event_type = "viewer-response"
-      lambda_arn = "${aws_lambda_function.lambda-headers.qualified_arn}"
+      lambda_arn = aws_lambda_function.lambda-headers.qualified_arn
     }
 
     forwarded_values {
@@ -130,7 +131,7 @@ resource "aws_cloudfront_distribution" "site-distribution" {
       }
     }
 
-    viewer_protocol_policy = "${var.cloudfront_protocol_policy}"
+    viewer_protocol_policy = var.cloudfront_protocol_policy
     compress               = true
     default_ttl            = 3600
     min_ttl                = 0
@@ -144,7 +145,7 @@ resource "aws_cloudfront_distribution" "site-distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "${var.acm_certificate_arn}"
+    acm_certificate_arn = var.acm_certificate_arn
     ssl_support_method  = "sni-only"
   }
 }
@@ -168,7 +169,7 @@ data "aws_iam_policy_document" "lambda-exec-role" {
 # Lambda@edge to set origin response headers
 resource "aws_iam_role" "lambda-edge-role" {
   name               = "${local.servicename}-lambda-exec-role"
-  assume_role_policy = "${data.aws_iam_policy_document.lambda-exec-role.json}"
+  assume_role_policy = data.aws_iam_policy_document.lambda-exec-role.json
 }
 
 data "archive_file" "lambda-zip" {
@@ -184,19 +185,20 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "lambda-headers" {
-  provider         = "aws.aws-lambda-east"
+  provider         = aws.aws-lambda-east
   function_name    = "${local.servicename}-headers"
   description      = "Provides Correct Response Headers for ${local.servicename}"
   publish          = "true"
   filename         = "${path.module}/lambda-headers.zip"
-  source_code_hash = "${data.archive_file.lambda-zip.output_base64sha256}"
-  role             = "${aws_iam_role.lambda-edge-role.arn}"
-  handler          = "${var.event_trigger}"
+  source_code_hash = data.archive_file.lambda-zip.output_base64sha256
+  role             = aws_iam_role.lambda-edge-role.arn
+  handler          = var.event_trigger
   runtime          = "nodejs10.x"
 
-  tags {
+  tags = {
     Name        = "${local.servicename}-headers"
-    ServiceName = "${local.servicename}"
+    ServiceName = local.servicename
     Terraform   = "true"
   }
 }
+

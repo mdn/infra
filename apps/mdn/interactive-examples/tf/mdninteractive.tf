@@ -1,6 +1,6 @@
 resource "random_id" "rand-var" {
   keepers = {
-    interactive-example-bucket = "${var.interactive-example-bucket}"
+    interactive-example-bucket = var.interactive-example-bucket
   }
 
   byte_length = 8
@@ -12,16 +12,14 @@ locals {
 }
 
 resource "aws_s3_bucket" "interactive-example-logs" {
-  bucket = "${local.interactive-example-bucket-logs}"
+  bucket = local.interactive-example-bucket-logs
   acl    = "log-delivery-write"
 }
 
 resource "aws_s3_bucket" "interactive-example" {
-  bucket = "${local.interactive-example-bucket}"
-  region = "${var.region}"
+  bucket = local.interactive-example-bucket
+  region = var.region
   acl    = "log-delivery-write"
-
-  force_destroy = ""
 
   cors_rule {
     allowed_headers = ["*"]
@@ -30,10 +28,10 @@ resource "aws_s3_bucket" "interactive-example" {
     max_age_seconds = 3000
   }
 
-  hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
+  hosted_zone_id = var.hosted-zone-id-defs[var.region]
 
   logging {
-    target_bucket = "${aws_s3_bucket.interactive-example-logs.id}"
+    target_bucket = aws_s3_bucket.interactive-example-logs.id
     target_prefix = "logs/"
   }
 
@@ -71,12 +69,13 @@ resource "aws_s3_bucket" "interactive-example" {
   ]
 }
 EOF
+
 }
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = "${local.interactive-example-bucket}.s3-website-${var.region}.amazonaws.com"
-    origin_id   = "${var.origin_id}"
+    origin_id   = var.origin_id
 
     custom_origin_config {
       origin_protocol_policy = "http-only"
@@ -97,12 +96,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     prefix          = "cflogs"
   }
 
-  aliases = "${var.cdn_aliases}"
+  aliases = var.cdn_aliases
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "${var.origin_id}"
+    target_origin_id = var.origin_id
     compress         = true
 
     forwarded_values {
@@ -126,10 +125,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "${var.acm_certificate_arn}"
+    acm_certificate_arn = var.acm_certificate_arn
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
     minimum_protocol_version = "TLSv1"
   }
 }
+
