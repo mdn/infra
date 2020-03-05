@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "${var.region}"
+  region  = var.region
+  version = "~> 2"
 }
 
 terraform {
@@ -18,29 +19,30 @@ locals {
     Name                                                   = "k8s.us-west-2a.mdn.mozit.cloud"
     KubernetesCluster                                      = "k8s.us-west-2a.mdn.mozit.cloud"
     "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "shared"
-    "kubernetes.io/cluster/k8s-developer-portal"           = "shared"
+    "kubernetes.io/cluster/mdn-apps-a"                     = "shared"
   }
 
   subnet_tags = {
     "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "shared"
-    "kubernetes.io/cluster/k8s-developer-portal"           = "shared"
+    "kubernetes.io/cluster/mdn-apps-a"                     = "shared"
   }
 }
 
 module "vpc-us-west-2" {
   source   = "../modules/vpc"
-  region   = "${var.region}"
+  region   = var.region
   vpc_cidr = "172.20.0.0/16"
 
-  tags = "${local.vpc_tags}"
+  tags = local.vpc_tags
 }
 
 module "subnets-us-west-2" {
   source               = "../modules/subnets"
-  vpc_id               = "${module.vpc-us-west-2.vpc_id}"
-  igw_id               = "${module.vpc-us-west-2.igw_id}"
+  vpc_id               = module.vpc-us-west-2.vpc_id
+  igw_id               = module.vpc-us-west-2.igw_id
   azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  public_subnet_cidrs  = "${local.public_subnet_cidrs}"
-  private_subnet_cidrs = "${local.private_subnet_cidrs}"
-  tags                 = "${local.subnet_tags}"
+  public_subnet_cidrs  = local.public_subnet_cidrs
+  private_subnet_cidrs = local.private_subnet_cidrs
+  tags                 = local.subnet_tags
 }
+

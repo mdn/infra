@@ -6,22 +6,25 @@ variable "vpc_name" {
   default = "main-vpc"
 }
 
-variable "vpc_id" {}
+variable "vpc_id" {
+}
 
-variable "igw_id" {}
+variable "igw_id" {
+}
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
 
 variable "azs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "public_subnet_cidrs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  type = "list"
+  type = list(string)
 }
+

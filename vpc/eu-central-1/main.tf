@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "${var.region}"
+  region  = var.region
+  version = "~> 2"
 }
 
 terraform {
@@ -16,29 +17,32 @@ locals {
 
   vpc_tags = {
     Name                                                      = "k8s.eu-central-1a.mdn.mozit.cloud"
+    Region                                                    = "eu-central-1"
     KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "shared"
+    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
   }
 
   subnet_tags = {
-    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "shared"
+    Region                                                    = "eu-central-1"
+    "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
   }
 }
 
 module "vpc-eu-central-1" {
   source   = "../modules/vpc"
-  region   = "${var.region}"
+  region   = var.region
   vpc_cidr = "172.20.0.0/16"
 
-  tags = "${local.vpc_tags}"
+  tags = local.vpc_tags
 }
 
 module "subnets-eu-central-1" {
   source               = "../modules/subnets"
-  vpc_id               = "${module.vpc-eu-central-1.vpc_id}"
-  igw_id               = "${module.vpc-eu-central-1.igw_id}"
+  vpc_id               = module.vpc-eu-central-1.vpc_id
+  igw_id               = module.vpc-eu-central-1.igw_id
   azs                  = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-  public_subnet_cidrs  = "${local.public_subnet_cidrs}"
-  private_subnet_cidrs = "${local.private_subnet_cidrs}"
-  tags                 = "${local.subnet_tags}"
+  public_subnet_cidrs  = local.public_subnet_cidrs
+  private_subnet_cidrs = local.private_subnet_cidrs
+  tags                 = local.subnet_tags
 }
+
