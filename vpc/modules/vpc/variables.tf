@@ -7,5 +7,6 @@ variable "vpc_cidr" {
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
+
