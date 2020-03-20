@@ -1,5 +1,9 @@
-variable "domain_name" {}
+variable "domain_name" {
+}
 
-variable "zone_id" {}
+variable "zone_id" {
+}
 
-variable "zone_name" {}
+variable "zone_name" {
+}
+
