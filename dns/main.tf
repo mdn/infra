@@ -8,34 +8,34 @@ terraform {
 
 provider "aws" {
   version = "~> 2"
-  region  = "${var.region}"
+  region  = var.region
 }
 
-resource aws_route53_delegation_set "delegation-set" {
+resource "aws_route53_delegation_set" "delegation-set" {
   lifecycle {
     create_before_destroy = true
   }
 
-  reference_name = "${var.reference_name}"
+  reference_name = var.reference_name
 }
 
-resource aws_route53_zone "master-zone" {
-  name = "${var.domain_name}"
+resource "aws_route53_zone" "master-zone" {
+  name = var.domain_name
 
-  delegation_set_id = "${aws_route53_delegation_set.delegation-set.id}"
+  delegation_set_id = aws_route53_delegation_set.delegation-set.id
 
-  tags {
-    Name    = "${var.domain_name}"
+  tags = {
+    Name    = var.domain_name
     Purpose = "MDN DNS master zone"
   }
 }
 
-resource aws_route53_zone "mdn-dev" {
+resource "aws_route53_zone" "mdn-dev" {
   name = "mdn.dev"
 
-  delegation_set_id = "${aws_route53_delegation_set.delegation-set.id}"
+  delegation_set_id = aws_route53_delegation_set.delegation-set.id
 
-  tags {
+  tags = {
     Name    = "mdn.dev"
     Purpose = "mdn.dev master zone"
   }
@@ -46,41 +46,42 @@ resource aws_route53_zone "mdn-dev" {
 module "us-west-2" {
   source      = "./hosted_zone"
   zone_name   = "us-west-2"
-  domain_name = "${var.domain_name}"
-  zone_id     = "${aws_route53_zone.master-zone.id}"
+  domain_name = var.domain_name
+  zone_id     = aws_route53_zone.master-zone.id
 }
 
 module "eu-central-1" {
   source      = "./hosted_zone"
   zone_name   = "eu-central-1"
-  domain_name = "${var.domain_name}"
-  zone_id     = "${aws_route53_zone.master-zone.id}"
+  domain_name = var.domain_name
+  zone_id     = aws_route53_zone.master-zone.id
 }
 
 module "us-west-2a" {
   source      = "./hosted_zone"
   zone_name   = "us-west-2a"
-  domain_name = "${var.domain_name}"
-  zone_id     = "${aws_route53_zone.master-zone.id}"
+  domain_name = var.domain_name
+  zone_id     = aws_route53_zone.master-zone.id
 }
 
 module "dev" {
   source      = "./hosted_zone"
   zone_name   = "dev"
-  domain_name = "${var.domain_name}"
-  zone_id     = "${aws_route53_zone.master-zone.id}"
+  domain_name = var.domain_name
+  zone_id     = aws_route53_zone.master-zone.id
 }
 
 module "stage" {
   source      = "./hosted_zone"
   zone_name   = "stage"
-  domain_name = "${var.domain_name}"
-  zone_id     = "${aws_route53_zone.master-zone.id}"
+  domain_name = var.domain_name
+  zone_id     = aws_route53_zone.master-zone.id
 }
 
 module "prod" {
   source      = "./hosted_zone"
   zone_name   = "prod"
-  domain_name = "${var.domain_name}"
-  zone_id     = "${aws_route53_zone.master-zone.id}"
+  domain_name = var.domain_name
+  zone_id     = aws_route53_zone.master-zone.id
 }
+

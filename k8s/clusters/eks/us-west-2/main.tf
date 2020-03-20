@@ -11,13 +11,13 @@ locals {
     {
       instance_type        = "m5.large"
       key_name             = "mdn"
-      subnets              = "${join(",", data.terraform_remote_state.vpc-us-west-2.private_subnets)}"
+      subnets              = data.terraform_remote_state.vpc-us-west-2.outputs.private_subnets,
       autoscaling_enabled  = true
       asg_desired_capacity = 5
       asg_min_size         = 5
       asg_max_size         = 12
       spot_price           = "0.06"
-      additional_userdata  = "${data.template_file.additional_userdata.rendered}"
+      additional_userdata  = data.template_file.additional_userdata.rendered
     },
   ]
 
@@ -29,12 +29,10 @@ locals {
     },
     {
       username = "AdminRole"
-
       # This is a bug in k8s, the role in IAM will not match this
       # file since k8s has issues parsing roles with paths
       role_arn = "arn:aws:iam::178589013767:role/AdminRole"
-
-      group = "system:masters"
+      group    = "system:masters"
     },
     {
       username = "jenkins"
@@ -52,30 +50,28 @@ locals {
   ]
 
   cluster_tags = {
-    Region                              = "${var.region}"
+    Region                              = var.region
     Terraform                           = "true"
     "k8s.io/cluster-autoscaler/enabled" = "true"
   }
 }
 
 data "template_file" "additional_userdata" {
-  template = "${file("${path.module}/templates/userdata/additional-userdata.sh")}"
+  template = file("${path.module}/templates/userdata/additional-userdata.sh")
 }
 
 module "mdn-apps-a" {
   source = "../modules/eks"
 
-  region      = "${var.region}"
-  vpc_id      = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
-  eks_subnets = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
+  region      = var.region
+  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  eks_subnets = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
-  cluster_name       = "mdn-apps-a"
-  cluster_version    = "1.14"
-  worker_groups      = "${local.mdn_apps_workers}"
-  worker_group_count = "1"
-  map_roles          = "${local.map_roles}"
-  map_roles_count    = "3"
-  map_users          = "${local.map_users}"
-  map_users_count    = "1"
-  tags               = "${local.cluster_tags}"
+  cluster_name    = "mdn-apps-a"
+  cluster_version = "1.14"
+  worker_groups   = local.mdn_apps_workers
+  map_roles       = local.map_roles
+  map_users       = local.map_users
+  tags            = local.cluster_tags
 }
+

@@ -139,8 +139,8 @@ data "aws_iam_policy_document" "ingress" {
 
 resource "aws_iam_role_policy" "ingress" {
   name   = "${var.cluster_name}-ingress-iam"
-  role   = "${module.eks.worker_iam_role_name}"
-  policy = "${data.aws_iam_policy_document.ingress.json}"
+  role   = module.eks.worker_iam_role_name
+  policy = data.aws_iam_policy_document.ingress.json
 }
 
 data "aws_iam_policy_document" "kube2iam" {
@@ -156,7 +156,8 @@ data "aws_iam_policy_document" "kube2iam" {
 }
 
 resource "aws_iam_role_policy" "kube2iam" {
-  count  = "${var.enable_kube2iam}"
-  role   = "${module.eks.worker_iam_role_name}"
-  policy = "${data.aws_iam_policy_document.kube2iam.json}"
+  count  = var.enable_kube2iam ? 1 : 0
+  role   = module.eks.worker_iam_role_name
+  policy = data.aws_iam_policy_document.kube2iam.json
 }
+
