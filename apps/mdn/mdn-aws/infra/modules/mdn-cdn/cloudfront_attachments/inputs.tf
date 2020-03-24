@@ -1,12 +1,23 @@
-variable "enabled" {}
-variable "distribution_name" {}
-variable "environment" {}
-variable "comment" {}
-variable "domain_name" {}
-variable "acm_cert_arn" {}
+variable "enabled" {
+}
+
+variable "distribution_name" {
+}
+
+variable "environment" {
+}
+
+variable "comment" {
+}
+
+variable "domain_name" {
+}
+
+variable "acm_cert_arn" {
+}
 
 variable "aliases" {
-  type = "list"
+  type = list(string)
 }
 
 variable "standard_transition_days" {
@@ -28,3 +39,4 @@ variable "cloudfront_log_cookies" {
 variable "cloudfront_log_prefix" {
   default = ""
 }
+

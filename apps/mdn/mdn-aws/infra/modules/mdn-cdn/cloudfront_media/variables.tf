@@ -2,14 +2,19 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "enabled" {}
-
-variable "environment" {}
-
-variable "aliases" {
-  type = "list"
+variable "enabled" {
 }
 
-variable "media_bucket" {}
+variable "environment" {
+}
 
-variable "certificate_arn" {}
+variable "aliases" {
+  type = list(string)
+}
+
+variable "media_bucket" {
+}
+
+variable "certificate_arn" {
+}
+

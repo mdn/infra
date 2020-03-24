@@ -1,6 +1,8 @@
-variable "region" {}
+variable "region" {
+}
 
-variable "environment" {}
+variable "environment" {
+}
 
 variable "enabled" {
   default = 1
@@ -18,13 +20,17 @@ variable "storage_type" {
   default = "gp2"
 }
 
-variable "replica_source_db" {}
+variable "replica_source_db" {
+}
 
-variable "subnets" {}
+variable "subnets" {
+}
 
-variable "kms_key_id" {}
+variable "kms_key_id" {
+}
 
-variable "vpc_id" {}
+variable "vpc_id" {
+}
 
 variable "multi_az" {
   default = true
@@ -37,3 +43,4 @@ variable "mysql_port" {
 variable "monitoring_interval" {
   default = "0"
 }
+

@@ -2,10 +2,14 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "environment" {}
+variable "environment" {
+}
 
-variable "redis_name" {}
-variable "redis_node_size" {}
+variable "redis_name" {
+}
+
+variable "redis_node_size" {
+}
 
 variable "redis_port" {
   default = 6379
@@ -27,14 +31,17 @@ variable "redis_engine_version" {
   default = "3.2.4"
 }
 
-variable "subnets" {}
+variable "subnets" {
+}
 
 variable "nodes_security_group" {
-  type = "list"
+  type = list(string)
 }
 
-variable "enabled" {}
+variable "enabled" {
+}
 
 variable "azs" {
-  type = "list"
+  type = list(string)
 }
+

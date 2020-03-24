@@ -2,6 +2,9 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "environment" {}
+variable "environment" {
+}
 
-variable "bucket_name" {}
+variable "bucket_name" {
+}
+

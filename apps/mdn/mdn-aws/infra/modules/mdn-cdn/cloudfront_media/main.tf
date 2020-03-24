@@ -1,22 +1,23 @@
 data "aws_s3_bucket" "this" {
-  bucket = "${var.media_bucket}"
+  bucket = var.media_bucket
 }
 
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+}
 
 locals {
   origin_id = "S3-${var.media_bucket}"
 }
 
 resource "aws_cloudfront_distribution" "this" {
-  count   = "${var.enabled}"
-  aliases = "${var.aliases}"
+  count   = var.enabled
+  aliases = var.aliases
   comment = "MDN ${var.environment} Media CDN"
   enabled = true
 
   origin {
-    domain_name = "${data.aws_s3_bucket.this.website_endpoint}"
-    origin_id   = "${local.origin_id}"
+    domain_name = data.aws_s3_bucket.this.website_endpoint
+    origin_id   = local.origin_id
 
     custom_origin_config {
       http_port                = "80"
@@ -31,7 +32,7 @@ resource "aws_cloudfront_distribution" "this" {
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "${local.origin_id}"
+    target_origin_id       = local.origin_id
     viewer_protocol_policy = "redirect-to-https"
     default_ttl            = 86400
     max_ttl                = 432000
@@ -53,11 +54,11 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "${var.certificate_arn}"
+    acm_certificate_arn = var.certificate_arn
     ssl_support_method  = "sni-only"
   }
 
-  tags {
+  tags = {
     Service   = "MDN"
     Purpose   = "MDN ${var.environment} Media CDN"
     Terraform = "true"
@@ -76,14 +77,15 @@ data "aws_iam_policy_document" "cdn-policy" {
     ]
 
     resources = [
-      "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.this.id}",
+      "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.this[0].id}",
     ]
   }
 }
 
 resource "aws_iam_policy" "cdn-invalidate" {
-  count  = "${var.enabled}"
+  count  = var.enabled
   name   = "${var.media_bucket}-${var.environment}-cdn-policy"
   path   = "/"
-  policy = "${data.aws_iam_policy_document.cdn-policy.json}"
+  policy = data.aws_iam_policy_document.cdn-policy.json
 }
+
