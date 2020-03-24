@@ -1,6 +1,6 @@
 provider "aws" {
   version = "~> 2"
-  region  = "${var.region}"
+  region  = var.region
 }
 
 module "backup_bucket" {
@@ -9,7 +9,7 @@ module "backup_bucket" {
   create_user = true
 
   eks_worker_role_arn = [
-    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}",
+    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn,
   ]
 }
 
@@ -23,12 +23,12 @@ module "mail_stage" {
 module "db_dev" {
   source         = "./modules/db"
   environment    = "dev"
-  vpc_id         = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
+  vpc_id         = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   identifier     = "developer-portal"
   instance_class = "db.t3.micro"
   db_name        = "developer_portal"
-  db_user        = "${lookup(var.rds, "user.dev")}"
-  db_password    = "${lookup(var.rds, "password.dev")}"
+  db_user        = local.rds["user"]
+  db_password    = var.rds["dev"]["password"]
 }
 
 module "bucket_dev" {
@@ -36,17 +36,17 @@ module "bucket_dev" {
   environment         = "dev"
   create_user         = true
   bucket_name         = "developer-portal"
-  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}"
-  distribution_id     = "${module.cdn_dev.cloudfront_id}"
+  eks_worker_role_arn = data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn
+  distribution_id     = module.cdn_dev.cloudfront_id
 }
 
 module "cdn_dev" {
   source          = "./modules/cdn"
   environment     = "dev"
   cdn_aliases     = ["developer-portal.dev.mdn.mozit.cloud", "developer-portal-cdn.dev.mdn.mozit.cloud"]
-  origin_bucket   = "${module.bucket_dev.bucket_id}"
-  logging_bucket  = "${module.bucket_dev.logging_bucket_id}"
-  certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-dev.arn}"
+  origin_bucket   = module.bucket_dev.bucket_id
+  logging_bucket  = module.bucket_dev.logging_bucket_id
+  certificate_arn = data.aws_acm_certificate.developer-portal-cdn-dev.arn
 }
 
 module "redis_dev" {
@@ -55,11 +55,14 @@ module "redis_dev" {
   environment     = "dev"
   redis_nodes     = "2"
   redis_node_type = "cache.t3.micro"
-  subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
+  subnets         = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   security_groups = [
-    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
-    "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
+    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
+    join(
+      ",",
+      data.terraform_remote_state.kops-us-west-2.outputs.node_security_group_ids,
+    ),
   ]
 }
 
@@ -67,12 +70,12 @@ module "redis_dev" {
 module "db_stage" {
   source         = "./modules/db"
   environment    = "stage"
-  vpc_id         = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
+  vpc_id         = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   identifier     = "developer-portal"
   instance_class = "db.t3.medium"
   db_name        = "developer_portal"
-  db_user        = "${lookup(var.rds, "user.stage")}"
-  db_password    = "${lookup(var.rds, "password.stage")}"
+  db_user        = local.rds["user"]
+  db_password    = var.rds["stage"]["password"]
 }
 
 module "bucket_stage" {
@@ -80,17 +83,17 @@ module "bucket_stage" {
   environment         = "stage"
   create_user         = true
   bucket_name         = "developer-portal"
-  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}"
-  distribution_id     = "${module.cdn_stage.cloudfront_id}"
+  eks_worker_role_arn = data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn
+  distribution_id     = module.cdn_stage.cloudfront_id
 }
 
 module "cdn_stage" {
   source          = "./modules/cdn"
   environment     = "stage"
   cdn_aliases     = ["developer-portal.stage.mdn.mozit.cloud", "developer-portal-cdn.stage.mdn.mozit.cloud"]
-  origin_bucket   = "${module.bucket_stage.bucket_id}"
-  logging_bucket  = "${module.bucket_stage.logging_bucket_id}"
-  certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-stage.arn}"
+  origin_bucket   = module.bucket_stage.bucket_id
+  logging_bucket  = module.bucket_stage.logging_bucket_id
+  certificate_arn = data.aws_acm_certificate.developer-portal-cdn-stage.arn
 }
 
 module "redis_stage" {
@@ -99,11 +102,14 @@ module "redis_stage" {
   environment     = "stage"
   redis_nodes     = "3"
   redis_node_type = "cache.t3.micro"
-  subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
+  subnets         = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   security_groups = [
-    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
-    "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
+    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
+    join(
+      ",",
+      data.terraform_remote_state.kops-us-west-2.outputs.node_security_group_ids,
+    ),
   ]
 }
 
@@ -111,12 +117,12 @@ module "redis_stage" {
 module "db_prod" {
   source         = "./modules/db"
   environment    = "prod"
-  vpc_id         = "${data.terraform_remote_state.vpc-us-west-2.vpc_id}"
+  vpc_id         = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   identifier     = "developer-portal"
   instance_class = "db.t3.medium"
   db_name        = "developer_portal"
-  db_user        = "${lookup(var.rds, "user.prod")}"
-  db_password    = "${lookup(var.rds, "password.prod")}"
+  db_user        = local.rds["user"]
+  db_password    = var.rds["prod"]["password"]
 }
 
 module "bucket_prod" {
@@ -124,17 +130,17 @@ module "bucket_prod" {
   environment         = "prod"
   create_user         = true
   bucket_name         = "developer-portal"
-  eks_worker_role_arn = "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_iam_role_arn}"
-  distribution_id     = "${module.cdn_prod.cloudfront_id}"
+  eks_worker_role_arn = data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn
+  distribution_id     = module.cdn_prod.cloudfront_id
 }
 
 module "cdn_prod" {
   source          = "./modules/cdn"
   environment     = "prod"
   cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-cdn.prod.mdn.mozit.cloud", "developer.mozilla.com"]
-  origin_bucket   = "${module.bucket_prod.bucket_id}"
-  logging_bucket  = "${module.bucket_prod.logging_bucket_id}"
-  certificate_arn = "${data.aws_acm_certificate.developer-portal-cdn-prod.arn}"
+  origin_bucket   = module.bucket_prod.bucket_id
+  logging_bucket  = module.bucket_prod.logging_bucket_id
+  certificate_arn = data.aws_acm_certificate.developer-portal-cdn-prod.arn
 }
 
 module "redis_prod" {
@@ -143,10 +149,14 @@ module "redis_prod" {
   environment     = "prod"
   redis_nodes     = "3"
   redis_node_type = "cache.t3.small"
-  subnets         = "${data.terraform_remote_state.vpc-us-west-2.public_subnets}"
+  subnets         = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   security_groups = [
-    "${data.terraform_remote_state.eks-us-west-2.mdn_apps_a_worker_security_group_id}",
-    "${join(",", data.terraform_remote_state.kops-us-west-2.node_security_group_ids)}",
+    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
+    join(
+      ",",
+      data.terraform_remote_state.kops-us-west-2.outputs.node_security_group_ids,
+    ),
   ]
 }
+

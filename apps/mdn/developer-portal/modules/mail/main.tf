@@ -4,18 +4,18 @@ locals {
 }
 
 resource "aws_iam_user" "email" {
-  name = "${local.iam_user}"
+  name = local.iam_user
 
-  tags {
-    Name      = "${local.iam_user}"
-    Service   = "${var.service_name}"
-    Region    = "${var.region}"
+  tags = {
+    Name      = local.iam_user
+    Service   = var.service_name
+    Region    = var.region
     Terraform = "True"
   }
 }
 
 resource "aws_iam_access_key" "email" {
-  user = "${aws_iam_user.email.name}"
+  user = aws_iam_user.email.name
 }
 
 data "aws_iam_policy_document" "email" {
@@ -32,7 +32,8 @@ data "aws_iam_policy_document" "email" {
 }
 
 resource "aws_iam_user_policy" "email" {
-  name   = "${local.iam_policy}"
-  user   = "${aws_iam_user.email.name}"
-  policy = "${data.aws_iam_policy_document.email.json}"
+  name   = local.iam_policy
+  user   = aws_iam_user.email.name
+  policy = data.aws_iam_policy_document.email.json
 }
+

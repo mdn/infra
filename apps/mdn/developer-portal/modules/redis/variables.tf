@@ -2,9 +2,11 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "environment" {}
+variable "environment" {
+}
 
-variable "redis_id" {}
+variable "redis_id" {
+}
 
 variable "redis_engine" {
   default = "5.0.5"
@@ -27,9 +29,10 @@ variable "redis_nodes" {
 }
 
 variable "subnets" {
-  type = "list"
+  type = list(string)
 }
 
 variable "security_groups" {
-  type = "list"
+  type = list(string)
 }
+

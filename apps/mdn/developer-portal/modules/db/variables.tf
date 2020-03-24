@@ -2,11 +2,14 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "vpc_id" {}
+variable "vpc_id" {
+}
 
-variable "environment" {}
+variable "environment" {
+}
 
-variable "identifier" {}
+variable "identifier" {
+}
 
 variable "db_storage" {
   default = "100"
@@ -24,13 +27,17 @@ variable "engine_version" {
   default = "11.4"
 }
 
-variable "instance_class" {}
+variable "instance_class" {
+}
 
-variable "db_name" {}
+variable "db_name" {
+}
 
-variable "db_user" {}
+variable "db_user" {
+}
 
-variable "db_password" {}
+variable "db_password" {
+}
 
 variable "multi_az" {
   default = true
@@ -63,3 +70,4 @@ variable "allow_major_version_upgrade" {
 variable "monitoring_interval" {
   default = "0"
 }
+

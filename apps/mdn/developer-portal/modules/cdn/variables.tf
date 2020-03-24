@@ -6,21 +6,25 @@ variable "enabled" {
   default = true
 }
 
-variable "environment" {}
+variable "environment" {
+}
 
 variable "servicename" {
   default = "developer-portal"
 }
 
 variable "cdn_aliases" {
-  type = "list"
+  type = list(string)
 }
 
-variable "origin_bucket" {}
+variable "origin_bucket" {
+}
 
-variable "logging_bucket" {}
+variable "logging_bucket" {
+}
 
-variable "certificate_arn" {}
+variable "certificate_arn" {
+}
 
 variable "cloudfront_protocol_policy" {
   default = "redirect-to-https"
@@ -47,3 +51,4 @@ variable "origin_id" {
   description = "Just an origin identifier"
   default     = ""
 }
+
