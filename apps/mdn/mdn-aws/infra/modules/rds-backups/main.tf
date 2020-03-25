@@ -1,6 +1,6 @@
 resource "random_id" "rand-var" {
   keepers = {
-    backup_bucket = "${var.backup-bucket}"
+    backup_bucket = var.backup-bucket
   }
 
   byte_length = 8
@@ -12,21 +12,21 @@ locals {
 }
 
 resource "aws_s3_bucket" "backup-bucket-logging" {
-  bucket = "${local.backup-bucket-logs}"
+  bucket = local.backup-bucket-logs
   acl    = "log-delivery-write"
 
-  tags {
-    Name    = "${local.backup-bucket-logs}"
-    Region  = "${var.region}"
+  tags = {
+    Name    = local.backup-bucket-logs
+    Region  = var.region
     Service = "MDN"
     Purpose = "RDS Backup bucket logs"
   }
 }
 
 resource "aws_s3_bucket" "backup-bucket" {
-  bucket = "${local.backup-bucket}"
-  region = "${var.region}"
-  acl    = "${var.bucket-acl}"
+  bucket = local.backup-bucket
+  region = var.region
+  acl    = var.bucket-acl
 
   versioning {
     enabled = true
@@ -46,29 +46,29 @@ resource "aws_s3_bucket" "backup-bucket" {
   }
 
   logging {
-    target_bucket = "${aws_s3_bucket.backup-bucket-logging.id}"
+    target_bucket = aws_s3_bucket.backup-bucket-logging.id
     target_prefix = "logs/"
   }
 
-  tags {
-    Name    = "${local.backup-bucket}"
-    Region  = "${var.region}"
+  tags = {
+    Name    = local.backup-bucket
+    Region  = var.region
     Service = "MDN"
     Purpose = "RDS backup bucket"
   }
 }
 
 resource "aws_iam_user" "backup-user" {
-  name = "${var.backup-user}"
+  name = var.backup-user
 }
 
 resource "aws_iam_access_key" "backup-user-key" {
-  user = "${aws_iam_user.backup-user.name}"
+  user = aws_iam_user.backup-user.name
 }
 
 resource "aws_iam_user_policy" "backup-user-policy" {
   name = "rds-backup-user"
-  user = "${aws_iam_user.backup-user.name}"
+  user = aws_iam_user.backup-user.name
 
   policy = <<EOF
 {
@@ -97,4 +97,6 @@ resource "aws_iam_user_policy" "backup-user-policy" {
     ]
 }
 EOF
+
 }
+

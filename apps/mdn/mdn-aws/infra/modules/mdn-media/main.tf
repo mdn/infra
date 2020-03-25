@@ -3,9 +3,9 @@ locals {
 }
 
 resource "aws_s3_bucket" "media" {
-  bucket = "${local.bucket_name}"
+  bucket = local.bucket_name
   acl    = "public-read"
-  policy = "${data.aws_iam_policy_document.public-read.json}"
+  policy = data.aws_iam_policy_document.public-read.json
 
   website {
     index_document = "index.html"
@@ -19,10 +19,10 @@ resource "aws_s3_bucket" "media" {
     max_age_seconds = 3000
   }
 
-  tags {
-    Name        = "${local.bucket_name}"
-    Environment = "${var.environment}"
-    Region      = "${var.region}"
+  tags = {
+    Name        = local.bucket_name
+    Environment = var.environment
+    Region      = var.region
     Service     = "MDN"
     Purpose     = "MDN Media bucket"
     Terraform   = "true"
@@ -51,11 +51,11 @@ resource "aws_s3_bucket" "logging" {
     }
   }
 
-  tags {
+  tags = {
     Name        = "${local.bucket_name}-logs"
-    Region      = "${var.region}"
+    Region      = var.region
     Service     = "MDN"
-    Environment = "${var.environment}"
+    Environment = var.environment
     Terraform   = "true"
   }
 }
@@ -125,5 +125,6 @@ data "aws_iam_policy_document" "bucket-policy" {
 resource "aws_iam_policy" "bucket-policy" {
   name   = "${local.bucket_name}-role-policy"
   path   = "/"
-  policy = "${data.aws_iam_policy_document.bucket-policy.json}"
+  policy = data.aws_iam_policy_document.bucket-policy.json
 }
+

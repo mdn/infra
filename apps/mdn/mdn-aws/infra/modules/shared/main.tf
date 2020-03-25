@@ -1,9 +1,5 @@
-provider "aws" {
-  region = "${var.region}"
-}
-
 resource "random_id" "rand-var" {
-  count = "${var.enabled}"
+  count = var.enabled ? 1 : 0
 
   # NOTE: don't mess with these keepers here
   #       if we remove anyone of these it means the hashes will all regenerate
@@ -12,25 +8,43 @@ resource "random_id" "rand-var" {
   #       The variable var.db_storage_bucket_name is no longer used
   #       but we keep it around to avoid hash regeneration
   keepers = {
-    db_storage_bucket_name = "${var.db_storage_bucket_name}"
-    elb_logs_bucket_name   = "${var.elb_logs_bucket_name}"
-    downloads_bucket_name  = "${var.downloads_bucket_name}"
+    db_storage_bucket_name = var.db_storage_bucket_name
+    elb_logs_bucket_name   = var.elb_logs_bucket_name
+    downloads_bucket_name  = var.downloads_bucket_name
   }
 
   byte_length = 8
 }
 
 locals {
-  downloads     = "${var.downloads_bucket_name}"
-  elb_logs      = "${var.elb_logs_bucket_name}-${random_id.rand-var.hex}"
-  shared_backup = "${var.shared_backup_bucket_name}-${random_id.rand-var.hex}"
+  downloads     = var.downloads_bucket_name
+  elb_logs      = "${var.elb_logs_bucket_name}-${random_id.rand-var[0].hex}"
+  shared_backup = "${var.shared_backup_bucket_name}-${random_id.rand-var[0].hex}"
+}
+
+data "aws_iam_policy_document" "elb_logs_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::797873946194:root"]
+    }
+
+    actions = [
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.elb_logs}/*"
+    ]
+  }
 }
 
 resource "aws_s3_bucket" "mdn-elb-logs" {
-  count = "${var.enabled}"
+  count = var.enabled ? 1 : 0
 
-  bucket = "${local.elb_logs}"
-  region = "${var.region}"
+  bucket = local.elb_logs
+  region = var.region
   acl    = "log-delivery-write"
 
   lifecycle_rule {
@@ -41,26 +55,10 @@ resource "aws_s3_bucket" "mdn-elb-logs" {
     }
   }
 
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Id": "AWSConsole-AccessLogs-Policy-1503002510675",
-    "Statement": [
-        {
-            "Sid": "AWSConsoleStmt-1503002510675",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::797873946194:root"
-            },
-            "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${local.elb_logs}/*"
-        }
-    ]
-}
-EOF
+  policy = data.aws_iam_policy_document.elb_logs_policy.json
 
-  tags {
-    Name        = "${local.elb_logs}"
+  tags = {
+    Name        = local.elb_logs
     Stack       = "MDN"
     Environment = "shared"
     Purpose     = "elb-logs"
@@ -68,17 +66,16 @@ EOF
 }
 
 resource "aws_s3_bucket" "mdn-downloads-logs" {
-  count  = "${var.enabled}"
+  count  = var.enabled ? 1 : 0
   bucket = "${local.downloads}-logs"
   acl    = "log-delivery-write"
 }
 
 resource "aws_s3_bucket" "mdn-downloads" {
-  count         = "${var.enabled}"
-  bucket        = "${local.downloads}"
-  region        = "${var.region}"
-  acl           = ""
-  force_destroy = ""
+  count  = var.enabled ? 1 : 0
+  acl    = ""
+  bucket = local.downloads
+  region = var.region
 
   cors_rule {
     allowed_headers = ["*"]
@@ -87,10 +84,10 @@ resource "aws_s3_bucket" "mdn-downloads" {
     max_age_seconds = 3000
   }
 
-  hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
+  hosted_zone_id = var.hosted-zone-id-defs[var.region]
 
   logging {
-    target_bucket = "${aws_s3_bucket.mdn-downloads-logs.id}"
+    target_bucket = aws_s3_bucket.mdn-downloads-logs[0].id
     target_prefix = "logs/"
   }
 
@@ -159,8 +156,9 @@ resource "aws_s3_bucket" "mdn-downloads" {
 }
 EOF
 
-  tags {
-    Name        = "${local.downloads}"
+
+  tags = {
+    Name        = local.downloads
     Stack       = "MDN"
     Environment = "shared"
   }
@@ -168,13 +166,13 @@ EOF
 
 # backup EFS to this
 resource "aws_s3_bucket" "mdn-shared-backup" {
-  count  = "${var.enabled}"
-  bucket = "${local.shared_backup}"
-  region = "${var.region}"
+  count  = var.enabled ? 1 : 0
+  bucket = local.shared_backup
+  region = var.region
   acl    = "log-delivery-write"
 
   logging {
-    target_bucket = "${local.shared_backup}"
+    target_bucket = local.shared_backup
     target_prefix = "logs/"
   }
 
@@ -182,25 +180,25 @@ resource "aws_s3_bucket" "mdn-shared-backup" {
     enabled = true
   }
 
-  tags {
-    Name        = "${local.shared_backup}"
+  tags = {
+    Name        = local.shared_backup
     Stack       = "MDN"
     Environment = "shared"
   }
 }
 
 # MDN efs backup user
-resource aws_iam_user "mdn-efs-backup-user" {
+resource "aws_iam_user" "mdn-efs-backup-user" {
   name = "mdn-efs-backup"
 }
 
-resource aws_iam_access_key "mdn-efs-backup-user" {
-  user = "${aws_iam_user.mdn-efs-backup-user.name}"
+resource "aws_iam_access_key" "mdn-efs-backup-user" {
+  user = aws_iam_user.mdn-efs-backup-user.name
 }
 
-resource aws_iam_user_policy "backup-user-policy" {
+resource "aws_iam_user_policy" "backup-user-policy" {
   name = "mdn-efs-backup"
-  user = "${aws_iam_user.mdn-efs-backup-user.name}"
+  user = aws_iam_user.mdn-efs-backup-user.name
 
   policy = <<EOF
 {
@@ -213,7 +211,7 @@ resource aws_iam_user_policy "backup-user-policy" {
         "s3:ListAllMyBuckets"
       ],
       "Resource": [
-        "${aws_s3_bucket.mdn-shared-backup.arn}"
+        "${aws_s3_bucket.mdn-shared-backup[0].arn}"
       ]
     },
     {
@@ -224,10 +222,11 @@ resource aws_iam_user_policy "backup-user-policy" {
         "s3:DeleteObject"
       ],
       "Resource": [
-        "${aws_s3_bucket.mdn-shared-backup.arn}/*"
+        "${aws_s3_bucket.mdn-shared-backup[0].arn}/*"
       ]
     }
   ]
 }
 EOF
 }
+

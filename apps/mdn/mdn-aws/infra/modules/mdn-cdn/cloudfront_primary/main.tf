@@ -3,19 +3,19 @@ locals {
 }
 
 data "aws_s3_bucket" "api_bucket" {
-  bucket = "${var.api_bucket}"
+  bucket = var.api_bucket
 }
 
 resource "random_id" "rand-var" {
   keepers = {
-    bucket_name = "${local.log_bucket}"
+    bucket_name = local.log_bucket
   }
 
   byte_length = 8
 }
 
 resource "aws_s3_bucket" "logging" {
-  count  = "${var.enabled}"
+  count  = var.enabled
   bucket = "${local.log_bucket}-${random_id.rand-var.hex}"
   acl    = "log-delivery-write"
 
@@ -27,42 +27,42 @@ resource "aws_s3_bucket" "logging" {
     enabled = true
 
     transition {
-      days          = "${var.standard_transition_days}"
+      days          = var.standard_transition_days
       storage_class = "STANDARD_IA"
     }
 
     transition {
-      days          = "${var.glacier_transition_days}"
+      days          = var.glacier_transition_days
       storage_class = "GLACIER"
     }
 
     expiration {
-      days = "${var.expiration_days}"
+      days = var.expiration_days
     }
   }
 
-  tags {
+  tags = {
     Name        = "${local.log_bucket}-${random_id.rand-var.hex}"
-    Environment = "${var.environment}"
+    Environment = var.environment
     Service     = "MDN"
     Purpose     = "Cloudfront logging bucket"
   }
 }
 
 resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
-  count = "${var.enabled}"
+  count = var.enabled
 
-  aliases         = "${var.aliases}"
-  comment         = "${var.comment}"
+  aliases         = var.aliases
+  comment         = var.comment
   enabled         = true
   http_version    = "http2"
   is_ipv6_enabled = true
   price_class     = "PriceClass_All"
 
   logging_config {
-    include_cookies = "${var.cloudfront_log_cookies}"
-    bucket          = "${aws_s3_bucket.logging.bucket_domain_name}"
-    prefix          = "${var.cloudfront_log_prefix}"
+    include_cookies = var.cloudfront_log_cookies
+    bucket          = aws_s3_bucket.logging[0].bucket_domain_name
+    prefix          = var.cloudfront_log_prefix
   }
 
   custom_error_response {
@@ -106,7 +106,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -131,7 +131,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -155,7 +155,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -179,7 +179,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -204,7 +204,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -228,7 +228,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -252,7 +252,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -276,7 +276,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -300,7 +300,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -324,7 +324,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 3600
     min_ttl                = 3600
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -347,7 +347,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -368,7 +368,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -383,7 +383,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   }
 
   origin {
-    domain_name = "${data.aws_s3_bucket.api_bucket.website_endpoint}"
+    domain_name = data.aws_s3_bucket.api_bucket.website_endpoint
     origin_id   = "S3-${var.api_bucket}"
 
     custom_origin_config {
@@ -397,14 +397,14 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   }
 
   origin {
-    domain_name = "${var.domain_name}"
-    origin_id   = "${var.distribution_name}"
+    domain_name = var.domain_name
+    origin_id   = var.distribution_name
 
     custom_origin_config {
       http_port                = "80"
       https_port               = "443"
       origin_protocol_policy   = "https-only"
-      origin_read_timeout      = "${var.origin_read_timeout}"
+      origin_read_timeout      = var.origin_read_timeout
       origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       origin_keepalive_timeout = 5
     }
@@ -417,17 +417,18 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "${var.acm_cert_arn}"
+    acm_certificate_arn = var.acm_cert_arn
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
     minimum_protocol_version = "TLSv1.1_2016"
   }
 
-  tags {
-    Name        = "${var.distribution_name}"
-    Environment = "${var.environment}"
+  tags = {
+    Name        = var.distribution_name
+    Environment = var.environment
     Purpose     = "Primary CDN"
     Service     = "MDN"
   }
 }
+

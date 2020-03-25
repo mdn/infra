@@ -10,6 +10,9 @@ variable "lambda_debug" {
   default = "False"
 }
 
-variable "source_bucket" {}
+variable "source_bucket" {
+}
 
-variable "destination_bucket" {}
+variable "destination_bucket" {
+}
+

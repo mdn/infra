@@ -2,7 +2,8 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "environment" {}
+variable "environment" {
+}
 
 variable "create_user" {
   default = false
@@ -13,9 +14,10 @@ variable "name" {
 }
 
 variable "eks_worker_role_arn" {
-  type = "list"
+  type = list(string)
 }
 
 variable "iam_policies" {
-  type = "list"
+  type = list(string)
 }
+

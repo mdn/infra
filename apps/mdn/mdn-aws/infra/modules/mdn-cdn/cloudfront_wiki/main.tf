@@ -3,9 +3,9 @@ locals {
 }
 
 resource "aws_cloudfront_distribution" "mdn-wiki" {
-  count           = "${var.enabled}"
-  aliases         = "${var.aliases}"
-  is_ipv6_enabled = "${var.enable_ipv6}"
+  count           = var.enabled
+  aliases         = var.aliases
+  is_ipv6_enabled = var.enable_ipv6
   comment         = "MDN wiki ${var.environment} CDN"
   enabled         = true
 
@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${local.distribution_name}"
+    target_origin_id       = local.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -75,7 +75,7 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${local.distribution_name}"
+    target_origin_id       = local.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -99,7 +99,7 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${local.distribution_name}"
+    target_origin_id       = local.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -120,7 +120,7 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${local.distribution_name}"
+    target_origin_id       = local.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -134,14 +134,14 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
   }
 
   origin {
-    domain_name = "${var.origin_domain}"
-    origin_id   = "${local.distribution_name}"
+    domain_name = var.origin_domain
+    origin_id   = local.distribution_name
 
     custom_origin_config {
       http_port                = "80"
       https_port               = "443"
       origin_protocol_policy   = "https-only"
-      origin_read_timeout      = "${var.origin_read_timeout}"
+      origin_read_timeout      = var.origin_read_timeout
       origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       origin_keepalive_timeout = 5
     }
@@ -154,15 +154,16 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = "${var.acm_cert_arn}"
+    acm_certificate_arn      = var.acm_cert_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.1_2016"
   }
 
-  tags {
-    Name        = "${local.distribution_name}"
-    Environment = "${var.environment}"
+  tags = {
+    Name        = local.distribution_name
+    Environment = var.environment
     Purpose     = "Wiki CDN"
     Service     = "MDN"
   }
 }
+

@@ -4,14 +4,14 @@ locals {
 
 resource "random_id" "rand-var" {
   keepers = {
-    bucket_name = "${local.log_bucket}"
+    bucket_name = local.log_bucket
   }
 
   byte_length = 8
 }
 
 resource "aws_s3_bucket" "logging" {
-  count  = "${var.enabled}"
+  count  = var.enabled
   bucket = "${local.log_bucket}-${random_id.rand-var.hex}"
   acl    = "log-delivery-write"
 
@@ -23,41 +23,41 @@ resource "aws_s3_bucket" "logging" {
     enabled = true
 
     transition {
-      days          = "${var.standard_transition_days}"
+      days          = var.standard_transition_days
       storage_class = "STANDARD_IA"
     }
 
     transition {
-      days          = "${var.glacier_transition_days}"
+      days          = var.glacier_transition_days
       storage_class = "GLACIER"
     }
 
     expiration {
-      days = "${var.expiration_days}"
+      days = var.expiration_days
     }
   }
 
-  tags {
+  tags = {
     Name        = "${local.log_bucket}-${random_id.rand-var.hex}"
-    Environment = "${var.environment}"
+    Environment = var.environment
     Service     = "MDN"
     Purpose     = "Cloudfront logging bucket"
   }
 }
 
 resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
-  count           = "${var.enabled}"
-  aliases         = "${var.aliases}"
-  comment         = "${var.comment}"
+  count           = var.enabled
+  aliases         = var.aliases
+  comment         = var.comment
   enabled         = true
   http_version    = "http2"
   is_ipv6_enabled = false
   price_class     = "PriceClass_All"
 
   logging_config {
-    include_cookies = "${var.cloudfront_log_cookies}"
-    bucket          = "${aws_s3_bucket.logging.bucket_domain_name}"
-    prefix          = "${var.cloudfront_log_prefix}"
+    include_cookies = var.cloudfront_log_cookies
+    bucket          = aws_s3_bucket.logging[0].bucket_domain_name
+    prefix          = var.cloudfront_log_prefix
   }
 
   custom_error_response {
@@ -76,7 +76,7 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -98,7 +98,7 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
     min_ttl     = 0
 
     smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
+    target_origin_id       = var.distribution_name
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -112,8 +112,8 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
   }
 
   origin {
-    domain_name = "${var.domain_name}"
-    origin_id   = "${var.distribution_name}"
+    domain_name = var.domain_name
+    origin_id   = var.distribution_name
 
     custom_origin_config {
       http_port                = "80"
@@ -132,17 +132,18 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "${var.acm_cert_arn}"
+    acm_certificate_arn = var.acm_cert_arn
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
     minimum_protocol_version = "TLSv1"
   }
 
-  tags {
-    Name        = "${var.distribution_name}"
-    Environment = "${var.environment}"
+  tags = {
+    Name        = var.distribution_name
+    Environment = var.environment
     Purpose     = "Attachment CDN"
     Service     = "MDN"
   }
 }
+

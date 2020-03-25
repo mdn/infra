@@ -1,64 +1,64 @@
 provider "aws" {
-  region = "${var.region}"
+  region = var.region
 }
 
 locals {
   name_prefix = "${var.replica_identifier}-${var.environment}-replica"
 }
 
-resource aws_db_subnet_group "replica" {
+resource "aws_db_subnet_group" "replica" {
   name        = "${local.name_prefix}-subnet-group"
   description = "${local.name_prefix}-subnet-group"
 
-  subnet_ids = ["${split(",", var.subnets)}"]
+  subnet_ids = split(",", var.subnets)
 
-  tags {
+  tags = {
     Name        = "${local.name_prefix}-subnet-group"
-    Environment = "${var.environment}"
-    Region      = "${var.region}"
+    Environment = var.environment
+    Region      = var.region
   }
 }
 
-resource aws_db_instance "replica" {
-  count = "${var.enabled}"
+resource "aws_db_instance" "replica" {
+  count = var.enabled
 
-  identifier           = "${local.name_prefix}"
-  replicate_source_db  = "${var.replica_source_db}"
-  instance_class       = "${var.instance_class}"
-  storage_type         = "${var.storage_type}"
-  kms_key_id           = "${var.kms_key_id}"
+  identifier           = local.name_prefix
+  replicate_source_db  = var.replica_source_db
+  instance_class       = var.instance_class
+  storage_type         = var.storage_type
+  kms_key_id           = var.kms_key_id
   storage_encrypted    = true
-  db_subnet_group_name = "${aws_db_subnet_group.replica.name}"
+  db_subnet_group_name = aws_db_subnet_group.replica.name
 
-  vpc_security_group_ids = ["${aws_security_group.replica-sg.id}"]
-  multi_az               = "${var.multi_az}"
+  vpc_security_group_ids = [aws_security_group.replica-sg[0].id]
+  multi_az               = var.multi_az
 
   apply_immediately   = true
   skip_final_snapshot = true
-  monitoring_interval = "${var.monitoring_interval}"
+  monitoring_interval = var.monitoring_interval
 
-  tags {
-    Name        = "${local.name_prefix}"
-    Region      = "${var.region}"
-    Environment = "${var.environment}"
+  tags = {
+    Name        = local.name_prefix
+    Region      = var.region
+    Environment = var.environment
   }
 }
 
-data aws_vpc "vpc_cidr" {
-  id = "${var.vpc_id}"
+data "aws_vpc" "vpc_cidr" {
+  id = var.vpc_id
 }
 
 resource "aws_security_group" "replica-sg" {
-  count = "${var.enabled}"
+  count = var.enabled
   name  = "${local.name_prefix}-sg"
 
-  vpc_id = "${var.vpc_id}"
+  vpc_id = var.vpc_id
 
   ingress {
-    from_port   = "${var.mysql_port}"
-    to_port     = "${var.mysql_port}"
+    from_port   = var.mysql_port
+    to_port     = var.mysql_port
     protocol    = "TCP"
-    cidr_blocks = ["${data.aws_vpc.vpc_cidr.cidr_block}"]
+    cidr_blocks = [data.aws_vpc.vpc_cidr.cidr_block]
   }
 
   egress {
@@ -68,9 +68,10 @@ resource "aws_security_group" "replica-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name        = "${local.name_prefix}-sg"
-    Environment = "${var.environment}"
-    Region      = "${var.region}"
+    Environment = var.environment
+    Region      = var.region
   }
 }
+
