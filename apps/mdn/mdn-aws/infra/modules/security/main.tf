@@ -23,7 +23,6 @@ resource "aws_iam_access_key" "worf-keys" {
   user = aws_iam_user.worf.name
 }
 
-
 locals {
   # This is a crappy way to do this, we are assuming that there is only
   # one nacl. Instead there might be multiple nacls but we are taking

@@ -74,15 +74,7 @@ data "aws_security_groups" "us-west-2-nodes_sg" {
   }
 
   filter {
-    name = "vpc-id"
-    # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-    # force an interpolation expression to be interpreted as a list by wrapping it
-    # in an extra set of list brackets. That form was supported for compatibility in
-    # v0.11, but is no longer supported in Terraform v0.12.
-    #
-    # If the expression in the following list itself returns a list, remove the
-    # brackets to avoid interpretation as a list of lists. If the expression
-    # returns a single list item then leave it as-is and remove this TODO comment.
+    name   = "vpc-id"
     values = [data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id]
   }
 }
@@ -96,15 +88,7 @@ data "aws_security_groups" "eu-central-1-nodes_sg" {
   }
 
   filter {
-    name = "vpc-id"
-    # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-    # force an interpolation expression to be interpreted as a list by wrapping it
-    # in an extra set of list brackets. That form was supported for compatibility in
-    # v0.11, but is no longer supported in Terraform v0.12.
-    #
-    # If the expression in the following list itself returns a list, remove the
-    # brackets to avoid interpretation as a list of lists. If the expression
-    # returns a single list item then leave it as-is and remove this TODO comment.
+    name   = "vpc-id"
     values = [data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id]
   }
 }

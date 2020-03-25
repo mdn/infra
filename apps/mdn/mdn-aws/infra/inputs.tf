@@ -77,11 +77,11 @@ variable "redis" {
 variable "rds_defaults" {
   description = "If you want to override some rds input variables, see local.tf for more of what you can override"
   type        = any
-  default = {}
+  default     = {}
 }
 
 variable "rds" {
-  type = any
+  type    = any
   default = {}
 }
 
