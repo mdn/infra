@@ -3,10 +3,6 @@ variable "region" {
 }
 
 variable "rds" {
-  default = {
-    user.stage     = "root"
-    user.prod      = "root"
-    password.stage = ""
-    password.prod  = ""
-  }
+  type    = any
+  default = {}
 }

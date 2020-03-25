@@ -1,0 +1,5 @@
+locals {
+  rds = {
+    user = "root"
+  }
+}

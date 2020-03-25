@@ -5,51 +5,52 @@ locals {
   policy_name  = "${var.bucket_name}-policy"
 }
 
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+}
 
 resource "aws_s3_bucket" "this" {
-  bucket = "${local.bucket_name}"
-  acl    = "${var.bucket_acl}"
+  bucket = local.bucket_name
+  acl    = var.bucket_acl
 
-  tags {
-    Name      = "${local.bucket_name}"
+  tags = {
+    Name      = local.bucket_name
     Project   = "developer-portal"
     Terraform = "true"
   }
 }
 
 resource "aws_iam_role" "this" {
-  name               = "${local.role_name}"
-  assume_role_policy = "${data.aws_iam_policy_document.bucket_role.json}"
+  name               = local.role_name
+  assume_role_policy = data.aws_iam_policy_document.bucket_role.json
 
-  tags {
-    Name      = "${local.role_name}"
+  tags = {
+    Name      = local.role_name
     Project   = "developer-portal"
     Terraform = "true"
   }
 }
 
 resource "aws_iam_role_policy" "this" {
-  name   = "${local.policy_name}"
-  role   = "${aws_iam_role.this.id}"
-  policy = "${data.aws_iam_policy_document.bucket_policy.json}"
+  name   = local.policy_name
+  role   = aws_iam_role.this.id
+  policy = data.aws_iam_policy_document.bucket_policy.json
 }
 
 resource "aws_iam_user" "this" {
-  count = "${var.create_user}"
-  name  = "${local.iam_username}"
+  count = var.create_user ? 1 : 0
+  name  = local.iam_username
 }
 
 resource "aws_iam_user_policy" "this" {
-  count  = "${var.create_user}"
-  name   = "${local.policy_name}"
-  user   = "${element(aws_iam_user.this.*.name, count.index)}"
-  policy = "${data.aws_iam_policy_document.bucket_policy.json}"
+  count  = var.create_user ? 1 : 0
+  name   = local.policy_name
+  user   = element(aws_iam_user.this.*.name, count.index)
+  policy = data.aws_iam_policy_document.bucket_policy.json
 }
 
 resource "aws_iam_access_key" "this" {
-  count = "${var.create_user}"
-  user  = "${element(aws_iam_user.this.*.name, count.index)}"
+  count = var.create_user ? 1 : 0
+  user  = element(aws_iam_user.this.*.name, count.index)
 }
 
 data "aws_iam_policy_document" "bucket_role" {
@@ -76,7 +77,7 @@ data "aws_iam_policy_document" "bucket_role" {
     # We assume you are using kube2iam here
     principals {
       type        = "AWS"
-      identifiers = ["${var.eks_worker_role_arn}"]
+      identifiers = var.eks_worker_role_arn
     }
   }
 }
@@ -122,3 +123,4 @@ data "aws_iam_policy_document" "bucket_policy" {
     ]
   }
 }
+

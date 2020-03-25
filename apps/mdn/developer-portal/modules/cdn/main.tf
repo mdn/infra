@@ -1,23 +1,24 @@
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
+}
 
 data "aws_s3_bucket" "selected" {
-  bucket = "${var.origin_bucket}"
+  bucket = var.origin_bucket
 }
 
 data "aws_s3_bucket" "logging" {
-  bucket = "${var.logging_bucket}"
+  bucket = var.logging_bucket
 }
 
 locals {
   servicename        = "${var.servicename}-${var.environment}"
-  origin_domain_name = "${var.origin_domain_name == "" ? "developer-portal-origin.${var.environment}.mdn.mozit.cloud" : var.origin_domain_name}"
-  origin_id          = "${var.origin_id == "" ? "developer-portal-${var.environment}-origin" : var.origin_id}"
+  origin_domain_name = var.origin_domain_name == "" ? "developer-portal-origin.${var.environment}.mdn.mozit.cloud" : var.origin_domain_name
+  origin_id          = var.origin_id == "" ? "developer-portal-${var.environment}-origin" : var.origin_id
 }
 
 resource "aws_cloudfront_distribution" "this" {
-  enabled = "${var.enabled}"
+  enabled = var.enabled
   comment = "developer-portal ${var.environment} CDN"
-  aliases = "${var.cdn_aliases}"
+  aliases = var.cdn_aliases
 
   #logging_config {
   #  include_cookies = false
@@ -32,8 +33,8 @@ resource "aws_cloudfront_distribution" "this" {
     response_page_path    = "/404.html"
   }
   origin {
-    domain_name = "${local.origin_domain_name}"
-    origin_id   = "${local.origin_id}"
+    domain_name = local.origin_domain_name
+    origin_id   = local.origin_id
 
     custom_origin_config {
       origin_protocol_policy = "https-only"
@@ -43,7 +44,7 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
   origin {
-    domain_name = "${data.aws_s3_bucket.selected.website_endpoint}"
+    domain_name = data.aws_s3_bucket.selected.website_endpoint
     origin_id   = "origin-${var.origin_bucket}"
 
     custom_origin_config {
@@ -62,7 +63,7 @@ resource "aws_cloudfront_distribution" "this" {
     max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "${local.origin_id}"
+    target_origin_id       = local.origin_id
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
@@ -77,8 +78,8 @@ resource "aws_cloudfront_distribution" "this" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods   = ["GET", "HEAD"]
-    compress         = "${var.cdn_compress}"
-    target_origin_id = "${local.origin_id}"
+    compress         = var.cdn_compress
+    target_origin_id = local.origin_id
 
     forwarded_values {
       query_string = true
@@ -89,7 +90,7 @@ resource "aws_cloudfront_distribution" "this" {
       }
     }
 
-    viewer_protocol_policy = "${var.cloudfront_protocol_policy}"
+    viewer_protocol_policy = var.cloudfront_protocol_policy
     min_ttl                = 0
     default_ttl            = 0
     max_ttl                = 84600
@@ -100,13 +101,13 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
   viewer_certificate {
-    acm_certificate_arn      = "${var.certificate_arn}"
-    minimum_protocol_version = "${var.minimum_protocol_version}"
+    acm_certificate_arn      = var.certificate_arn
+    minimum_protocol_version = var.minimum_protocol_version
     ssl_support_method       = "sni-only"
   }
-  tags {
+  tags = {
     Name        = "developer-portal ${var.environment} CDN"
-    Environment = "${var.environment}"
+    Environment = var.environment
     Terraform   = "true"
   }
 }
@@ -130,7 +131,7 @@ data "aws_iam_policy_document" "lambda-exec-role" {
 # Lambda@edge to set origin response headers
 resource "aws_iam_role" "lambda-edge-role" {
   name               = "${local.servicename}-lambda-exec-role"
-  assume_role_policy = "${data.aws_iam_policy_document.lambda-exec-role.json}"
+  assume_role_policy = data.aws_iam_policy_document.lambda-exec-role.json
 }
 
 data "archive_file" "lambda-zip" {
@@ -146,19 +147,20 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "lambda-headers" {
-  provider         = "aws.aws-lambda-east"
+  provider         = aws.aws-lambda-east
   function_name    = "${local.servicename}-headers"
   description      = "Provides Correct Response Headers for ${local.servicename}"
   publish          = "true"
   filename         = "${path.module}/lambda-headers.zip"
-  source_code_hash = "${data.archive_file.lambda-zip.output_base64sha256}"
-  role             = "${aws_iam_role.lambda-edge-role.arn}"
-  handler          = "${var.event_trigger}"
+  source_code_hash = data.archive_file.lambda-zip.output_base64sha256
+  role             = aws_iam_role.lambda-edge-role.arn
+  handler          = var.event_trigger
   runtime          = "nodejs10.x"
 
-  tags {
+  tags = {
     Name        = "${local.servicename}-headers"
-    ServiceName = "${local.servicename}"
+    ServiceName = local.servicename
     Terraform   = "true"
   }
 }
+
