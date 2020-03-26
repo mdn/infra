@@ -26,22 +26,29 @@ variable "backup_dir" {
   default = "/data/backups"
 }
 
-variable "nginx_htpasswd" {}
+variable "nginx_htpasswd" {
+}
 
-variable "jenkins_backup_dms" {}
+variable "jenkins_backup_dms" {
+}
 
-variable "papertrail_host" {}
+variable "papertrail_host" {
+}
 
-variable "papertrail_port" {}
+variable "papertrail_port" {
+}
 
-variable "datadog_key" {}
+variable "datadog_key" {
+}
 
-variable "datadog_hostname" {}
+variable "datadog_hostname" {
+}
 
 variable "ip_whitelist" {
-  type = "list"
+  type = list(string)
 }
 
 variable "mozilla_vpn_whitelist" {
-  type = "list"
+  type = list(string)
 }
+
