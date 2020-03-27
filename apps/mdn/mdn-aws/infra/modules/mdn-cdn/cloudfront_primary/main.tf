@@ -291,6 +291,31 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 8
   ordered_cache_behavior {
+    path_pattern = "*/payments/*"
+
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = var.distribution_name
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      headers      = ["*"]
+
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+
+  # 9
+  ordered_cache_behavior {
     path_pattern = "admin/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
@@ -313,7 +338,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 9
+  # 10
   ordered_cache_behavior {
     path_pattern = "api/v1/doc/*"
 
@@ -336,7 +361,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
-  # 10
+  # 11
   ordered_cache_behavior {
     path_pattern = "api/*"
 
@@ -431,4 +456,3 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     Service     = "MDN"
   }
 }
-
