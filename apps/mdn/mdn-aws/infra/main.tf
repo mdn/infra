@@ -1,5 +1,6 @@
 provider "aws" {
-  region = var.region
+  region  = var.region
+  version = "~>2"
 }
 
 terraform {
@@ -323,4 +324,3 @@ module "upload-user-prod" {
     data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn,
   ]
 }
-
