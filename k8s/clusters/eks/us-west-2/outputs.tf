@@ -17,4 +17,3 @@ output "mdn_apps_a_worker_iam_role_arn" {
 output "mdn_apps_a_worker_security_group_id" {
   value = module.mdn-apps-a.worker_security_group_id
 }
-

@@ -10,6 +10,18 @@ output "cluster_arn" {
   value = module.eks.cluster_arn
 }
 
+output "cluster_oidc_issuer_url" {
+  value = module.eks.cluster_oidc_issuer_url
+}
+
+output "cluster_version" {
+  value = module.eks.cluster_version
+}
+
+output "node_groups" {
+  value = module.eks.node_groups
+}
+
 output "workers_asg_names" {
   value = module.eks.workers_asg_names
 }
