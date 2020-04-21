@@ -22,3 +22,7 @@ variable "github_users" {
   type    = list(string)
   default = ["limed", "escattone", "Gregoor", "peterbe", "tobinmori", "schalkneethling"]
 }
+
+variable "zone_id" {}
+
+variable "vpc_id" {}

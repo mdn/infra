@@ -1,8 +1,8 @@
 
 output "tunnel_server_ip" {
-  value = aws_eip.ssh-tunnel.public_ip
+  value = module.ssh_tunnel_eu_central_1.tunnel_server_ip
 }
 
 output "tunnel_fqdn" {
-  value = aws_route53_record.ssh-tunnel.fqdn
+  value = module.ssh_tunnel_eu_central_1.tunnel_fqdn
 }
