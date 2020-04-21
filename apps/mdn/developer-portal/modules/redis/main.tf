@@ -27,3 +27,8 @@ resource "aws_elasticache_replication_group" "redis_cluster" {
   }
 }
 
+resource "aws_security_group" "redis_sg" {
+  name        = "${local.instance_name}-sg"
+  description = "Allow inbound redis connection"
+  vpc_id      = data.aws_vpc.id.id
+}
