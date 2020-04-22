@@ -55,6 +55,7 @@ module "redis_dev" {
   environment     = "dev"
   redis_nodes     = "2"
   redis_node_type = "cache.t3.micro"
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   subnets         = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   security_groups = [
@@ -102,6 +103,7 @@ module "redis_stage" {
   environment     = "stage"
   redis_nodes     = "3"
   redis_node_type = "cache.t3.micro"
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   subnets         = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   security_groups = [
@@ -149,6 +151,7 @@ module "redis_prod" {
   environment     = "prod"
   redis_nodes     = "3"
   redis_node_type = "cache.t3.small"
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   subnets         = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   security_groups = [
