@@ -28,6 +28,8 @@ variable "redis_nodes" {
   default = "1"
 }
 
+variable "vpc_id" {}
+
 variable "subnets" {
   type = list(string)
 }
