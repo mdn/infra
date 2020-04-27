@@ -1,25 +1,25 @@
 # MDN Kubernetes Support Guide
 
-> MDN is running on the MozMEAO Portland Kubernetes cluster, if you don't have credentials to access the cluster, reach out to the SRE team on #meao-infra
+> MDN is running on the IT Portland Kubernetes cluster, if you don't have credentials to access the cluster, reach out to the SRE team on #meao-infra
 
 ## Links
 
 High level:
 
-- [MDN Infra home (general)](https://github.com/mozmeao/infra/tree/master/apps/mdn)
-- [MDN Infra AWS home](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws)
-- [Deploying MDN](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/k8s/README.md)
+- [MDN Infra home (general)](https://github.com/mdn/infra/tree/master/apps/mdn)
+- [MDN Infra AWS home](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws)
+- [Deploying MDN](https://github.com/mdn/infra/blob/master/apps/mdn/mdn-aws/k8s/README.md)
 
 Tech details:
 
-- [MDN backup cron](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron)
-- [MDN K8s deployments/services/secrets/pv/pvc template](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/k8s)
-- [MDN infra - general docs](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/docs)
-- [MDN AWS resource definitions](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra)
-    - [Shared resources (S3)](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/shared)
-    - [per-region resources RDS/Redis/EFS](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/multi_region)
-- [MDN CDN resource definition](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/infra/mdn-cdn)
-- [Interactive examples hosting](https://github.com/mozmeao/infra/tree/master/apps/mdn/interactive-examples)
+- [MDN backup cron](https://github.com/mdn/infra/tree/master/apps/mdn/utils/mdn_backup_cron)
+- [MDN K8s deployments/services/secrets/pv/pvc template](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/k8s)
+- [MDN infra - general docs](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/docs)
+- [MDN AWS resource definitions](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/infra)
+    - [Shared resources (S3)](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/infra/shared)
+    - [per-region resources RDS/Redis/EFS](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/infra/multi_region)
+- [MDN CDN resource definition](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/infra/mdn-cdn)
+- [Interactive examples hosting](https://github.com/mdn/infra/tree/master/apps/mdn/interactive-examples)
 
 ## K8s commands
 
@@ -285,12 +285,12 @@ kubectl -n mdn-prod get pods | grep restore
 
 ##### Dev docs
 
-- Development docs for the `mdn-backup` cronjob are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+- Development docs for the `mdn-backup` cronjob are located [here](https://github.com/mdn/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
 
 
 #### Datadog/Redis cronjob
 
-- Docs for the Datadog/Redis cron tasks are located [here](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/docs/mdn-dd-redis.md).
+- Docs for the Datadog/Redis cron tasks are located [here](https://github.com/mdn/infra/blob/master/apps/mdn/mdn-aws/docs/mdn-dd-redis.md).
 
 ### Persistent Volumes
 
@@ -325,10 +325,10 @@ Secret values are base64 encoded when viewed in K8s output. Once setup as an env
 We use secrets in two different ways:
 
 - specified as environment variables in a deployment spec
-  - [example](https://github.com/mozmeao/infra/blob/613e558cccbe1f0e5791dba657c73a4dc11e8b9a/apps/mdn/mdn-aws/k8s/kuma.base.deploy.yaml.j2#L47-L51)
+  - [example](https://github.com/mdn/infra/blob/613e558cccbe1f0e5791dba657c73a4dc11e8b9a/apps/mdn/mdn-aws/k8s/kuma.base.deploy.yaml.j2#L47-L51)
 - mounted as a file in the filesystem
-    - [example part 1](https://github.com/mozmeao/infra/blob/613e558cccbe1f0e5791dba657c73a4dc11e8b9a/apps/mdn/mdn-aws/k8s/mdn-dd-redis.yaml.j2#L53-L55) (mapping the file to the filesystem)
-    - [example part 2](https://github.com/mozmeao/infra/blob/613e558cccbe1f0e5791dba657c73a4dc11e8b9a/apps/mdn/mdn-aws/k8s/mdn-dd-redis.yaml.j2#L72-L77) (specifying the secrets mount)
+    - [example part 1](https://github.com/mdn/infra/blob/613e558cccbe1f0e5791dba657c73a4dc11e8b9a/apps/mdn/mdn-aws/k8s/mdn-dd-redis.yaml.j2#L53-L55) (mapping the file to the filesystem)
+    - [example part 2](https://github.com/mdn/infra/blob/613e558cccbe1f0e5791dba657c73a4dc11e8b9a/apps/mdn/mdn-aws/k8s/mdn-dd-redis.yaml.j2#L72-L77) (specifying the secrets mount)
 
 To list secrets:
 
@@ -365,15 +365,6 @@ Starting to serve on 127.0.0.1:8001
 - [kumascript-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34601215)
 - [kuma-web-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34459612)
 - [kuma-backend-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34601198)	
-		
-### Datadog		
-
-- [MDN Prod Redis (Celery)](https://app.datadoghq.com/dash/373636/mdn-prod-redis?live=true&page=0&is_auto=false&from_ts=1507298951634&to_ts=1507302551634&tile_size=m)
-- [MySQL (RDS)](https://app.datadoghq.com/screen/integration/aws_rds_mysql?tpl_var_dbinstanceidentifier=mdn-prod)
-- [Redis](https://app.datadoghq.com/screen/integration/aws_elasticache_redis?tpl_var_cluster_id=mdn-redis-prod-001) (select from primary/secondary nodes in the filter)
-- [K8s running containers](https://app.datadoghq.com/containers?columns=container_name,container_cpu,container_memory,container_net_sent_bps,container_net_rcvd_bps,container_status,container_created&options=normalizeCPU&sort=container_memory,DESC&tags=kube_namespace%3Amdn-prod)	
-- [K8s running containers by deployment](https://app.datadoghq.com/containers?columns=container_name,container_cpu,container_memory,container_net_sent_bps,container_net_rcvd_bps,container_status,container_created&options=normalizeCPU&sort=container_memory,DESC&tags=kube_namespace%3Amdn-prod&groups=kube_deployment)
-- [K8s (general)](https://app.datadoghq.com/screen/integration/kubernetes?tpl_var_namespace=mdn-prod&tpl_var_scope=kubernetescluster%3Aportland.moz.works)	
 		
 ### AWS		
 
@@ -462,7 +453,7 @@ There are limits that apply to using VPC ACLs documented [here](http://docs.aws.
 We take daily snapshots of the mdn-prod RDS instance. Follow the [AWS docs on restoring a DB instance from a DB snapshot](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_RestoreFromSnapshot.html).
 
 
-The [rds\_backup\_tool](https://github.com/mozmeao/infra/blob/master/tools/aws/rds_backup_tool/README.md) takes full mdn-prod encrypted backups that are stored in S3 (and moved to Glacier after 30 days). To access and decrypt a backup, follow [these](https://github.com/mozmeao/infra/blob/master/tools/aws/rds_backup_tool/README.md#decrypting-a-database-archive) instructions.
+The [rds\_backup\_tool](https://github.com/mdn/infra/blob/master/tools/aws/rds_backup_tool/README.md) takes full mdn-prod encrypted backups that are stored in S3 (and moved to Glacier after 30 days). To access and decrypt a backup, follow [these](https://github.com/mdn/infra/blob/master/tools/aws/rds_backup_tool/README.md#decrypting-a-database-archive) instructions.
 
 
 ### Manual Cluster failover
@@ -479,15 +470,15 @@ The [rds\_backup\_tool](https://github.com/mozmeao/infra/blob/master/tools/aws/r
         - if data is written to a promoted instance, and failover back to the Portland cluster is desirable, a full DB backup and restore in Portland is required.
         - the replica is automatically rebooted before being promoted to a full instance.
 - **ensure image versions are up to date**
-    - [This document](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/k8s) describes how to set and deploy new images.
+    - [This document](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/k8s) describes how to set and deploy new images.
     - Most MySQL changes should already be replicated to the read-replica, however, if you're reading this, chances are things are broken. Ensure that the DB schema is correct for the iamges you're deploying.
 - **manually copy S3 files to EFS**
-    - [This script](https://github.com/mozmeao/infra/blob/master/apps/mdn/utils/mdn_backup_cron/image/mdn_sync.sh) can be used to pull files from S3 to EFS.
+    - [This script](https://github.com/mdn/infra/blob/master/apps/mdn/utils/mdn_backup_cron/image/mdn_sync.sh) can be used to pull files from S3 to EFS.
         - the script must be run from a pod that has the MDN EFS mount
         - the script depends on the AWS cli being installed
         - the `mdn-admin` deployment is a good place to run this script
 - **scale cluster and pods**
-    - the [prod deployment](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/k8s) yaml contains the correct number of replicas for each pod, but just in case:
+    - the [prod deployment](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/k8s) yaml contains the correct number of replicas for each pod, but just in case:
 
         ```
         kubectl -n mdn-prod scale --replicas=20 deployment/web
@@ -501,8 +492,8 @@ The [rds\_backup\_tool](https://github.com/mozmeao/infra/blob/master/tools/aws/r
     - Cloudfront shouldn't need any changes, as it's origin is `prod.mdn.moz.works`. 
 - **Cluster backup**
     - If the cluster is running in maintanence mode, the backup cronjob does not need to be enabled.
-    - In write mode, the [backup cron job](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron) will need to be manually run as the Frankfurt cluster does not have K8s cronjobs enabled.
-        - [This script](https://github.com/mozmeao/infra/blob/master/apps/mdn/utils/mdn_backup_cron/image/mdn_sync.sh) can be used to backup to S3.
+    - In write mode, the [backup cron job](https://github.com/mdn/infra/tree/master/apps/mdn/utils/mdn_backup_cron) will need to be manually run as the Frankfurt cluster does not have K8s cronjobs enabled.
+        - [This script](https://github.com/mdn/infra/blob/master/apps/mdn/utils/mdn_backup_cron/image/mdn_sync.sh) can be used to backup to S3.
             - the script must be run from a pod that has the MDN EFS mount
             - the script depends on the AWS cli being installed
             - the `mdn-admin` deployment is a good place to run this script
