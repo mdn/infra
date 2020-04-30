@@ -7,34 +7,13 @@ terraform {
 }
 
 locals {
-  mdn_apps_workers = [
-    {
-      instance_type        = "m5.large"
-      key_name             = "mdn"
-      subnets              = data.terraform_remote_state.vpc-us-west-2.outputs.private_subnets,
-      autoscaling_enabled  = true
-      asg_desired_capacity = 5
-      asg_min_size         = 5
-      asg_max_size         = 12
-      spot_price           = "0.06"
-      additional_userdata  = data.template_file.additional_userdata.rendered
-
-      tags = [
-        {
-          "key"                 = "k8s.io/cluster-autoscaler/enabled"
-          "value"               = "true"
-          "propagate_at_launch" = "true"
-        }
-      ]
-    }
-  ]
 
   mdn_apps_node_groups = {
     default_ng = {
-      desired_capacity = "1"
-      min_capacity     = "1"
-      max_capacity     = "3"
-      disk_size        = "100"
+      desired_capacity = "4"
+      min_capacity     = "3"
+      max_capacity     = "12"
+      disk_size        = "50"
       instance_type    = "m5.large"
       subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.private_subnets
 
@@ -46,6 +25,28 @@ locals {
       additional_tags = {
         "Name"                              = "mdn-apps-a-default-ng"
         "kubernetes.io/cluster/mdn-apps-a"  = "owned"
+        "k8s.io/cluster-autoscaler/enabled" = "true"
+      }
+    }
+  }
+
+  mdn_node_groups = {
+    default_ng = {
+      desired_capacity = "1"
+      min_capacity     = "1"
+      max_capacity     = "3"
+      disk_size        = "100"
+      instance_type    = "t3.small"
+      subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.private_subnets
+
+      k8s_label = {
+        Service = "default"
+        Node    = "managed"
+      }
+
+      additional_tags = {
+        "Name"                              = "mdn-default-ng"
+        "kubernetes.io/cluster/mdn"         = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }
     }
@@ -90,8 +91,18 @@ locals {
   }
 }
 
-data "template_file" "additional_userdata" {
-  template = file("${path.module}/templates/userdata/additional-userdata.sh")
+module "mdn" {
+  source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
+
+  region          = var.region
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  cluster_subnets = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
+
+  cluster_name    = "mdn"
+  cluster_version = "1.15"
+  node_groups     = local.mdn_node_groups
+  map_roles       = local.map_roles
+
 }
 
 module "mdn-apps-a" {
@@ -103,7 +114,6 @@ module "mdn-apps-a" {
 
   cluster_name    = "mdn-apps-a"
   cluster_version = "1.14"
-  worker_groups   = local.mdn_apps_workers
   node_groups     = local.mdn_apps_node_groups
   map_roles       = local.map_roles
   map_users       = local.map_users

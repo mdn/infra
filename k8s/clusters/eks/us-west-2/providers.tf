@@ -1,5 +1,5 @@
 provider "aws" {
-  version = ">= 2.6.0"
+  version = "~> 2"
   region  = var.region
 }
 
