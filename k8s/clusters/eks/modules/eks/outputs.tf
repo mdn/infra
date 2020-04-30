@@ -18,6 +18,14 @@ output "cluster_version" {
   value = module.eks.cluster_version
 }
 
+output "cluster_primary_security_group_id" {
+  value = module.eks.cluster_primary_security_group_id
+}
+
+output "cluster_security_group_id" {
+  value = module.eks.cluster_security_group_id
+}
+
 output "node_groups" {
   value = module.eks.node_groups
 }

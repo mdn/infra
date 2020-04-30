@@ -20,11 +20,13 @@ locals {
     KubernetesCluster                                      = "k8s.us-west-2a.mdn.mozit.cloud"
     "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "shared"
     "kubernetes.io/cluster/mdn-apps-a"                     = "shared"
+    "kubernetes.io/cluster/mdn"                            = "shared"
   }
 
   subnet_tags = {
     "kubernetes.io/cluster/k8s.us-west-2a.mdn.mozit.cloud" = "shared"
     "kubernetes.io/cluster/mdn-apps-a"                     = "shared"
+    "kubernetes.io/cluster/mdn"                            = "shared"
   }
 }
 

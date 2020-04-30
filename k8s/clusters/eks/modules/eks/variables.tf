@@ -9,10 +9,6 @@ variable "cluster_version" {
   default = "1.14"
 }
 
-variable "lifecycled_log_group" {
-  default = "/aws/lifecycled"
-}
-
 variable "vpc_id" {
 }
 

@@ -17,22 +17,6 @@ provider "helm" {
   }
 }
 
-# Allow SSM access
-resource "aws_iam_role_policy_attachment" "ssm" {
-  role       = module.eks.worker_iam_role_name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-
-module "lifecycle" {
-  source = "github.com/mozilla-it/terraform-modules//aws/asg-lifecycle?ref=master"
-
-  name                 = var.cluster_name
-  worker_asg           = module.eks.workers_asg_names
-  worker_asg_count     = "1"
-  worker_iam_role      = module.eks.worker_iam_role_name
-  lifecycled_log_group = "${var.lifecycled_log_group}-${var.cluster_name}"
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "10.0.0"
