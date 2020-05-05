@@ -20,11 +20,13 @@ locals {
     Region                                                    = "eu-central-1"
     KubernetesCluster                                         = "k8s.eu-central-1a.mdn.mozit.cloud"
     "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
+    "kubernetes.io/cluster/mdn"                               = "shared"
   }
 
   subnet_tags = {
     Region                                                    = "eu-central-1"
     "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
+    "kubernetes.io/cluster/mdn"                               = "shared"
   }
 }
 

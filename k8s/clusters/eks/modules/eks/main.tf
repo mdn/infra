@@ -19,7 +19,7 @@ provider "helm" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "10.0.0"
+  version = "~> 11"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version

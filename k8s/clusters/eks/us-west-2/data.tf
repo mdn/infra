@@ -8,6 +8,8 @@ data "terraform_remote_state" "vpc-us-west-2" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_vpc" "us-west-2" {
   id = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
 }

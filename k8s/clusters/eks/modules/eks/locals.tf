@@ -1,19 +1,18 @@
 
 locals {
 
+  cluster_autoscaler_name_prefix = "${module.eks.cluster_id}-cluster-autoscaler-${var.region}"
+
   cluster_autoscaler_versions = {
-    "1.13" = "v1.13.9"
-    "1.14" = "v1.14.7"
-    # By default this should be 1.15.5 but
-    # they have not released a version in the 1.15.x branch
-    # to accept irsa yet (IAM Roles for Service accounts)
-    # See: https://github.com/kubernetes/autoscaler/issues/2920
-    "1.15" = "v1.14.7"
-    "1.16" = "v1.16.4"
-    "1.17" = "v1.17.1"
+    "1.14" = "v1.14.8"
+    "1.15" = "v1.15.6"
+    "1.16" = "v1.16.5"
+    "1.17" = "v1.17.2"
+    "1.18" = "v1.18.1"
   }
   cluster_autoscaler_defaults = {
     "awsRegion"                                                     = var.region
+    "image.repository"                                              = "us.gcr.io/k8s-artifacts-prod/autoscaling/cluster-autoscaler"
     "image.tag"                                                     = lookup(local.cluster_autoscaler_versions, var.cluster_version)
     "autoDiscovery.clusterName"                                     = module.eks.cluster_id
     "autoDiscovery.enabled"                                         = "true"
