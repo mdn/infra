@@ -13,3 +13,16 @@ output "mdn_apps_a_worker_iam_role_arn" {
 output "mdn_apps_a_worker_security_group_id" {
   value = module.mdn-apps-a.worker_security_group_id
 }
+
+output "mdn_cluster_name" {
+  value = module.mdn.cluster_id
+}
+
+output "mdn_cluster_endpoint" {
+  value = module.mdn.cluster_endpoint
+}
+
+output "mdn_cluster_primary_security_group_id" {
+  value = module.mdn.cluster_primary_security_group_id
+}
+
