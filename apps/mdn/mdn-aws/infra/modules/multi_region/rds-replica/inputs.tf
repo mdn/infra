@@ -5,7 +5,7 @@ variable "environment" {
 }
 
 variable "enabled" {
-  default = 1
+  default = true
 }
 
 variable "replica_identifier" {
@@ -13,7 +13,7 @@ variable "replica_identifier" {
 }
 
 variable "instance_class" {
-  default = "db.t2.small"
+  default = "db.t3.small"
 }
 
 variable "storage_type" {
@@ -23,7 +23,8 @@ variable "storage_type" {
 variable "replica_source_db" {
 }
 
-variable "subnets" {
+variable "subnet_type" {
+  default = "Public"
 }
 
 variable "kms_key_id" {

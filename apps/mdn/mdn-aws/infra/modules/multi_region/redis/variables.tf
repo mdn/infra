@@ -2,6 +2,10 @@ variable "region" {
   default = "us-west-2"
 }
 
+variable "enabled" {
+  default = true
+}
+
 variable "environment" {
 }
 
@@ -13,6 +17,12 @@ variable "redis_node_size" {
 
 variable "redis_port" {
   default = 6379
+}
+
+variable "vpc_id" {}
+
+variable "subnet_type" {
+  default = "Public"
 }
 
 variable "redis_num_nodes" {
@@ -31,14 +41,8 @@ variable "redis_engine_version" {
   default = "3.2.4"
 }
 
-variable "subnets" {
-}
-
 variable "nodes_security_group" {
   type = list(string)
-}
-
-variable "enabled" {
 }
 
 variable "azs" {
