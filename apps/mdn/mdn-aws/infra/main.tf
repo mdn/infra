@@ -107,15 +107,13 @@ module "lambda-log" {
 # Multi region resources
 
 module "efs-us-west-2" {
-  source      = "./modules/multi_region/efs"
-  enabled     = lookup(var.features, "efs")
-  environment = "stage"
-  region      = "us-west-2"
-  efs_name    = "stage"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets,
-  )
+  source               = "./modules/multi_region/efs"
+  enabled              = lookup(var.features, "efs")
+  environment          = "stage"
+  region               = "us-west-2"
+  efs_name             = "stage"
+  vpc_id               = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  subnets              = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
   nodes_security_group = data.aws_security_groups.us-west-2-nodes_sg.ids
 }
 
@@ -125,10 +123,8 @@ module "efs-us-west-2-prod" {
   environment = "prod"
   region      = "us-west-2"
   efs_name    = "prod"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets,
-  )
+  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  subnets     = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   nodes_security_group = flatten([
     data.aws_security_groups.us-west-2-nodes_sg.ids,
@@ -137,15 +133,13 @@ module "efs-us-west-2-prod" {
 }
 
 module "efs-eu-central-1-prod" {
-  source      = "./modules/multi_region/efs"
-  enabled     = lookup(var.features, "efs")
-  environment = "prod"
-  region      = "eu-central-1"
-  efs_name    = "prod"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets,
-  )
+  source               = "./modules/multi_region/efs"
+  enabled              = lookup(var.features, "efs")
+  environment          = "prod"
+  region               = "eu-central-1"
+  efs_name             = "prod"
+  vpc_id               = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
+  subnets              = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
   nodes_security_group = data.aws_security_groups.eu-central-1-nodes_sg.ids
 }
 
@@ -154,14 +148,11 @@ module "redis-stage-us-west-2" {
   enabled         = lookup(var.features, "redis")
   environment     = "stage"
   region          = "us-west-2"
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   azs             = ["us-west-2c", "us-west-2b", "us-west-2a"]
   redis_name      = "mdn-stage"
   redis_node_size = "cache.t3.medium"
   redis_num_nodes = "3"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets,
-  )
 
   nodes_security_group = flatten([
     data.aws_security_groups.us-west-2-nodes_sg.ids,
@@ -174,14 +165,11 @@ module "redis-prod-us-west-2" {
   enabled         = lookup(var.features, "redis")
   environment     = "prod"
   region          = "us-west-2"
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
   redis_name      = "mdn-prod"
   redis_node_size = "cache.m5.large"
   redis_num_nodes = "3"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets,
-  )
 
   nodes_security_group = flatten([
     data.aws_security_groups.us-west-2-nodes_sg.ids,
@@ -194,14 +182,11 @@ module "redis-prod-eu-central-1" {
   enabled         = lookup(var.features, "redis")
   environment     = "prod"
   region          = "eu-central-1"
+  vpc_id          = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
   azs             = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
   redis_name      = "mdn-prod"
   redis_node_size = "cache.m5.large"
   redis_num_nodes = "3"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets,
-  )
 
   nodes_security_group = flatten([
     data.aws_security_groups.eu-central-1-nodes_sg.ids,
@@ -225,12 +210,7 @@ module "mysql-us-west-2" {
   mysql_storage_gb            = local.rds["stage"]["storage_gb"]
   mysql_storage_type          = local.rds["stage"]["storage_type"]
   vpc_id                      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  vpc_cidr                    = data.aws_vpc.cidr.cidr_block
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets,
-  )
-  monitoring_interval = "60"
+  monitoring_interval         = "60"
 }
 
 module "mysql-us-west-2-prod" {
@@ -250,23 +230,14 @@ module "mysql-us-west-2-prod" {
   mysql_storage_gb            = local.rds["prod"]["storage_gb"]
   mysql_storage_type          = local.rds["prod"]["storage_type"]
   vpc_id                      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  vpc_cidr                    = data.aws_vpc.cidr.cidr_block
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets,
-  )
-  monitoring_interval = "60"
+  monitoring_interval         = "60"
 }
 
 # Replica set
 module "mysql-eu-central-1-replica-prod" {
-  source      = "./modules/multi_region/rds-replica"
-  environment = "prod"
-  region      = "eu-central-1"
-  subnets = join(
-    ",",
-    data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets,
-  )
+  source              = "./modules/multi_region/rds-replica"
+  environment         = "prod"
+  region              = "eu-central-1"
   replica_source_db   = module.mysql-us-west-2-prod.rds_arn
   vpc_id              = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
   kms_key_id          = lookup(var.rds, "key_id.eu-central-1") # Less than ideal this key is copied from the console

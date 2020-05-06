@@ -8,7 +8,10 @@ variable "environment" {
 variable "efs_name" {
 }
 
+variable "vpc_id" {}
+
 variable "subnets" {
+  type = list(string)
 }
 
 variable "nodes_security_group" {
@@ -16,6 +19,7 @@ variable "nodes_security_group" {
 }
 
 variable "enabled" {
+  default = true
 }
 
 variable "performance_mode" {

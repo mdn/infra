@@ -4,23 +4,35 @@ provider "aws" {
 
 locals {
   name_prefix = "${var.replica_identifier}-${var.environment}-replica"
+  tags = {
+    Service     = "MDN"
+    Environment = var.environment
+    Region      = var.region
+    Terraform   = "true"
+  }
+}
+
+data "aws_vpc" "vpc_cidr" {
+  id = var.vpc_id
+}
+
+data "aws_subnet_ids" "this" {
+  vpc_id = var.vpc_id
+  filter {
+    name   = "tag:SubnetType"
+    values = [var.subnet_type]
+  }
 }
 
 resource "aws_db_subnet_group" "replica" {
   name        = "${local.name_prefix}-subnet-group"
   description = "${local.name_prefix}-subnet-group"
-
-  subnet_ids = split(",", var.subnets)
-
-  tags = {
-    Name        = "${local.name_prefix}-subnet-group"
-    Environment = var.environment
-    Region      = var.region
-  }
+  subnet_ids  = data.aws_subnet_ids.this.ids
+  tags        = merge({ "Name" = "${local.name_prefix}-subnet-group" }, local.tags)
 }
 
 resource "aws_db_instance" "replica" {
-  count = var.enabled
+  count = var.enabled ? 1 : 0
 
   identifier           = local.name_prefix
   replicate_source_db  = var.replica_source_db
@@ -36,20 +48,11 @@ resource "aws_db_instance" "replica" {
   apply_immediately   = true
   skip_final_snapshot = true
   monitoring_interval = var.monitoring_interval
-
-  tags = {
-    Name        = local.name_prefix
-    Region      = var.region
-    Environment = var.environment
-  }
-}
-
-data "aws_vpc" "vpc_cidr" {
-  id = var.vpc_id
+  tags                = merge({ "Name" = local.name_prefix }, local.tags)
 }
 
 resource "aws_security_group" "replica-sg" {
-  count = var.enabled
+  count = var.enabled ? 1 : 0
   name  = "${local.name_prefix}-sg"
 
   vpc_id = var.vpc_id
@@ -68,10 +71,6 @@ resource "aws_security_group" "replica-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name        = "${local.name_prefix}-sg"
-    Environment = var.environment
-    Region      = var.region
-  }
+  tags = merge({ "Name" = "${local.name_prefix}-sg" }, local.tags)
 }
 

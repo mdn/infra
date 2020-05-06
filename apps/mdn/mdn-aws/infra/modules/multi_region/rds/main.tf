@@ -2,6 +2,27 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_vpc" "id" {
+  id = var.vpc_id
+}
+
+data "aws_subnet_ids" "this" {
+  vpc_id = var.vpc_id
+  filter {
+    name   = "tag:SubnetType"
+    values = [var.subnet_type]
+  }
+}
+
+locals {
+  tags = {
+    Service     = "MDN"
+    Environment = var.environment
+    Region      = var.region
+    Terraform   = "true"
+  }
+}
+
 resource "aws_db_parameter_group" "mdn-params" {
   count = var.enabled ? 1 : 0
 
@@ -17,19 +38,11 @@ resource "aws_db_parameter_group" "mdn-params" {
 }
 
 resource "aws_db_subnet_group" "rds" {
-  count = var.enabled ? 1 : 0
-
+  count       = var.enabled ? 1 : 0
   name        = "mdn-${var.environment}-rds-subnet-group"
   description = "mdn-${var.environment}-rds-subnet-group"
-
-  subnet_ids = split(",", var.subnets)
-
-  tags = {
-    Name        = "mdn-${var.environment}-rds-subnet-group"
-    Environment = var.environment
-    Stack       = "mdn-rds-${var.environment}"
-    Region      = var.region
-  }
+  subnet_ids  = data.aws_subnet_ids.this.ids
+  tags        = merge({ "Name" = "mdn-${var.environment}-rds-subnet-group" }, local.tags)
 }
 
 resource "aws_db_instance" "mdn_rds" {
@@ -66,18 +79,11 @@ resource "aws_db_instance" "mdn_rds" {
   apply_immediately            = true
   monitoring_interval          = var.monitoring_interval
   performance_insights_enabled = var.performance_insights_enabled
-
-  tags = {
-    Name        = "MDN-rds-${var.environment}"
-    Stack       = "MDN-rds-${var.mysql_env}"
-    Environment = var.environment
-    Region      = var.region
-  }
+  tags                         = merge({ "Name" = "MDN-rds-${var.environment}" }, local.tags)
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
-  count = var.enabled ? 1 : 0
-
+  count       = var.enabled ? 1 : 0
   name        = var.mysql_security_group_name
   description = "Allow all inbound traffic"
   vpc_id      = var.vpc_id
@@ -86,7 +92,7 @@ resource "aws_security_group" "mdn_rds_sg" {
     from_port   = var.mysql_port
     to_port     = var.mysql_port
     protocol    = "TCP"
-    cidr_blocks = [var.vpc_cidr]
+    cidr_blocks = [data.aws_vpc.id.cidr_block]
   }
 
   egress {
@@ -95,12 +101,6 @@ resource "aws_security_group" "mdn_rds_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name        = "mdn_rds_sg-${var.environment}"
-    Stack       = "MDN-rds-${var.environment}"
-    Environment = var.environment
-    Region      = var.region
-  }
+  tags = merge({ "Name" = "mdn_rds_sg-${var.environment}" }, local.tags)
 }
 

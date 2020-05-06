@@ -1,3 +1,11 @@
+variable "region" {
+  default = "us-west-2"
+}
+
+variable "enabled" {
+  default = true
+}
+
 variable "mysql_db_name" {
 }
 
@@ -72,19 +80,11 @@ variable "mysql_allow_major_version_upgrade" {
 variable "vpc_id" {
 }
 
-variable "vpc_cidr" {
-}
-
-variable "enabled" {
-}
-
 variable "environment" {
 }
 
-variable "region" {
-}
-
-variable "subnets" {
+variable "subnet_type" {
+  default = "Public"
 }
 
 variable "monitoring_interval" {
