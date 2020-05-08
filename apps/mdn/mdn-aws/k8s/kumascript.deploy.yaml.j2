@@ -1,9 +1,12 @@
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: {{ KUMASCRIPT_NAME }}
 spec:
   replicas: {{ KUMASCRIPT_REPLICAS }}
+  selector:
+    matchLabels:
+      app: {{ KUMASCRIPT_APP_LABEL }}
   template:
     metadata:
       labels:
