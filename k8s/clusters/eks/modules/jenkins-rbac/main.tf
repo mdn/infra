@@ -6,7 +6,8 @@ resource "kubernetes_role" "this" {
     name      = "${var.role_name}-access-${each.value}"
     namespace = each.value
     labels = {
-      app = "jenkins-rbac"
+      namespace = each.value
+      app       = "${var.role_name}-rbac"
     }
   }
 
@@ -47,6 +48,11 @@ resource "kubernetes_role_binding" "this" {
   metadata {
     name      = "${var.role_name}-access-${each.value}"
     namespace = each.value
+
+    labels {
+      namespace = each.value
+      app       = "${var.role_name}-rbac"
+    }
   }
 
   role_ref {
