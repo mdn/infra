@@ -113,14 +113,6 @@ install_cluster_autoscaler() {
     (cd ${KOPS_INSTALLER}/services/cluster-autoscaler && make MAX_NODES=${MAX_NODES} KOPS_CLUSTER_NAME=${KOPS_CLUSTER_NAME} AWS_REGION=${KOPS_REGION})
 }
 
-install_datadog() {
-    echo "Installing datadog"
-    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-namespace.yaml"
-    kubectl apply -f "${SECRETS_PATH}/k8s/secrets/${CLUSTER_ALT_NAME}/datadog-cluster.yaml"
-    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-agent.yaml"
-    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog_statsd_svc.yaml"
-}
-
 install_block-aws() {
     echo "Install block-aws"
     kubectl apply -f "${KOPS_INSTALLER}/services/block-aws/block-aws-namespace.yaml"
@@ -152,7 +144,6 @@ install_services() {
     install_cluster_autoscaler
     install_calico_rbac
     install_fluentd
-    install_datadog
     install_redirector_service
     install_block-aws
     install_ark

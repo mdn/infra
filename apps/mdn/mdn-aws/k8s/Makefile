@@ -236,17 +236,6 @@ export NEW_RELIC_KUMASCRIPT_NAME ?= "kumascript-${NEW_RELIC_MONITOR_SUFFIX}"
 export NEW_RELIC_CELERY_NAME ?= "kuma-backend-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_ROLLUP_NAME}"
 export NEW_RELIC_SSR_NAME ?= "ssr-${NEW_RELIC_MONITOR_SUFFIX}"
 
-export DATADOG_REDIS_DEPLOYMENT_NAME ?= mdn-dd-redis
-export DATADOG_SECRETS_NAME ?= datadog-secrets
-
-export DATADOG_API_KEY ?= foo
-export DATADOG_API_KEY_BASE64 ?= $(shell echo -n "${DATADOG_API_KEY}" | base64)
-
-export DATADOG_REDIS_CONFIG ?= foo
-# Note that the string should never be split w/newlines.
-# see https://kubernetes.io/docs/concepts/configuration/secret/
-export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64)
-
 export PERCONA_TOOLKIT_NS ?= percona-toolkit
 export PERCONA_TOOLKIT_IMAGE ?= mdnwebdocs/percona-toolkit:226571b
 
@@ -478,18 +467,6 @@ k8s-admin-node: check-service-env
 
 k8s-delete-admin-node: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
-
-k8s-datadog-secrets: check-service-env
-	j2 datadog-secrets.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-datadog-secrets: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${DATADOG_SECRETS_NAME}
-
-k8s-redis-dd: check-service-env
-	j2 mdn-dd-redis.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-redis-dd: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${DATADOG_REDIS_DEPLOYMENT_NAME}
 
 k8s-rds-backup-cron: check-service-env
 	j2 mdn-rds-backup-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -

@@ -228,8 +228,6 @@ data "template_file" "user_data" {
     jenkins_backup_dms = var.jenkins_backup_dms
     papertrail_host    = var.papertrail_host
     papertrail_port    = var.papertrail_port
-    datadog_key        = var.datadog_key
-    datadog_hostname   = var.datadog_hostname
     eip_id             = aws_eip.ci-eip.id
     region             = var.region
   }

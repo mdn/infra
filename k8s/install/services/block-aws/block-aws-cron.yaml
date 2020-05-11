@@ -53,7 +53,7 @@ spec:
                     name: blockaws-secrets
                     key: DMS_URL
               - name: WHITELISTED_NAMESPACES
-                value: 'kube-system,datadog'
+                value: 'kube-system'
           serviceAccountName: blockaws
           restartPolicy: OnFailure
 

@@ -8,8 +8,6 @@ JENKINS_BACKUP_DMS="${jenkins_backup_dms}"
 NGINX_HTPASSWD="${nginx_htpasswd}"
 PAPERTRAIL_HOST="${papertrail_host}"
 PAPERTRAIL_PORT="${papertrail_port}"
-DATADOG_KEY="${datadog_key}"
-DATADOG_HOSTNAME="${datadog_hostname}"
 EIP_ID="${eip_id}"
 
 die() {
@@ -78,7 +76,6 @@ main() {
         ansible-playbook site.yml -e "jenkins_backup_directory="$${BACKUP_DIR}" jenkins_backup_bucket="$${BACKUP_BUCKET}" \
                                         jenkins_backup_dms="$${JENKINS_BACKUP_DMS}" nginx_htpasswd="$${NGINX_HTPASSWD}" \
                                         papertrail_host="$${PAPERTRAIL_HOST}" papertrail_port="$${PAPERTRAIL_PORT}" \
-                                        datadog_key="$${DATADOG_KEY}" datadog_hostname="$${DATADOG_HOSTNAME}"" \
         || die "Failed to run ansible"
 
     echo "Setting EIP"

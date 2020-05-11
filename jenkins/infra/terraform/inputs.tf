@@ -38,12 +38,6 @@ variable "papertrail_host" {
 variable "papertrail_port" {
 }
 
-variable "datadog_key" {
-}
-
-variable "datadog_hostname" {
-}
-
 variable "ip_whitelist" {
   type = list(string)
 }

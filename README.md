@@ -45,8 +45,6 @@ repo was forked from [mozmeao/infra][mozmeao-infra] to the [MDN org][mdn-org].
 
 - [Mig](http://mig.mozilla.org/)
   - Mozilla's real-time digital forensics and investigation platform.
-- [Datadog](https://www.datadoghq.com/)
-  - performance monitoring
 - [New Relic](https://newrelic.com/)
   - performance monitoring
 - [Papertrail](https://papertrailapp.com/)

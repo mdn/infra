@@ -186,7 +186,7 @@ You'll need to:
 2. cd to the directory containing config.sh
 3. run: `$KOPS_INSTALLER/stage2.sh` ***or*** source and then run each desired function in `$KOPS_INSTALLER/stage2_functions.sh`
 
-Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `newrelic`, and `deis`.
+Note: each DaemonSet is installed into it's own namespace: `mig`, `newrelic`, and `deis`.
 
 ---
 # Post install
