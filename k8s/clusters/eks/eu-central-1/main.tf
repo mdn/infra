@@ -15,8 +15,13 @@ module "mdn" {
 
   cluster_name       = "mdn"
   cluster_version    = "1.16"
+  cluster_features   = local.cluster_features
   node_groups        = local.mdn_node_groups
   map_roles          = local.map_roles
   velero_bucket_name = local.velero_bucket_name
 }
 
+module "jenkins-rbac" {
+  source    = "../modules/jenkins-rbac"
+  namespace = ["mdn-prod"]
+}

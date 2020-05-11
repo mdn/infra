@@ -6,6 +6,14 @@ terraform {
   }
 }
 
+module "mdn-jenkins-rbac" {
+  source    = "../modules/jenkins-rbac"
+  namespace = ["mdn-stage", "mdn-prod"]
+  providers = {
+    kubernetes = kubernetes.mdn
+  }
+}
+
 module "mdn" {
   source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
 

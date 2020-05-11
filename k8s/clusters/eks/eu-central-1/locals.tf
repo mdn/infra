@@ -1,14 +1,18 @@
 locals {
 
+  cluster_features = {
+    "aws_calico" = true
+  }
+
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
 
   mdn_node_groups = {
     default_ng = {
-      desired_capacity = "1"
-      min_capacity     = "1"
-      max_capacity     = "3"
+      desired_capacity = "3"
+      min_capacity     = "3"
+      max_capacity     = "12"
       disk_size        = "50"
-      instance_type    = "t3.small"
+      instance_type    = "m5.large"
       subnets          = data.terraform_remote_state.vpc-eu-central-1.outputs.private_subnets
 
       k8s_label = {
