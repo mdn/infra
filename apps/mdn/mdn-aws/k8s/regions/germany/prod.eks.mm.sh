@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo '--> Setting environment to STANDBY in eu-central-1'
 
-export KUBECONFIG=${HOME}/.kube/mdn-eu-central-1
+export KUBECONFIG=${HOME}/.kube/mdn-eu-central-1.config
 
 # Define defaults for environment variables that personalize the commands.
 export TARGET_ENVIRONMENT=prod
