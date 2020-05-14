@@ -255,20 +255,28 @@ k8s-delete-shared-storage: k8s-delete-efs-setup-job k8s-delete-pvc-shared \
 
 k8s-services: k8s-web-svc k8s-api-svc k8s-kumascript-svc k8s-ssr-svc
 
+test-k8s-services: test-k8s-web-svc test-k8s-api-svc test-k8s-kumascript-svc test-k8s-ssr-svc
+
 k8s-delete-services: k8s-delete-web-svc k8s-delete-api-svc \
 					 k8s-delete-kumascript-svc k8s-delete-ssr-svc
 
 k8s-deployments: k8s-kuma-deployments k8s-kumascript-deployments
 
+test-k8s-deployments: test-k8s-kuma-deployments test-k8s-kumascript-deployments
+
 k8s-delete-deployments: k8s-delete-kuma-deployments \
-						k8s-delete-kumascript-deployments
+				k8s-delete-kumascript-deployments
 
 k8s-kuma-deployments: k8s-web k8s-api k8s-celery k8s-ssr
+
+test-k8s-kuma-deployments: test-k8s-web test-k8s-api test-k8s-celery test-k8s-ssr
 
 k8s-delete-kuma-deployments: k8s-delete-web k8s-delete-api k8s-delete-celery \
 							 k8s-delete-ssr
 
 k8s-kumascript-deployments: k8s-kumascript
+
+test-k8s-kumascript-deployments: test-k8s-kumascript
 
 k8s-delete-kumascript-deployments: k8s-delete-kumascript
 
@@ -349,17 +357,26 @@ k8s-kumascript-delete-record-deployment-job:
 k8s-pv-shared: check-service-env
 	j2 shared.pv.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-pv-shared:
+	j2 shared.pv.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-pv-shared: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${SHARED_PV_NAME}
 
 k8s-pvc-shared: check-service-env
 	j2 shared.pvc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-pvc-shared:
+	j2 shared.pvc.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-pvc-shared: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
 
 k8s-efs-setup-job: check-service-env
 	j2 mdn-efs-setup-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-efs-setup-job:
+	j2 mdn-efs-setup-job.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 k8s-delete-efs-setup-job: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
@@ -376,6 +393,18 @@ k8s-web-svc: check-service-env
 		ELB_CONNECTION_IDLE_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
 		j2 cert.svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-web-svc:
+	env SERVICE_NAME=${WEB_SERVICE_NAME} \
+		SERVICE_TYPE=${WEB_SERVICE_TYPE} \
+		SERVICE_PORT=${WEB_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${WEB_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
+		SERVICE_CERT_ARN=${WEB_SERVICE_CERT_ARN} \
+		TARGET_ENVIRONMENT=${TARGET_ENVIRONMENT} \
+		ELB_S3_LOGGING_ENABLED=false \
+		ELB_CONNECTION_IDLE_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
+	j2 cert.svc.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-web-svc: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${WEB_SERVICE_NAME}
@@ -387,6 +416,14 @@ k8s-api-svc: check-service-env
 		SERVICE_TARGET_PORT=${API_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${API_SERVICE_PROTOCOL} \
 		j2 svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-api-svc:
+	env SERVICE_NAME=${API_SERVICE_NAME} \
+		SERVICE_TYPE=${API_SERVICE_TYPE} \
+		SERVICE_PORT=${API_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${API_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${API_SERVICE_PROTOCOL} \
+	j2 svc.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 k8s-delete-api-svc: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
@@ -400,6 +437,14 @@ k8s-kumascript-svc: check-service-env
 		SERVICE_PROTOCOL=${KUMASCRIPT_SERVICE_PROTOCOL} \
 		j2 svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-kumascript-svc:
+	env SERVICE_NAME=${KUMASCRIPT_SERVICE_NAME} \
+		SERVICE_TYPE=${KUMASCRIPT_SERVICE_TYPE} \
+		SERVICE_PORT=${KUMASCRIPT_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${KUMASCRIPT_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${KUMASCRIPT_SERVICE_PROTOCOL} \
+	j2 svc.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-kumascript-svc: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${KUMASCRIPT_SERVICE_NAME}
@@ -411,6 +456,14 @@ k8s-ssr-svc: check-service-env
 		SERVICE_TARGET_PORT=${SSR_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${SSR_SERVICE_PROTOCOL} \
 		j2 svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-ssr-svc:
+	env SERVICE_NAME=${SSR_SERVICE_NAME} \
+		SERVICE_TYPE=${SSR_SERVICE_TYPE} \
+		SERVICE_PORT=${SSR_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${SSR_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${SSR_SERVICE_PROTOCOL} \
+	j2 svc.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 k8s-delete-ssr-svc: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
@@ -465,6 +518,9 @@ k8s-delete-sync-from-s3-cron: check-service-env
 k8s-admin-node: check-service-env
 	j2 mdn-admin-node.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-admin-node:
+	j2 mdn-admin-node.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-admin-node: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
 
@@ -516,6 +572,24 @@ k8s-web:
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
 		j2 kuma.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-web:
+	env KUMA_NAME=${WEB_NAME} \
+		KUMA_REPLICAS=${WEB_REPLICAS} \
+		KUMA_APP_LABEL=${WEB_SERVICE_NAME} \
+		KUMA_CONTAINER_PORT=${WEB_SERVICE_TARGET_PORT} \
+		KUMA_GUNICORN_WORKERS=${WEB_GUNICORN_WORKERS} \
+		KUMA_GUNICORN_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
+		KUMA_GUNICORN_WORKER_MAX_REQUESTS=${WEB_GUNICORN_WORKER_MAX_REQUESTS} \
+		KUMA_GUNICORN_WORKER_MAX_REQUESTS_JITTER=${WEB_GUNICORN_WORKER_MAX_REQUESTS_JITTER} \
+		KUMA_CPU_LIMIT=${WEB_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${WEB_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${WEB_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
+		KUMA_RATELIMIT_ENABLE=${WEB_RATELIMIT_ENABLE} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
+	j2 kuma.deploy.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-web:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WEB_NAME}
 
@@ -538,6 +612,25 @@ k8s-api:
 		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
 		j2 kuma.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-api:
+	env KUMA_NAME=${API_NAME} \
+		KUMA_REPLICAS=${API_REPLICAS} \
+		KUMA_APP_LABEL=${API_SERVICE_NAME} \
+		KUMA_CONTAINER_PORT=${API_SERVICE_TARGET_PORT} \
+		KUMA_GUNICORN_WORKERS=${API_GUNICORN_WORKERS} \
+		KUMA_GUNICORN_TIMEOUT=${API_GUNICORN_TIMEOUT} \
+		KUMA_GUNICORN_WORKER_MAX_REQUESTS=${API_GUNICORN_WORKER_MAX_REQUESTS} \
+		KUMA_GUNICORN_WORKER_MAX_REQUESTS_JITTER=${API_GUNICORN_WORKER_MAX_REQUESTS_JITTER} \
+		KUMA_CPU_LIMIT=${API_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${API_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${API_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${API_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
+		KUMA_RATELIMIT_ENABLE=False \
+		KUMA_WIKI_HOST=${API_SERVICE_NAME} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
+	j2 kuma.deploy.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-api:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${API_NAME}
 
@@ -546,11 +639,18 @@ k8s-kumascript:
 		NEW_RELIC_APP_NAME=${NEW_RELIC_KUMASCRIPT_NAME} \
 		j2 kumascript.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-kumascript:
+	env KUMASCRIPT_APP_LABEL=${KUMASCRIPT_SERVICE_NAME} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_KUMASCRIPT_NAME} \
+	j2 kumascript.deploy.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-kumascript:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${KUMASCRIPT_NAME}
 
 k8s-celery: k8s-celery-workers k8s-celery-beat
+
+test-k8s-celery: test-k8s-celery-workers test-k8s-celery-beat
 
 k8s-delete-celery: k8s-delete-celery-workers k8s-delete-celery-beat
 
@@ -566,6 +666,19 @@ k8s-celery-workers:
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERY_NAME} \
 		j2 celery.workers.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-celery-workers:
+	env KUMA_NAME=${CELERY_WORKERS_NAME} \
+		KUMA_APP_LABEL=${CELERY_WORKERS_NAME} \
+		KUMA_REPLICAS=${CELERY_WORKERS_REPLICAS} \
+		KUMA_CPU_LIMIT=${CELERY_WORKERS_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${CELERY_WORKERS_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${CELERY_WORKERS_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${CELERY_WORKERS_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS="" \
+		KUMA_RATELIMIT_ENABLE=False \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERY_NAME} \
+	j2 celery.workers.deploy.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 k8s-delete-celery-workers:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
@@ -584,12 +697,28 @@ k8s-celery-beat:
 		NEW_RELIC_APP_NAME="" \
 		j2 celery.beat.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
+test-k8s-celery-beat:
+	env KUMA_NAME=${CELERY_BEAT_NAME} \
+		KUMA_APP_LABEL=${CELERY_BEAT_NAME} \
+		KUMA_REPLICAS=${CELERY_BEAT_REPLICAS} \
+		KUMA_CPU_LIMIT=${CELERY_BEAT_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${CELERY_BEAT_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS="" \
+		KUMA_RATELIMIT_ENABLE=False \
+		NEW_RELIC_APP_NAME="" \
+	j2 celery.beat.deploy.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
 k8s-delete-celery-beat:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_BEAT_NAME}
 
 k8s-ssr:
 	j2 ssr.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-ssr:
+	j2 ssr.deploy.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 k8s-delete-ssr:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${SSR_NAME}
