@@ -47,3 +47,4 @@ variable "origin_read_timeout" {
 variable "api_bucket" {
 }
 
+variable "media_bucket" {}

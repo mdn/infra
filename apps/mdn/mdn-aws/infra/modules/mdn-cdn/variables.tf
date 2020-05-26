@@ -22,6 +22,8 @@ variable "cloudfront_primary_distribution_name" {
 variable "cloudfront_primary_api_bucket" {
 }
 
+variable "cloudfront_primary_media_bucket" {}
+
 variable "acm_primary_cert_arn" {
 }
 
