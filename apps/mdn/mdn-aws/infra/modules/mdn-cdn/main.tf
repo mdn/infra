@@ -17,6 +17,7 @@ module "primary-cloudfront" {
   domain_name         = var.cloudfront_primary_domain_name
   origin_read_timeout = "120"
   api_bucket          = var.cloudfront_primary_api_bucket
+  media_bucket        = var.cloudfront_primary_media_bucket
 }
 
 ########################################

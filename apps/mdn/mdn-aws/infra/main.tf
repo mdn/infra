@@ -40,6 +40,7 @@ module "mdn_cdn" {
   cloudfront_primary_aliases           = split(",", var.cloudfront_primary["aliases.stage"])
   cloudfront_primary_domain_name       = var.cloudfront_primary["domain.stage"]
   cloudfront_primary_api_bucket        = var.cloudfront_primary["api_bucket.stage"]
+  cloudfront_primary_media_bucket      = module.media-bucket-stage.bucket_name
 
   # attachment CDN
   cloudfront_attachments_enabled           = "0" # Disable for stage
@@ -75,6 +76,7 @@ module "mdn_cdn_prod" {
   cloudfront_primary_aliases           = split(",", var.cloudfront_primary["aliases.prod"])
   cloudfront_primary_domain_name       = var.cloudfront_primary["domain.prod"]
   cloudfront_primary_api_bucket        = var.cloudfront_primary["api_bucket.prod"]
+  cloudfront_primary_media_bucket      = module.media-bucket-prod.bucket_name
 
   # attachment CDN
   cloudfront_attachments_enabled           = var.cloudfront_attachments["enabled"]

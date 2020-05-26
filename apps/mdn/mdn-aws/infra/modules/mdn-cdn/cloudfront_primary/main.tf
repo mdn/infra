@@ -1,9 +1,15 @@
 locals {
-  log_bucket = "${var.distribution_name}-logs"
+  log_bucket      = "${var.distribution_name}-logs"
+  api_origin_id   = "S3-${var.api_bucket}"
+  media_origin_id = "S3-${var.media_bucket}"
 }
 
 data "aws_s3_bucket" "api_bucket" {
   bucket = var.api_bucket
+}
+
+data "aws_s3_bucket" "media_bucket" {
+  bucket = var.media_bucket
 }
 
 resource "random_id" "rand-var" {
@@ -385,6 +391,76 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
+  # 12
+  ordered_cache_behavior {
+    path_pattern = "diagrams/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 31536000
+    max_ttl                = 31536000
+    min_ttl                = 31536000
+    smooth_streaming       = false
+    target_origin_id       = local.media_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 13
+  ordered_cache_behavior {
+    path_pattern = "presentations/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 31536000
+    max_ttl                = 31536000
+    min_ttl                = 31536000
+    smooth_streaming       = false
+    target_origin_id       = local.media_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 14
+  ordered_cache_behavior {
+    path_pattern = "samples/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 31536000
+    max_ttl                = 31536000
+    min_ttl                = 31536000
+    smooth_streaming       = false
+    target_origin_id       = local.media_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -419,6 +495,11 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
       origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       origin_keepalive_timeout = 5
     }
+  }
+
+  origin {
+    domain_name = data.aws_s3_bucket.media_bucket.bucket_domain_name
+    origin_id   = local.media_origin_id
   }
 
   origin {
