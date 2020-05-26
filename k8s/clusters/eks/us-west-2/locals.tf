@@ -25,11 +25,12 @@ locals {
 
   mdn_node_groups = {
     default_ng = {
-      desired_capacity = "1"
-      min_capacity     = "1"
-      max_capacity     = "3"
-      disk_size        = "50"
-      instance_type    = "t3.small"
+      desired_capacity = "2"
+      min_capacity     = "2"
+      max_capacity     = "5"
+      disk_size        = "100"
+      instance_type    = "m5.xlarge"
+      key_name         = "mdn"
       subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.private_subnets
 
       k8s_label = {
@@ -49,6 +50,11 @@ locals {
     {
       username = "maws-admin"
       rolearn  = "arn:aws:iam::178589013767:role/maws-admin"
+      groups   = ["system:masters"]
+    },
+    {
+      username = "maws-mdn-admin"
+      rolearn  = "arn:aws:iam::178589013767:role/maws-mdn-admin"
       groups   = ["system:masters"]
     },
     {
