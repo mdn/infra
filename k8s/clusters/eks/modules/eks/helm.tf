@@ -1,17 +1,7 @@
 
-data "helm_repository" "eks" {
-  name = "eks"
-  url  = "https://aws.github.io/eks-charts"
-}
-
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
-}
-
 resource "helm_release" "node_drain" {
   name       = "aws-node-termination-handler"
-  repository = data.helm_repository.eks.metadata.0.name
+  repository = local.eks_charts_repo
   chart      = "eks/aws-node-termination-handler"
   namespace  = "kube-system"
 
@@ -20,7 +10,7 @@ resource "helm_release" "node_drain" {
 
 resource "helm_release" "cluster_autoscaler" {
   name       = "cluster-autoscaler"
-  repository = data.helm_repository.stable.metadata.0.name
+  repository = local.stable_charts_repo
   chart      = "stable/cluster-autoscaler"
   namespace  = "kube-system"
 
@@ -39,7 +29,7 @@ resource "helm_release" "cluster_autoscaler" {
 
 resource "helm_release" "metrics_server" {
   name       = "metrics-server"
-  repository = data.helm_repository.stable.metadata.0.name
+  repository = local.stable_charts_repo
   chart      = "stable/metrics-server"
   namespace  = "kube-system"
 

@@ -49,7 +49,7 @@ resource "kubernetes_role_binding" "this" {
     name      = "${var.role_name}-access-${each.value}"
     namespace = each.value
 
-    labels {
+    labels = {
       namespace = each.value
       app       = "${var.role_name}-rbac"
     }

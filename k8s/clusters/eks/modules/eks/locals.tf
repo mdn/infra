@@ -1,6 +1,9 @@
 
 locals {
 
+  eks_charts_repo    = "https://aws.github.io/eks-charts"
+  stable_charts_repo = "https://kubernetes-charts.storage.googleapis.com"
+
   cluster_autoscaler_name_prefix = "${module.eks.cluster_id}-cluster-autoscaler-${var.region}"
 
   cluster_autoscaler_versions = {

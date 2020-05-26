@@ -14,6 +14,10 @@ output "mdn_apps_a_worker_security_group_id" {
   value = module.mdn-apps-a.worker_security_group_id
 }
 
+output "mdn_apps_a_primary_security_group_id" {
+  value = module.mdn-apps-a.cluster_primary_security_group_id
+}
+
 output "mdn_cluster_name" {
   value = module.mdn.cluster_id
 }
