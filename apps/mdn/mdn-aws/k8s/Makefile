@@ -274,16 +274,17 @@ k8s-delete-deployments: k8s-delete-kuma-deployments \
 
 k8s-kuma-deployments: k8s-web k8s-api k8s-celery k8s-ssr k8s-hpa-web k8s-hpa-api k8s-hpa-celery-workers k8s-hpa-ssr
 
-test-k8s-kuma-deployments: test-k8s-web test-k8s-api test-k8s-celery test-k8s-ssr
+test-k8s-kuma-deployments: test-k8s-web test-k8s-api test-k8s-celery test-k8s-ssr \
+				test-k8s-hpa-web test-k8s-hpa-api test-k8s-hpa-celery-workers test-k8s-hpa-ssr
 
 k8s-delete-kuma-deployments: k8s-delete-web k8s-delete-api k8s-delete-celery \
-							 k8s-delete-ssr
+				k8s-delete-ssr k8s-delete-hpa-web k8s-delete-hpa-api k8s-delete-hpa-celery-workers k8s-delete-hpa-ssr
 
 k8s-kumascript-deployments: k8s-kumascript k8s-hpa-kumascript
 
-test-k8s-kumascript-deployments: test-k8s-kumascript
+test-k8s-kumascript-deployments: test-k8s-kumascript test-k8s-hpa-kumascript
 
-k8s-delete-kumascript-deployments: k8s-delete-kumascript
+k8s-delete-kumascript-deployments: k8s-delete-kumascript k8s-delete-hpa-kumascript
 
 k8s-rollout-status: k8s-kuma-rollout-status k8s-kumascript-rollout-status
 
@@ -599,16 +600,10 @@ k8s-delete-web:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WEB_NAME}
 
 k8s-hpa-web:
-	env KUMA_NAME=${WEB_NAME}\
-		KUMA_REPLICAS=${WEB_REPLICAS} \
-		KUMA_MAX_REPLICAS=${WEB_MAX_REPLICAS} \
-	j2 hpa.kuma.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+	j2 hpa.web.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 test-k8s-hpa-web:
-	env KUMA_NAME=${WEB_NAME}\
-		KUMA_REPLICAS=${WEB_REPLICAS} \
-		KUMA_MAX_REPLICAS=${WEB_MAX_REPLICAS} \
-	j2 hpa.kuma.yaml.j2 | kubeval --strict --ignore-missing-schemas
+	j2 hpa.web.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 k8s-delete-hpa-web:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${WEB_NAME}
@@ -679,6 +674,12 @@ k8s-delete-kumascript:
 
 k8s-hpa-kumascript:
 	j2 hpa.kumascript.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-hpa-kumascript:
+	j2 hpa.kumascript.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-hpa-kumascript:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${KUMASCRIPT_NAME}
 
 k8s-celery: k8s-celery-workers k8s-celery-beat
 
@@ -794,6 +795,8 @@ k8s-get-kumascript-revision-hash:
 		k8s-delete-celery-workers k8s-celery-beat k8s-delete-celery-beat \
 		k8s-kuma-deployments \
 		k8s-delete-kuma-deployments k8s-kumascript-deployments \
+		k8s-delete-hpa-web k8s-delete-hpa-api k8s-delete-hpa-kumascript \
+		k8s-delete-hpa-celery-workers k8s-delete-hpa-ssr \
 		k8s-delete-kumascript-deployments k8s-rollout-status \
 		k8s-kuma-rollout-status k8s-kumascript-rollout-status \
 		k8s-kuma-record-deployment-job k8s-kumascript-record-deployment-job \
