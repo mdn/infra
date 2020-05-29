@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ SSR_NAME }}
+  labels:
+    app: {{ SSR_NAME }}
+    environment: {{ TARGET_ENVIRONMENT }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ SSR_NAME }}
+  minReplicas: {{ SSR_REPLICAS }}
+  maxReplicas: {{ SSR_MAX_REPLICAS }}
+  targetCPUUtilizationPercentage: 80

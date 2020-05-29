@@ -42,6 +42,7 @@ export SSR_SERVICE_PROTOCOL ?= TCP
 
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
+export WEB_MAX_REPLICAS ?= 2
 export WEB_GUNICORN_WORKERS ?= 4
 export WEB_GUNICORN_TIMEOUT ?= 118
 export WEB_GUNICORN_WORKER_MAX_REQUESTS ?= 1000
@@ -55,6 +56,7 @@ export WEB_RATELIMIT_ENABLE ?= True
 
 export API_NAME ?= api
 export API_REPLICAS ?= 1
+export API_MAX_REPLICAS ?= 2
 export API_GUNICORN_WORKERS ?= 4
 export API_GUNICORN_TIMEOUT ?= 120
 export API_GUNICORN_WORKER_MAX_REQUESTS ?= 500
@@ -67,6 +69,7 @@ export API_ALLOWED_HOSTS ?= ${API_SERVICE_NAME}
 
 export SSR_NAME ?= ssr
 export SSR_REPLICAS ?= 1
+export SSR_MAX_REPLICAS ?= 2
 export SSR_CPU_LIMIT ?= 1
 export SSR_CPU_REQUEST ?= 100m
 export SSR_MEMORY_LIMIT ?= 2Gi
@@ -75,6 +78,7 @@ export SSR_CONTAINER_PORT ?= ${SSR_SERVICE_TARGET_PORT}
 
 export CELERY_WORKERS_NAME ?= celery-worker
 export CELERY_WORKERS_REPLICAS ?= 1
+export CELERY_WORKERS_MAX_REPLICAS ?= 2
 export CELERY_WORKERS_CPU_LIMIT ?= 2
 export CELERY_WORKERS_CPU_REQUEST ?= 100m
 export CELERY_WORKERS_MEMORY_LIMIT ?= 4Gi
@@ -91,6 +95,7 @@ export CELERY_BEAT_MEMORY_REQUEST ?= 256Mi
 
 export KUMASCRIPT_NAME ?= kumascript
 export KUMASCRIPT_REPLICAS ?= 1
+export KUMASCRIPT_MAX_REPLICAS ?= 2
 export KUMASCRIPT_CONTAINER_PORT ?= ${KUMASCRIPT_SERVICE_TARGET_PORT}
 export KUMASCRIPT_IMAGE ?= mdnwebdocs/kumascript
 export KUMASCRIPT_IMAGE_PULL_POLICY ?= IfNotPresent
@@ -267,18 +272,19 @@ test-k8s-deployments: test-k8s-kuma-deployments test-k8s-kumascript-deployments
 k8s-delete-deployments: k8s-delete-kuma-deployments \
 				k8s-delete-kumascript-deployments
 
-k8s-kuma-deployments: k8s-web k8s-api k8s-celery k8s-ssr
+k8s-kuma-deployments: k8s-web k8s-api k8s-celery k8s-ssr k8s-hpa-web k8s-hpa-api k8s-hpa-celery-workers k8s-hpa-ssr
 
-test-k8s-kuma-deployments: test-k8s-web test-k8s-api test-k8s-celery test-k8s-ssr
+test-k8s-kuma-deployments: test-k8s-web test-k8s-api test-k8s-celery test-k8s-ssr \
+				test-k8s-hpa-web test-k8s-hpa-api test-k8s-hpa-celery-workers test-k8s-hpa-ssr
 
 k8s-delete-kuma-deployments: k8s-delete-web k8s-delete-api k8s-delete-celery \
-							 k8s-delete-ssr
+				k8s-delete-ssr k8s-delete-hpa-web k8s-delete-hpa-api k8s-delete-hpa-celery-workers k8s-delete-hpa-ssr
 
-k8s-kumascript-deployments: k8s-kumascript
+k8s-kumascript-deployments: k8s-kumascript k8s-hpa-kumascript
 
-test-k8s-kumascript-deployments: test-k8s-kumascript
+test-k8s-kumascript-deployments: test-k8s-kumascript test-k8s-hpa-kumascript
 
-k8s-delete-kumascript-deployments: k8s-delete-kumascript
+k8s-delete-kumascript-deployments: k8s-delete-kumascript k8s-delete-hpa-kumascript
 
 k8s-rollout-status: k8s-kuma-rollout-status k8s-kumascript-rollout-status
 
@@ -593,6 +599,15 @@ test-k8s-web:
 k8s-delete-web:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WEB_NAME}
 
+k8s-hpa-web:
+	j2 hpa.web.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-hpa-web:
+	j2 hpa.web.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-hpa-web:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${WEB_NAME}
+
 k8s-api:
 	env KUMA_NAME=${API_NAME} \
 		KUMA_REPLICAS=${API_REPLICAS} \
@@ -634,6 +649,15 @@ test-k8s-api:
 k8s-delete-api:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${API_NAME}
 
+k8s-hpa-api:
+	j2 hpa.api.yaml.j2 |  ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-hpa-api:
+	j2 hpa.api.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-hpa-api:
+	 ${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${API_NAME}
+
 k8s-kumascript:
 	env KUMASCRIPT_APP_LABEL=${KUMASCRIPT_SERVICE_NAME} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_KUMASCRIPT_NAME} \
@@ -647,6 +671,15 @@ test-k8s-kumascript:
 k8s-delete-kumascript:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${KUMASCRIPT_NAME}
+
+k8s-hpa-kumascript:
+	j2 hpa.kumascript.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-hpa-kumascript:
+	j2 hpa.kumascript.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-hpa-kumascript:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${KUMASCRIPT_NAME}
 
 k8s-celery: k8s-celery-workers k8s-celery-beat
 
@@ -683,6 +716,15 @@ test-k8s-celery-workers:
 k8s-delete-celery-workers:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_WORKERS_NAME}
+
+k8s-hpa-celery-workers:
+	j2 hpa.celery.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-hpa-celery-workers:
+	j2 hpa.celery.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-hpa-celery-workers:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${CELERY_WORKERS_NAME}
 
 k8s-celery-beat:
 	env KUMA_NAME=${CELERY_BEAT_NAME} \
@@ -723,6 +765,15 @@ test-k8s-ssr:
 k8s-delete-ssr:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${SSR_NAME}
 
+k8s-hpa-ssr:
+	j2 hpa.ssr.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+
+test-k8s-hpa-ssr:
+	j2 hpa.ssr.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-hpa-ssr:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found hpa ${SSR_NAME}
+
 check-service-env:
 	./check_infra_lock.sh
 
@@ -744,6 +795,8 @@ k8s-get-kumascript-revision-hash:
 		k8s-delete-celery-workers k8s-celery-beat k8s-delete-celery-beat \
 		k8s-kuma-deployments \
 		k8s-delete-kuma-deployments k8s-kumascript-deployments \
+		k8s-delete-hpa-web k8s-delete-hpa-api k8s-delete-hpa-kumascript \
+		k8s-delete-hpa-celery-workers k8s-delete-hpa-ssr \
 		k8s-delete-kumascript-deployments k8s-rollout-status \
 		k8s-kuma-rollout-status k8s-kumascript-rollout-status \
 		k8s-kuma-record-deployment-job k8s-kumascript-record-deployment-job \
