@@ -58,7 +58,11 @@ output "worf_user" {
   value = module.security.worf_user
 }
 
-output "work_user_secret_key" {
+output "worf_user_secret_key" {
   value = module.security.worf_secret_key
+}
+
+output "media-sync-role_arn" {
+  value = module.media-sync-roles.role_arn
 }
 
