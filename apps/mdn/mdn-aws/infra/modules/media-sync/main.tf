@@ -25,4 +25,15 @@ data "aws_iam_policy_document" "media-sync" {
       "arn:aws:s3:::${var.prod_bucket}/*"
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.stage_bucket}",
+      "arn:aws:s3:::${var.prod_bucket}"
+    ]
+  }
 }
