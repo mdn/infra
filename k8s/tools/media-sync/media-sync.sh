@@ -7,7 +7,7 @@ set -o pipefail
 PROD_MEDIA_BUCKET=${PROD_MEDIA_BUCKET:-mdn-media-prod}
 STAGE_MEDIA_BUCKET=${STAGE_MEDIA_BUCKET:-mdn-media-stage}
 DMS_URL=${DMS_URL}
-OPTIONS="--exclude 'sitemaps/*' --exclude sitemap.xml --cache-control max-age=31536000,public,immutable"
+OPTIONS="--exclude 'sitemaps/*' --exclude 'sitemap.xml' --cache-control max-age=31536000,public,immutable"
 
 if [ -z "${DMS_URL}" ]; then
     echo "No DMS URL"
