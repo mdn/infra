@@ -277,7 +277,6 @@ module "upload-user-stage" {
   eks_worker_role_arn = [
     data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
     data.terraform_remote_state.kops-eu-central-1.outputs.nodes_role_arn,
-    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn,
   ]
 }
 
@@ -294,6 +293,14 @@ module "upload-user-prod" {
   eks_worker_role_arn = [
     data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
     data.terraform_remote_state.kops-eu-central-1.outputs.nodes_role_arn,
-    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn,
   ]
+}
+
+# Create role for media sync
+module "media-sync-roles" {
+  source                  = "./modules/media-sync"
+  cluster_oidc_issuer_url = data.terraform_remote_state.eks-us-west-2.outputs.mdn_cluster_oidc_issuer_url
+  stage_bucket            = module.media-bucket-stage.bucket_name
+  prod_bucket             = module.media-bucket-prod.bucket_name
+
 }

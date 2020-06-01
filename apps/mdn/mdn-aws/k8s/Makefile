@@ -244,6 +244,12 @@ export NEW_RELIC_SSR_NAME ?= "ssr-${NEW_RELIC_MONITOR_SUFFIX}"
 export PERCONA_TOOLKIT_NS ?= percona-toolkit
 export PERCONA_TOOLKIT_IMAGE ?= mdnwebdocs/percona-toolkit:226571b
 
+export MEDIA_SYNC_NS ?= mdn-cron
+export MEDIA_SYNC_IMAGE ?= mdnwebdocs/media-sync
+export MEDIA_SYNC_IMAGE_TAG ?= 43bafbf
+export MEDIA_SYNC_DEBUG_MODE ?= false
+export MEDIA_SYNC_ROLE_ARN ?= "arn:aws:iam::178589013767:role/media-sync-role"
+
 ###############################
 ### core tasks
 
@@ -555,6 +561,15 @@ k8s-percona-toolkit-ptkill: check-service-env
 
 k8s-delete-percona-toolkit-ptkill: check-service-env
 	${KUBECTL} delete -n ${PERCONA_TOOLKIT_NS} --ignore-not-found deployment percona-toolkit-ptkill
+
+k8s-media-sync-cron: check-service-env
+	j2 mdn-media-sync-cron.yaml.j2 | ${KUBECTL} apply -n ${MEDIA_SYNC_NS} -f -
+
+k8s-delete-media-sync-cron:
+	${KUBECTL} delete -n ${MEDIA_SYNC_NS} --ignore-not-found cronjob  mdn-media-sync
+
+test-k8s-media-sync-cron: check-service-env
+	j2 mdn-media-sync-cron.yaml.j2 | kubeval --strict --ignore-missing-schemas
 
 
 ### end administrative tasks

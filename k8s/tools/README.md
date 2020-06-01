@@ -1,27 +1,8 @@
 # Tools
+Various administrative and tools containers to help manage our k8s cluster
 
-### `k8s_ssh_security.ssh`
+Contains the following:
 
-This script grants or revokes SSH access to a kops Kubernetes cluster.
-
-```
-~/infra/k8s/tools$ ./k8s_ssh_security.sh --help
----------------------------------------------
-You must source config.sh to use this script.
-
-Show current security groups
-k8s_ssh_security.sh --show
-
-Disable external ssh into K8s:
-k8s_ssh_security.sh --disable
-
-Disable ssh access from this public ip into K8s:
-k8s_ssh_security.sh --disable --myip
-
-Enable 0.0.0.0/0 ssh access into K8s:
-k8s_ssh_security.sh --enable
-
-Enable ssh access from this public ip into K8s:
-k8s_ssh_security.sh --enable --myip
-```
-
+- admin node which is deployment of a long running pod to run various admin jobs
+- block-aws a deployment to block the AWS metadata endpoint
+- media-sync simple container to sync the attachments from the prod environment to stage

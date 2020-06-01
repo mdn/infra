@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: {{ MEDIA_SYNC_ROLE_ARN }}
+  labels:
+    app: mdn-media-sync
+    service: mdn
+  name: media-sync
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: mdn-media-sync
+  labels:
+    app: mdn-media-sync
+    service: mdn
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: {{ FAILED_JOBS_HISTORY_LIMIT }}
+  successfulJobsHistoryLimit: {{ SUCCESSFUL_JOBS_HISTORY_LIMIT }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: media-sync
+          containers:
+            - name: mdn-media-sync
+              image: {{ MEDIA_SYNC_IMAGE }}:{{ MEDIA_SYNC_IMAGE_TAG }}
+              {%- if MEDIA_SYNC_DEBUG_MODE == 'true' %}
+              command: [ "/bin/bash", "-c", "--" ]
+              args: [ "while true; do sleep 30; done;" ]
+              {%- endif %}
+              env:
+                - name: DMS_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: mdn-media-sync
+                      key: dms_url
