@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo '--> Setting environment to PROD(MM) in OREGON'
 
-export KUBECONFIG=${HOME}/.kube/oregon.config
+export KUBECONFIG=${HOME}/.kube/mdn-us-west-2.config
 
 # Define defaults for environment variables that personalize the commands.
 export TARGET_ENVIRONMENT=prod
