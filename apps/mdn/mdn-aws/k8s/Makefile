@@ -5,17 +5,6 @@ export AWS_RESOURCE_STACK=MDN-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
 export KUBECTL ?= kubectl
 
-# Note PVs are available within ALL namespaces, so delimit them with
-# the name of the target environment.
-export SHARED_PV_NAME ?= mdn-shared-${TARGET_ENVIRONMENT}
-export SHARED_PV_SIZE ?= 1000Gi
-export SHARED_PV_RECLAIM_POLICY ?= Retain
-export SHARED_PV_MOUNT_PATH ?= /
-export SHARED_PV_STORAGE_CLASS_NAME ?= efs
-
-export SHARED_PVC_NAME ?= mdn-shared
-export SHARED_PVC_SIZE ?= 40Gi
-
 export WEB_SERVICE_NAME ?= web
 export WEB_SERVICE_TYPE ?= LoadBalancer
 export WEB_SERVICE_PORT ?= 443
@@ -108,8 +97,6 @@ export KUMASCRIPT_CACHE_MINUTES ?= 60
 
 export KUMA_IMAGE ?= mdnwebdocs/kuma
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
-# "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
-export KUMA_MOUNT_PATH ?= /mdn
 
 # Defaults for the Kuma environment.
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
@@ -159,36 +146,6 @@ export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMA
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=${KUMASCRIPT_DOCUMENT_URL}/en-US/docs/{path}?raw=1&redirect=no
 export KUMASCRIPT_LIVE_SAMPLES_BASE_URL=${KUMA_PROTOCOL}${KUMA_ATTACHMENT_HOST}
 
-# MDN backup tool
-export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
-export RESTORE_SERVICE_NAME ?= mdn-restore-${TARGET_ENVIRONMENT}
-export SYNC_FROM_S3_SERVICE_NAME ?= mdn-s3-sync-${TARGET_ENVIRONMENT}
-export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
-
-export BACKUP_MOUNT_DIR ?= "/mdn"
-
-export BACKUP_BUCKET ?= s3://mdn-efs-backup-c2037ed87dd96008
-export AWS_BACKUP_REGION ?= us-west-2
-export AWS_BACKUP_PAGE_SIZE ?= 100
-
-export BACKUP_LOCAL_DIR ?= "/mdn/www/"
-# note, this is different than the sync directory in S3
-export BACKUP_REMOTE_DIR ?= "/backups/mdn/"
-
-export SYNC_BUCKET ?= s3://mdn-efs-backup-c2037ed87dd96008
-export AWS_SYNC_REGION ?= us-west-2
-export AWS_SYNC_PAGE_SIZE ?= 100
-export SYNC_LOCAL_DIR ?= "/mdn/www/"
-export SYNC_REMOTE_DIR ?= "/backups/efs/"
-
-export BACKUP_CONTAINER_NAME ?= mdn-backup
-export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
-export BACKUP_IMAGE ?= mdnwebdocs/mdn-backup:51ae821
-# cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
-export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
-export RESTORE_SERVICE_SCHEDULE ?= "@hourly"
-export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
-
 export RDS_BACKUP_DIR ?= /backup
 export RDS_BACKUP_DBTYPE ?= MYSQL
 export RDS_BACKUP_DEBUG_MODE ?= false
@@ -199,15 +156,6 @@ export RDS_BACKUP_BUCKET ?= s3://mdn-rds-backup-7752d5ca6f3744a0/backups
 
 export FAILED_JOBS_HISTORY_LIMIT ?= 3
 export SUCCESSFUL_JOBS_HISTORY_LIMIT ?= 3
-
-# https://kubernetes.io/docs/concepts/configuration/secret/
-# the values below are NOT real access/secret keys
-export BACKUP_ACCESS_KEY ?= foo
-export BACKUP_SECRET_KEY ?= bar
-export BACKUP_ACCESS_KEY_BASE64 ?= $(shell echo -n "${BACKUP_ACCESS_KEY}" | base64)
-export BACKUP_SECRET_KEY_BASE64 ?= $(shell echo -n "${BACKUP_SECRET_KEY}" | base64)
-export BACKUP_DEADMANSSNITCH_URL ?= baz
-export BACKUP_DEADMANSSNITCH_URL_BASE64 ?= $(shell echo -n "${BACKUP_DEADMANSSNITCH_URL}" | base64)
 
 export ADMIN_NODE_NAME ?= mdn-admin
 
@@ -258,11 +206,6 @@ k8s-ns: check-service-env
 
 k8s-delete-ns: check-service-env
 	${KUBECTL} delete --ignore-not-found ns ${K8S_NAMESPACE}
-
-k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
-
-k8s-delete-shared-storage: k8s-delete-efs-setup-job k8s-delete-pvc-shared \
-						   k8s-delete-pv-shared
 
 k8s-services: k8s-web-svc k8s-api-svc k8s-kumascript-svc k8s-ssr-svc
 
@@ -366,33 +309,6 @@ k8s-kumascript-delete-record-deployment-job:
 ### end core tasks
 ###############################
 
-k8s-pv-shared: check-service-env
-	j2 shared.pv.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-test-k8s-pv-shared:
-	j2 shared.pv.yaml.j2 | kubeval --strict --ignore-missing-schemas
-
-k8s-delete-pv-shared: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${SHARED_PV_NAME}
-
-k8s-pvc-shared: check-service-env
-	j2 shared.pvc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-test-k8s-pvc-shared:
-	j2 shared.pvc.yaml.j2 | kubeval --strict --ignore-missing-schemas
-
-k8s-delete-pvc-shared: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
-
-k8s-efs-setup-job: check-service-env
-	j2 mdn-efs-setup-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-test-k8s-efs-setup-job:
-	j2 mdn-efs-setup-job.yaml.j2 | kubeval --strict --ignore-missing-schemas
-
-k8s-delete-efs-setup-job: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
-
 k8s-web-svc: check-service-env
 	env SERVICE_NAME=${WEB_SERVICE_NAME} \
 		SERVICE_TYPE=${WEB_SERVICE_TYPE} \
@@ -491,42 +407,6 @@ k8s-newrelic-secrets: check-service-env
 k8s-delete-newrelic-secrets: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${NEW_RELIC_SECRETS_NAME}
 
-k8s-backup-secrets: check-service-env
-	j2 mdn-backup-secrets.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-backup-secrets: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
-
-# backup EFS to S3, for production
-k8s-backup-cron: check-service-env
-	j2 mdn-backup-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-backup-cron: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
-
-
-# test backup pod
-k8s-backup-test-pod: check-service-env
-	j2 mdn-backup-test-pod.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-backup-test-pod: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pod mdn-backup-test
-
-
-# restore data from S3 to EFS
-k8s-restore-cron: check-service-env
-	j2 mdn-restore-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-restore-cron: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${RESTORE_SERVICE_NAME}
-
-# pull files from S3 (SCL3), for dev/stage
-k8s-sync-from-s3-cron: check-service-env
-	j2 mdn-sync-from-s3-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-sync-from-s3-cron: check-service-env
-	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${SYNC_FROM_S3_SERVICE_NAME}
-
 k8s-admin-node: check-service-env
 	j2 mdn-admin-node.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
@@ -541,19 +421,6 @@ k8s-rds-backup-cron: check-service-env
 
 k8s-delete-rds-backup-cron: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob mdn-rds-backup
-
-# one-time job to push EFS to S3
-k8s-sync-efs-to-s3-job: check-service-env
-	env PUSH_OR_PULL=PUSH \
-		JOB_NAME=mdn-sync-efs-to-s3 \
-		j2 mdn-sync-efs-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
-# one-time job to load EFS from S3
-k8s-sync-efs-from-s3-job: check-service-env
-	env PUSH_OR_PULL=PULL \
-		JOB_NAME=mdn-sync-efs-from-s3 \
-		j2 mdn-sync-efs-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-
 
 #check-service-env
 k8s-percona-toolkit-ptkill: check-service-env
@@ -570,7 +437,6 @@ k8s-delete-media-sync-cron:
 
 test-k8s-media-sync-cron: check-service-env
 	j2 mdn-media-sync-cron.yaml.j2 | kubeval --strict --ignore-missing-schemas
-
 
 ### end administrative tasks
 ###############################
@@ -799,9 +665,7 @@ k8s-get-kumascript-revision-hash:
 	@ ${KUBECTL} -n ${K8S_NAMESPACE} exec $(shell ${KUBECTL} -n ${K8S_NAMESPACE} get pods --selector app=${KUMASCRIPT_SERVICE_NAME} -o jsonpath='{.items[0].metadata.name}') -- printenv REVISION_HASH
 
 # These tasks don't have file targets
-.PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
-		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
-		k8s-shared-storage k8s-delete-shared-storage \
+.PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns \
 		k8s-web-svc k8s-delete-web-svc k8s-api-svc k8s-delete-api-svc \
 		k8s-ssr-svc k8s-delete-ssr-svc k8s-kumascript-svc \
 		k8s-delete-kumascript-svc k8s-deployments k8s-delete-deployments \

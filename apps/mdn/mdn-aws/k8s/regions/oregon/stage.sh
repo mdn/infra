@@ -12,18 +12,6 @@ export K8S_CLUSTER_SHORT_NAME=oregon
 # Define an alias for kubectl for convenience.
 alias kc="kubectl -n ${K8S_NAMESPACE}"
 
-# Note PVs are available within ALL namespaces, so delimit them with
-# the name of the target environment.
-export SHARED_PV_NAME=mdn-shared-${TARGET_ENVIRONMENT}
-export SHARED_PV_SIZE=1000Gi
-export SHARED_PV_RECLAIM_POLICY=Retain
-export SHARED_PV_MOUNT_PATH=/
-export SHARED_PV_ARN=fs-676d25ce.efs.us-west-2.amazonaws.com
-export SHARED_PV_STORAGE_CLASS_NAME=efs
-
-export SHARED_PVC_NAME=mdn-shared
-export SHARED_PVC_SIZE=100Gi
-
 export WEB_SERVICE_NAME=web
 export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
@@ -109,8 +97,6 @@ export KUMASCRIPT_MEMORY_REQUEST=128Mi
 
 export KUMA_IMAGE=mdnwebdocs/kuma
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
-# "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
-export KUMA_MOUNT_PATH=/mdn
 
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL=https
 export KUMA_ADMIN_NAMES="MDN devs"
@@ -152,6 +138,3 @@ export KUMA_STRIPE_PUBLIC_KEY=pk_test_8QPCGoZzaushrXveHRqHAZch
 export KUMA_WEB_CONCURRENCY=4
 
 export INTERACTIVE_EXAMPLES_BASE_URL=https://interactive-examples.mdn.mozilla.net
-
-export SYNC_BUCKET=s3://mdn-efs-backup-c2037ed87dd96008
-export BACKUP_BUCKET=s3://mdn-efs-backup-c2037ed87dd96008

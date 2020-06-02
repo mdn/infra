@@ -17,9 +17,6 @@ spec:
           image: mdnwebdocs/mdn-admin:2f6c560
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 30; done;" ]
-          volumeMounts:
-            - mountPath: {{ BACKUP_MOUNT_DIR }}
-              name: {{ SHARED_PVC_NAME }}
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -31,7 +28,3 @@ spec:
                 secretKeyRef:
                   name: mdn-admin-node-secrets
                   key: secret_key
-      volumes:
-        - name: {{ SHARED_PVC_NAME }}
-          persistentVolumeClaim:
-            claimName: {{ SHARED_PVC_NAME }}

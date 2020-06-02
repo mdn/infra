@@ -1,14 +1,7 @@
-      volumes:
-        - name: kuma-fs
-          persistentVolumeClaim:
-            claimName: {{ SHARED_PVC_NAME }}
       containers:
         - name: {{ KUMA_NAME }}
           image: {{ KUMA_IMAGE }}:{{ KUMA_IMAGE_TAG }}
           imagePullPolicy: {{ KUMA_IMAGE_PULL_POLICY }}
-          volumeMounts:
-            - name: kuma-fs
-              mountPath: {{ KUMA_MOUNT_PATH }}
           resources:
             requests:
               cpu: {{ KUMA_CPU_REQUEST }}
