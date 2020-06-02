@@ -3,12 +3,13 @@ apiVersion: v1
 metadata:
   name: {{ SERVICE_NAME }}
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "{{ SERVICE_PORT }}"
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{{ SERVICE_CERT_ARN }}"
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "{{ ELB_CONNECTION_IDLE_TIMEOUT }}"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     {% if ELB_S3_LOGGING_ENABLED.lower() == "true" -%}
-    service.beta.kubernetes.io/aws-load-balancer-access-log-enabled: true
+    service.beta.kubernetes.io/aws-load-balancer-access-log-enabled: "true"
     service.beta.kubernetes.io/aws-load-balancer-access-log-emit-interval: "{{ ELB_S3_LOGGING_INTERVAL }}"
     service.beta.kubernetes.io/aws-load-balancer-access-log-s3-bucket-name: "{{ ELB_S3_LOGGING_BUCKET }}"
     service.beta.kubernetes.io/aws-load-balancer-access-log-s3-bucket-prefix: "{{ ELB_S3_LOGGING_PREFIX }}"
