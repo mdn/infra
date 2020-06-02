@@ -36,7 +36,7 @@ module "mdn-apps-a" {
   eks_subnets = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   cluster_name    = "mdn-apps-a"
-  cluster_version = "1.14"
+  cluster_version = "1.15"
   node_groups     = local.mdn_apps_node_groups
   map_roles       = local.map_roles
   map_users       = local.map_users
