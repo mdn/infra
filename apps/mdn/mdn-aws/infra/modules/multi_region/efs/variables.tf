@@ -15,7 +15,8 @@ variable "subnets" {
 }
 
 variable "nodes_security_group" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
 
 variable "enabled" {
