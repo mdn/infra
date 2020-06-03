@@ -20,6 +20,23 @@ module "ssh_sg" {
   vpc_id = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
 }
 
+module "papertrail-mdn-apps-a" {
+  providers = {
+    helm = helm.mdn-apps-a
+  }
+  source         = "../modules/papertrail"
+  eks_cluster_id = module.mdn-apps-a.cluster_id
+}
+
+module "papertrail-mdn" {
+  providers = {
+    helm = helm.mdn
+  }
+
+  source         = "../modules/papertrail"
+  eks_cluster_id = module.mdn.cluster_id
+}
+
 module "mdn" {
   source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
 
