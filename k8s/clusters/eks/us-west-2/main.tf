@@ -14,34 +14,6 @@ module "mdn-jenkins-rbac" {
   }
 }
 
-resource "aws_security_group" "ssh" {
-  name        = "eks-allow-ssh"
-  description = "Allow inbound SSH"
-  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-
-  ingress {
-    from_port = "22"
-    to_port   = "22"
-    protocol  = "tcp"
-    cidr_blocks = [
-      data.aws_vpc.us-west-2.cidr_block
-    ]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name      = "eks-allow-ssh-sg"
-    Terraform = "true"
-    Region    = var.region
-  }
-}
-
 module "ssh_sg" {
   source = "../modules/security-groups"
   region = var.region
