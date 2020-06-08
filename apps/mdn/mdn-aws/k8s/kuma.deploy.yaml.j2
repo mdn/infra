@@ -14,7 +14,7 @@
             - "--access-logformat=%(h)s %(l)s %(u)s %(t)s \"%(r)s\" %(s)s %(b)s \"%(f)s\" \"%(a)s\" %({X_Forwarded_For}i)s\" %(T)s"
             - "--timeout={{ KUMA_GUNICORN_TIMEOUT }}"
             - "--keep-alive={{ KUMA_GUNICORN_KEEPALIVE }}"
-            - "--worker-class=gunicorn.workers.ggevent.GeventWorker"
+            - "--worker-class=meinheld.gmeinheld.MeinheldWorker"
             - "kuma.wsgi:application"
           livenessProbe:
             httpGet:
