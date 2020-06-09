@@ -63,4 +63,3 @@ variable "enable_kube2iam" {
   description = "Boolean to create kube2iam iam roles"
   default     = true
 }
-

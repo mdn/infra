@@ -1,6 +1,7 @@
 
 locals {
 
+  mozit_charts_repo  = "https://mozilla-it.github.io/helm-charts"
   eks_charts_repo    = "https://aws.github.io/eks-charts"
   stable_charts_repo = "https://kubernetes-charts.storage.googleapis.com"
 
