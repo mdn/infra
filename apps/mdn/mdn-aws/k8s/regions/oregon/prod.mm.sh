@@ -49,8 +49,8 @@ export WEB_MEMORY_REQUEST=4Gi
 export WEB_ALLOWED_HOSTS="developer.mozilla.org,beta.developer.mozilla.org,wiki.developer.mozilla.org,mdn.mozillademos.org,demos.mdn.mozit.cloud,demos-origin.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud"
 
 export API_NAME=api
-export API_REPLICAS=2
-export API_MAX_REPLICAS=4
+export API_REPLICAS=4
+export API_MAX_REPLICAS=8
 export API_GUNICORN_WORKERS=4
 export API_GUNICORN_TIMEOUT=120
 export API_CPU_LIMIT=4
@@ -68,8 +68,8 @@ export SSR_MEMORY_REQUEST=1Gi
 export SSR_CONTAINER_PORT=${SSR_SERVICE_TARGET_PORT}
 
 export CELERY_WORKERS_NAME=celery-worker
-export CELERY_WORKERS_REPLICAS=10
-export CELERY_WORKERS_MAX_REPLICAS=15
+export CELERY_WORKERS_REPLICAS=4
+export CELERY_WORKERS_MAX_REPLICAS=8
 export CELERY_WORKERS_CPU_LIMIT=4
 export CELERY_WORKERS_CPU_REQUEST=500m
 export CELERY_WORKERS_MEMORY_LIMIT=4Gi

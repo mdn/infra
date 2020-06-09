@@ -24,14 +24,15 @@ locals {
   }
 
   mdn_node_groups = {
-    default_ng = {
-      desired_capacity = "10"
-      min_capacity     = "10"
-      max_capacity     = "20"
-      disk_size        = "100"
-      instance_type    = "m5.xlarge"
-      key_name         = "mdn"
-      subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.private_subnets
+    default_ng_1 = {
+      desired_capacity          = "10"
+      min_capacity              = "10"
+      max_capacity              = "20"
+      disk_size                 = "100"
+      instance_type             = "m5.xlarge"
+      key_name                  = "mdn"
+      source_security_group_ids = [module.ssh_sg.ssh_security_group_id]
+      subnets                   = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
       k8s_label = {
         Service = "default"
@@ -39,7 +40,7 @@ locals {
       }
 
       additional_tags = {
-        "Name"                              = "mdn-default-ng"
+        "Name"                              = "mdn-default-ng-1"
         "kubernetes.io/cluster/mdn"         = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }
@@ -56,13 +57,6 @@ locals {
       username = "maws-mdn-admin"
       rolearn  = "arn:aws:iam::178589013767:role/maws-mdn-admin"
       groups   = ["system:masters"]
-    },
-    {
-      username = "AdminRole"
-      # This is a bug in k8s, the role in IAM will not match this
-      # file since k8s has issues parsing roles with paths
-      rolearn = "arn:aws:iam::178589013767:role/AdminRole"
-      groups  = ["system:masters"]
     },
     {
       username = "jenkins"

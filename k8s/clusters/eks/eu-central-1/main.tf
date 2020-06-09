@@ -6,6 +6,12 @@ terraform {
   }
 }
 
+module "ssh_sg" {
+  source = "../modules/security-groups"
+  region = var.region
+  vpc_id = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
+}
+
 module "mdn" {
   source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
 
