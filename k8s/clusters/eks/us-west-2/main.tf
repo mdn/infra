@@ -46,6 +46,7 @@ module "mdn" {
 
   cluster_name       = "mdn"
   cluster_version    = "1.16"
+  cluster_features   = local.cluster_features
   node_groups        = local.mdn_node_groups
   map_roles          = local.map_roles
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"

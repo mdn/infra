@@ -1,6 +1,12 @@
 
 locals {
 
+  cluster_features = {
+    "aws_calico"  = true
+    "alb_ingress" = true
+    "reloader"    = false
+  }
+
   mdn_apps_node_groups = {
     default_ng = {
       desired_capacity = "4"

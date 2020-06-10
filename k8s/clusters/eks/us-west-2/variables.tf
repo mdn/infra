@@ -3,6 +3,6 @@ variable "region" {
 }
 
 variable "cluster_version" {
-  default = "1.13"
+  default = "1.15"
 }
 
