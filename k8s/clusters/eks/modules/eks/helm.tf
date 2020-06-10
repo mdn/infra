@@ -35,3 +35,22 @@ resource "helm_release" "metrics_server" {
 
   depends_on = [module.eks]
 }
+
+resource "helm_release" "alb_ingress" {
+  name       = "aws-alb-ingress-controller"
+  repository = local.incubator_repository
+  chart      = "aws-alb-ingress-controller"
+  namespace  = "kube-system"
+
+  dynamic "set" {
+    iterator = item
+    for_each = local.alb_ingress_settings
+
+    content {
+      name  = item.key
+      value = item.value
+    }
+  }
+
+  depends_on = [module.eks]
+}
