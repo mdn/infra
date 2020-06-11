@@ -53,6 +53,11 @@ variable "cluster_autoscaler_settings" {
   default = {}
 }
 
+variable "alb_ingress_settings" {
+  type    = map(string)
+  default = {}
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources."
   type        = map(string)
@@ -63,4 +68,3 @@ variable "enable_kube2iam" {
   description = "Boolean to create kube2iam iam roles"
   default     = true
 }
-

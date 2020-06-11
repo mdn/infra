@@ -28,6 +28,21 @@ module "mdn" {
 }
 
 module "jenkins-rbac" {
+
+  providers = {
+    kubernetes = kubernetes.mdn
+  }
+
   source    = "../modules/jenkins-rbac"
   namespace = ["mdn-prod"]
+}
+
+module "papertrail" {
+
+  providers = {
+    helm = helm.mdn
+  }
+
+  source         = "../modules/papertrail"
+  eks_cluster_id = module.mdn.cluster_id
 }

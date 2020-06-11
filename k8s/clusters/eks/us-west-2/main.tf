@@ -20,6 +20,23 @@ module "ssh_sg" {
   vpc_id = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
 }
 
+module "papertrail-mdn-apps-a" {
+  providers = {
+    helm = helm.mdn-apps-a
+  }
+  source         = "../modules/papertrail"
+  eks_cluster_id = module.mdn-apps-a.cluster_id
+}
+
+module "papertrail-mdn" {
+  providers = {
+    helm = helm.mdn
+  }
+
+  source         = "../modules/papertrail"
+  eks_cluster_id = module.mdn.cluster_id
+}
+
 module "mdn" {
   source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
 
@@ -29,6 +46,7 @@ module "mdn" {
 
   cluster_name       = "mdn"
   cluster_version    = "1.16"
+  cluster_features   = local.cluster_features
   node_groups        = local.mdn_node_groups
   map_roles          = local.map_roles
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"

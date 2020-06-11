@@ -1,8 +1,10 @@
 
 locals {
 
-  eks_charts_repo    = "https://aws.github.io/eks-charts"
-  stable_charts_repo = "https://kubernetes-charts.storage.googleapis.com"
+  mozit_charts_repo    = "https://mozilla-it.github.io/helm-charts"
+  eks_charts_repo      = "https://aws.github.io/eks-charts"
+  stable_charts_repo   = "https://kubernetes-charts.storage.googleapis.com"
+  incubator_repository = "http://storage.googleapis.com/kubernetes-charts-incubator"
 
   cluster_autoscaler_name_prefix = "${module.eks.cluster_id}-cluster-autoscaler-${var.region}"
 
@@ -26,4 +28,14 @@ locals {
     "extraArgs.balance-similar-node-groups"                         = "true"
   }
   cluster_autoscaler_settings = merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_settings)
+
+  alb_ingress_namespace   = "kube-system"
+  alb_ingress_name_prefix = "${module.eks.cluster_id}-alb-ingress-${var.region}"
+  alb_ingress_defaults = {
+    "clusterName"                                                    = var.cluster_name
+    "autoDiscoverAwsRegion"                                          = "true"
+    "awsVpcID"                                                       = var.vpc_id
+    "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.alb_ingress_role.this_iam_role_arn
+  }
+  alb_ingress_settings = merge(local.alb_ingress_defaults, var.alb_ingress_settings)
 }

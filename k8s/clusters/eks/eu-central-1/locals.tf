@@ -1,7 +1,9 @@
 locals {
 
   cluster_features = {
-    "aws_calico" = true
+    "aws_calico"  = true
+    "alb_ingress" = true
+    "reloader"    = false
   }
 
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
