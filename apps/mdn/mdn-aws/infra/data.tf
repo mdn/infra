@@ -78,18 +78,3 @@ data "aws_security_groups" "us-west-2-nodes_sg" {
     values = [data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id]
   }
 }
-
-data "aws_security_groups" "eu-central-1-nodes_sg" {
-  provider = aws.data-eu-central-1
-
-  filter {
-    name   = "group-name"
-    values = ["nodes.k8s.eu-central-1*"]
-  }
-
-  filter {
-    name   = "vpc-id"
-    values = [data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id]
-  }
-}
-

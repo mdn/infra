@@ -44,6 +44,7 @@ module "wiki-cdn" {
   acm_cert_arn      = var.acm_wiki_cert_arn
   aliases           = var.cloudfront_wiki_aliases
   origin_domain     = var.cloudfront_wiki_origin_domain
+  media_bucket      = var.cloudfront_wiki_media_bucket
 }
 
 module "media-cdn" {

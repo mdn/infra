@@ -54,15 +54,11 @@ output "rds_backup_secret_key" {
   value = module.rds-backups.rds-backup-bucket-key
 }
 
-output "worf_user" {
-  value = module.security.worf_user
-}
-
-output "worf_user_secret_key" {
-  value = module.security.worf_secret_key
-}
-
 output "media-sync-role_arn" {
   value = module.media-sync-roles.role_arn
+}
+
+output "worf_role_arn" {
+  value = module.security.worf_role_arn
 }
 

@@ -39,6 +39,11 @@ locals {
       groups   = ["system:masters"]
     },
     {
+      username = "maws-mdn-admin"
+      rolearn  = "arn:aws:iam::178589013767:role/maws-mdn-admin"
+      groups   = ["system:masters"]
+    },
+    {
       username = "jenkins"
       rolearn  = "arn:aws:iam::178589013767:role/ci-mdn-us-west-2"
       groups   = ["jenkins-access"]

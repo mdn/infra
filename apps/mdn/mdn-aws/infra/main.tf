@@ -24,6 +24,7 @@ module "rds-backups" {
 
 module "security" {
   source           = "./modules/security"
+  eks_cluster_id   = data.terraform_remote_state.eks-us-west-2.outputs.mdn_cluster_name
   us-west-2-vpc-id = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
 }
 
@@ -55,6 +56,7 @@ module "mdn_cdn" {
   cloudfront_wiki_distribution_name = var.cloudfront_wiki["distribution_name"]
   cloudfront_wiki_aliases           = split(",", var.cloudfront_wiki["aliases.stage"])
   cloudfront_wiki_origin_domain     = var.cloudfront_wiki["domain.stage"]
+  cloudfront_wiki_media_bucket      = module.media-bucket-stage.bucket_name
 
   # media CDN
   cloudfront_media_enabled = var.cloudfront_media["enabled"]
@@ -91,6 +93,7 @@ module "mdn_cdn_prod" {
   cloudfront_wiki_distribution_name = var.cloudfront_wiki["distribution_name"]
   cloudfront_wiki_aliases           = split(",", var.cloudfront_wiki["aliases.prod"])
   cloudfront_wiki_origin_domain     = var.cloudfront_wiki["domain.prod"]
+  cloudfront_wiki_media_bucket      = module.media-bucket-prod.bucket_name
 
   # media CDN
   cloudfront_media_enabled = var.cloudfront_media["enabled"]
@@ -135,14 +138,13 @@ module "efs-us-west-2-prod" {
 }
 
 module "efs-eu-central-1-prod" {
-  source               = "./modules/multi_region/efs"
-  enabled              = lookup(var.features, "efs")
-  environment          = "prod"
-  region               = "eu-central-1"
-  efs_name             = "prod"
-  vpc_id               = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
-  subnets              = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
-  nodes_security_group = data.aws_security_groups.eu-central-1-nodes_sg.ids
+  source      = "./modules/multi_region/efs"
+  enabled     = lookup(var.features, "efs")
+  environment = "prod"
+  region      = "eu-central-1"
+  efs_name    = "prod"
+  vpc_id      = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
+  subnets     = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
 }
 
 module "redis-stage-us-west-2" {
@@ -189,10 +191,6 @@ module "redis-prod-eu-central-1" {
   redis_name      = "mdn-prod"
   redis_node_size = "cache.m5.large"
   redis_num_nodes = "3"
-
-  nodes_security_group = flatten([
-    data.aws_security_groups.eu-central-1-nodes_sg.ids,
-  ])
 }
 
 module "mysql-us-west-2" {
@@ -276,7 +274,6 @@ module "upload-user-stage" {
 
   eks_worker_role_arn = [
     data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
-    data.terraform_remote_state.kops-eu-central-1.outputs.nodes_role_arn,
   ]
 }
 
@@ -292,7 +289,6 @@ module "upload-user-prod" {
 
   eks_worker_role_arn = [
     data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
-    data.terraform_remote_state.kops-eu-central-1.outputs.nodes_role_arn,
   ]
 }
 

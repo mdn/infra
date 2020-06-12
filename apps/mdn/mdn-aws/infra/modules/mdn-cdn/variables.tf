@@ -64,6 +64,8 @@ variable "cloudfront_wiki_aliases" {
 variable "cloudfront_wiki_origin_domain" {
 }
 
+variable "cloudfront_wiki_media_bucket" {}
+
 variable "cloudfront_media_enabled" {
 }
 
