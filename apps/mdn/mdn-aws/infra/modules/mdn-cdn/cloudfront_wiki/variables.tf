@@ -29,3 +29,4 @@ variable "origin_read_timeout" {
   default = "120"
 }
 
+variable "media_bucket" {}

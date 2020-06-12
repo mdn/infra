@@ -42,7 +42,8 @@ variable "redis_engine_version" {
 }
 
 variable "nodes_security_group" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
 
 variable "azs" {

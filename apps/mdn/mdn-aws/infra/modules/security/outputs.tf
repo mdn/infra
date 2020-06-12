@@ -1,8 +1,7 @@
-output "worf_user" {
-  value = aws_iam_access_key.worf-keys.id
+output "worf_role_name" {
+  value = module.iam_assumable_role_admin.this_iam_role_name
 }
 
-output "worf_secret_key" {
-  value = aws_iam_access_key.worf-keys.secret
+output "worf_role_arn" {
+  value = module.iam_assumable_role_admin.this_iam_role_arn
 }
-
