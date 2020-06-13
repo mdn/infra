@@ -1,7 +1,18 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mdn-rds-backup
+  labels:
+    app: mdn-rds-backups
+  annotations:
+    eks.amazonaws.com/role-arn: {{ RDS_BACKUP_ROLE_ARN }}
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: mdn-rds-backup
+  labels:
+    app: mdn-rds-backup
 spec:
   schedule: {{ RDS_BACKUP_SCHEDULE }}
   concurrencyPolicy: Forbid
@@ -12,6 +23,7 @@ spec:
       template:
         spec:
           restartPolicy: Never
+          serviceAccountName: mdn-rds-backup
           containers:
             - name: mdn-rds-backup
               image: {{ RDS_BACKUP_IMAGE }}:{{ RDS_BACKUP_IMAGE_TAG }}
@@ -26,16 +38,6 @@ spec:
                   value: {{ RDS_BACKUP_DIR }}
                 - name: BACKUP_BUCKET
                   value: {{ RDS_BACKUP_BUCKET }}
-                - name: AWS_ACCESS_KEY_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: mdn-rds-backup-secrets
-                      key: access_key
-                - name: AWS_SECRET_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: mdn-rds-backup-secrets
-                      key: secret_key
                 - name: BACKUP_PASSWORD
                   valueFrom:
                     secretKeyRef:
