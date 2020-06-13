@@ -58,45 +58,52 @@ resource "aws_s3_bucket" "backup-bucket" {
   }
 }
 
-resource "aws_iam_user" "backup-user" {
-  name = var.backup-user
+provider "aws" {
+  region = "eu-central-1"
+  alias  = "eks"
 }
 
-resource "aws_iam_access_key" "backup-user-key" {
-  user = aws_iam_user.backup-user.name
+data "aws_eks_cluster" "this" {
+  provider = aws.eks
+  name     = var.eks_cluster_id
 }
 
-resource "aws_iam_user_policy" "backup-user-policy" {
-  name = "rds-backup-user"
-  user = aws_iam_user.backup-user.name
+module "iam_assumable_role_admin" {
+  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version                       = "~> v2.10.0"
+  create_role                   = true
+  role_name                     = "mdn-rds-backups"
+  provider_url                  = replace(data.aws_eks_cluster.this.identity.0.oidc.0.issuer, "https://", "")
+  role_policy_arns              = [aws_iam_policy.rds_backup_policy.arn]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${var.rds_backup_namespace}:${var.rds_backup_sa}"]
+}
 
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::${local.backup-bucket}"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:DeleteObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::${local.backup-bucket}/*"
-            ]
-        }
+resource "aws_iam_policy" "rds_backup_policy" {
+  name_prefix = "mdn-rds-backup-policy-"
+  description = "EKS mdn-rds-backup policy for cluster ${var.eks_cluster_id}"
+  policy      = data.aws_iam_policy_document.rds_backup_policy.json
+}
+
+data "aws_iam_policy_document" "rds_backup_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
     ]
-}
-EOF
+    resources = [
+      "arn:aws:s3:::${local.backup-bucket}"
+    ]
+  }
 
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${local.backup-bucket}/*"
+    ]
+  }
 }
-

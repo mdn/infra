@@ -18,8 +18,9 @@ module "mdn_shared" {
 }
 
 module "rds-backups" {
-  source = "./modules/rds-backups"
-  region = "us-west-2"
+  source         = "./modules/rds-backups"
+  region         = "us-west-2"
+  eks_cluster_id = data.terraform_remote_state.eks-eu-central-1.outputs.mdn_cluster_name
 }
 
 module "security" {

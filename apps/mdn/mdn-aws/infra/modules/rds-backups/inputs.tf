@@ -14,3 +14,13 @@ variable "backup-user" {
   default = "rds-backup-user"
 }
 
+variable "eks_cluster_id" {}
+
+variable "rds_backup_namespace" {
+  default = "mdn-prod"
+}
+
+variable "rds_backup_sa" {
+  default = "mdn-rds-backup"
+}
+

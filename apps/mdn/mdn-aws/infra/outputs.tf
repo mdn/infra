@@ -46,12 +46,8 @@ output "rds_backup_bucket" {
   value = module.rds-backups.rds-backup-bucket-name
 }
 
-output "rds_backup_user" {
-  value = module.rds-backups.rds-backup-bucket-users
-}
-
-output "rds_backup_secret_key" {
-  value = module.rds-backups.rds-backup-bucket-key
+output "rds_backup_role_arn" {
+  value = module.rds-backups.rds_backup_role_arn
 }
 
 output "media-sync-role_arn" {
