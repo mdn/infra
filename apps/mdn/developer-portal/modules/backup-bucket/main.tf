@@ -1,8 +1,7 @@
 locals {
-  bucket_name  = "${var.bucket_name}-${data.aws_caller_identity.current.account_id}"
-  iam_username = "${var.bucket_name}-user"
-  role_name    = "${var.bucket_name}-role"
-  policy_name  = "${var.bucket_name}-policy"
+  bucket_name = "${var.bucket_name}-${data.aws_caller_identity.current.account_id}"
+  role_name   = "${var.bucket_name}-role"
+  policy_name = "${var.bucket_name}-policy"
 }
 
 data "aws_caller_identity" "current" {
@@ -19,67 +18,24 @@ resource "aws_s3_bucket" "this" {
   }
 }
 
-resource "aws_iam_role" "this" {
-  name               = local.role_name
-  assume_role_policy = data.aws_iam_policy_document.bucket_role.json
-
-  tags = {
-    Name      = local.role_name
-    Project   = "developer-portal"
-    Terraform = "true"
-  }
+data "aws_eks_cluster" "this" {
+  name = var.eks_cluster_id
 }
 
-resource "aws_iam_role_policy" "this" {
-  name   = local.policy_name
-  role   = aws_iam_role.this.id
-  policy = data.aws_iam_policy_document.bucket_policy.json
+module "iam_assumable_role_admin" {
+  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version                       = "~> v2.10.0"
+  create_role                   = true
+  role_name                     = local.role_name
+  provider_url                  = replace(data.aws_eks_cluster.this.identity.0.oidc.0.issuer, "https://", "")
+  role_policy_arns              = [aws_iam_policy.this.arn]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${var.backups_namespace}:${var.backups_sa}"]
 }
 
-resource "aws_iam_user" "this" {
-  count = var.create_user ? 1 : 0
-  name  = local.iam_username
-}
-
-resource "aws_iam_user_policy" "this" {
-  count  = var.create_user ? 1 : 0
-  name   = local.policy_name
-  user   = element(aws_iam_user.this.*.name, count.index)
-  policy = data.aws_iam_policy_document.bucket_policy.json
-}
-
-resource "aws_iam_access_key" "this" {
-  count = var.create_user ? 1 : 0
-  user  = element(aws_iam_user.this.*.name, count.index)
-}
-
-data "aws_iam_policy_document" "bucket_role" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    # We assume you are using kube2iam here
-    principals {
-      type        = "AWS"
-      identifiers = var.eks_worker_role_arn
-    }
-  }
+resource "aws_iam_policy" "this" {
+  name_prefix = "${local.policy_name}-"
+  description = "EKS rds backup policy for ${var.eks_cluster_id}"
+  policy      = data.aws_iam_policy_document.bucket_policy.json
 }
 
 data "aws_iam_policy_document" "bucket_policy" {
