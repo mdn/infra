@@ -8,37 +8,6 @@ locals {
   attachments  = "devportal-media-${var.environment}"
 }
 
-resource "aws_s3_bucket" "this" {
-  bucket = local.bucket_name
-  acl    = var.bucket_acl
-  policy = data.aws_iam_policy_document.bucket_public_policy.json
-
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET"]
-    allowed_origins = ["*"]
-    max_age_seconds = 3000
-  }
-
-  website {
-    index_document = "index.html"
-    error_document = "404.html"
-  }
-
-  #logging {
-  #  target_bucket = "${aws_s3_bucket.logging.id}"
-  #  target_prefix = "bucket/"
-  #}
-
-  tags = {
-    Name        = local.bucket_name
-    Region      = var.region
-    environment = var.environment
-    Project     = "developer-portal"
-    Terraform   = "true"
-  }
-}
-
 resource "aws_s3_bucket" "attachments" {
   bucket = local.attachments
   acl    = "public-read"
@@ -106,25 +75,6 @@ resource "aws_iam_user_policy" "this" {
 resource "aws_iam_access_key" "this" {
   count = var.create_user ? 1 : 0
   user  = element(aws_iam_user.this.*.name, count.index)
-}
-
-data "aws_iam_policy_document" "bucket_public_policy" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "s3:GetObject",
-    ]
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-
-    resources = [
-      "arn:aws:s3:::${local.bucket_name}/*",
-    ]
-  }
 }
 
 data "aws_iam_policy_document" "attachment_bucket_public_policy" {

@@ -30,10 +30,6 @@ variable "cloudfront_protocol_policy" {
   default = "redirect-to-https"
 }
 
-variable "event_trigger" {
-  default = "lambda-headers.handler"
-}
-
 variable "minimum_protocol_version" {
   default = "TLSv1.1_2016"
 }
@@ -51,4 +47,3 @@ variable "origin_id" {
   description = "Just an origin identifier"
   default     = ""
 }
-
