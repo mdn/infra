@@ -30,6 +30,7 @@ resource "aws_s3_bucket" "attachments" {
 }
 
 resource "aws_s3_bucket" "logging" {
+  count  = var.enable_logging ? 1 : 0
   bucket = local.log_bucket
   acl    = "log-delivery-write"
 

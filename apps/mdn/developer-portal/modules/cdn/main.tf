@@ -98,3 +98,8 @@ resource "aws_cloudfront_distribution" "this" {
     Terraform   = "true"
   }
 }
+
+provider "aws" {
+  alias  = "aws-lambda-east"
+  region = "us-east-1"
+}

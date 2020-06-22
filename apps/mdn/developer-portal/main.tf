@@ -40,7 +40,6 @@ module "cdn_dev" {
   source          = "./modules/cdn"
   environment     = "dev"
   cdn_aliases     = ["developer-portal.dev.mdn.mozit.cloud", "developer-portal-cdn.dev.mdn.mozit.cloud"]
-  origin_bucket   = module.bucket_dev.bucket_id
   logging_bucket  = module.bucket_dev.logging_bucket_id
   certificate_arn = data.aws_acm_certificate.developer-portal-cdn-dev.arn
 }
@@ -84,7 +83,6 @@ module "cdn_stage" {
   source          = "./modules/cdn"
   environment     = "stage"
   cdn_aliases     = ["developer-portal.stage.mdn.mozit.cloud", "developer-portal-cdn.stage.mdn.mozit.cloud"]
-  origin_bucket   = module.bucket_stage.bucket_id
   logging_bucket  = module.bucket_stage.logging_bucket_id
   certificate_arn = data.aws_acm_certificate.developer-portal-cdn-stage.arn
 }

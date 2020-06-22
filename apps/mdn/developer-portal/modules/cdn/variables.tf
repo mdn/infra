@@ -17,9 +17,6 @@ variable "cdn_aliases" {
   type = list(string)
 }
 
-variable "origin_bucket" {
-}
-
 variable "logging_bucket" {
 }
 
