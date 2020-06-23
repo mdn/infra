@@ -269,6 +269,7 @@ module "upload-user-prod" {
     module.media-bucket-prod.bucket_iam_policy,
     module.mdn_cdn_prod.cdn-media-iam-policy,
   ]
+
 }
 
 # Create role for media sync
@@ -277,5 +278,4 @@ module "media-sync-roles" {
   cluster_oidc_issuer_url = data.terraform_remote_state.eks-us-west-2.outputs.mdn_cluster_oidc_issuer_url
   stage_bucket            = module.media-bucket-stage.bucket_name
   prod_bucket             = module.media-bucket-prod.bucket_name
-
 }
