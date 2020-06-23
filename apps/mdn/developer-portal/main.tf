@@ -4,13 +4,9 @@ provider "aws" {
 }
 
 module "backup_bucket" {
-  source      = "./modules/backup-bucket"
-  bucket_name = "developer-portal-backups"
-  create_user = true
-
-  eks_worker_role_arn = [
-    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_iam_role_arn,
-  ]
+  source         = "./modules/backup-bucket"
+  bucket_name    = "developer-portal-backups"
+  eks_cluster_id = data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_cluster_name
 }
 
 module "mail_stage" {

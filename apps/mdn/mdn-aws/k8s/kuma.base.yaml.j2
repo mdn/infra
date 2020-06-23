@@ -72,6 +72,8 @@
                   key: redis-url-1
             - name: CELERY_WORKER_MAX_TASKS_PER_CHILD
               value: "{{ KUMA_CELERY_WORKER_MAX_TASKS_PER_CHILD }}"
+            - name: CONN_MAX_AGE
+              value: "{{ KUMA_CONN_MAX_AGE }}"
             - name: CSP_ENABLE_MIDDLEWARE
               value: "{{ KUMA_CSP_ENABLE_MIDDLEWARE }}"
             - name: CSP_REPORT_ENABLE

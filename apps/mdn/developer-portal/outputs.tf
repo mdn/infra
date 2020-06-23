@@ -78,11 +78,6 @@ output "redis_prod_endpoint" {
   value = module.redis_prod.redis_endpoint
 }
 
-output "backup_bucket_iam_user_access_key" {
-  value = module.backup_bucket.bucket_iam_user_access_key
+output "backup_bucket_iam_role_arn" {
+  value = module.backup_bucket.bucket_iam_role_arn
 }
-
-output "backup_bucket_iam_user_secret_key" {
-  value = module.backup_bucket.bucket_iam_user_secret_key
-}
-

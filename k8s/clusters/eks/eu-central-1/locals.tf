@@ -1,7 +1,9 @@
 locals {
 
   cluster_features = {
-    "aws_calico" = true
+    "aws_calico"  = true
+    "alb_ingress" = true
+    "reloader"    = false
   }
 
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
@@ -34,6 +36,11 @@ locals {
     {
       username = "maws-admin"
       rolearn  = "arn:aws:iam::178589013767:role/maws-admin"
+      groups   = ["system:masters"]
+    },
+    {
+      username = "maws-mdn-admin"
+      rolearn  = "arn:aws:iam::178589013767:role/maws-mdn-admin"
       groups   = ["system:masters"]
     },
     {

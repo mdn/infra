@@ -1,5 +1,10 @@
 locals {
   distribution_name = "${var.distribution_name}-${var.environment}"
+  media_origin_id   = "S3-${var.media_bucket}"
+}
+
+data "aws_s3_bucket" "media_bucket" {
+  bucket = var.media_bucket
 }
 
 resource "aws_cloudfront_distribution" "mdn-wiki" {
@@ -112,6 +117,52 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
     }
   }
 
+  # 3
+  ordered_cache_behavior {
+    path_pattern = "sitemap.xml"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 43200
+    max_ttl                = 43200
+    min_ttl                = 43200
+    smooth_streaming       = false
+    target_origin_id       = local.media_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 4
+  ordered_cache_behavior {
+    path_pattern = "sitemaps/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 43200
+    max_ttl                = 43200
+    min_ttl                = 43200
+    smooth_streaming       = false
+    target_origin_id       = local.media_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -131,6 +182,11 @@ resource "aws_cloudfront_distribution" "mdn-wiki" {
         forward = "all"
       }
     }
+  }
+
+  origin {
+    domain_name = data.aws_s3_bucket.media_bucket.bucket_domain_name
+    origin_id   = local.media_origin_id
   }
 
   origin {

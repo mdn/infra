@@ -9,11 +9,12 @@ variable "bucket_acl" {
   default = "private"
 }
 
-variable "eks_worker_role_arn" {
-  type = list(string)
+variable "eks_cluster_id" {}
+
+variable "backups_sa" {
+  default = "dev-portal-rds-backups"
 }
 
-variable "create_user" {
-  default = false
+variable "backups_namespace" {
+  default = "dev-portal-prod"
 }
-

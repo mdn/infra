@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo '--> Setting environment to PROD in OREGON'
 
-export KUBECONFIG=${HOME}/.kube/oregon.config
+export KUBECONFIG=${HOME}/.kube/mdn-us-west-2.config
 
 # Define defaults for environment variables that personalize the commands.
 export TARGET_ENVIRONMENT=prod
@@ -11,6 +11,8 @@ export K8S_CLUSTER_SHORT_NAME=oregon
 
 # Define an alias for kubectl for convenience.
 alias kc="kubectl -n ${K8S_NAMESPACE}"
+
+export ELB_CONNECTION_DRAINING_ENABLED=True
 
 export WEB_SERVICE_NAME=web
 export WEB_SERVICE_TYPE=LoadBalancer
@@ -41,7 +43,8 @@ export WEB_NAME=web
 export WEB_REPLICAS=10
 export WEB_MAX_REPLICAS=20
 export WEB_GUNICORN_WORKERS=8
-export WEB_GUNICORN_TIMEOUT=118
+export WEB_GUNICORN_TIMEOUT=90
+export WEB_GUNICORN_KEEPALIVE=75
 export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=6Gi
@@ -52,7 +55,8 @@ export API_NAME=api
 export API_REPLICAS=4
 export API_MAX_REPLICAS=8
 export API_GUNICORN_WORKERS=4
-export API_GUNICORN_TIMEOUT=120
+export API_GUNICORN_TIMEOUT=90
+export API_GUNICORN_KEEPALIVE=75
 export API_CPU_LIMIT=4
 export API_CPU_REQUEST=500m
 export API_MEMORY_LIMIT=4Gi

@@ -443,10 +443,33 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
+    compress               = false
+    default_ttl            = 2592000
+    max_ttl                = 2592000
+    min_ttl                = 2592000
+    smooth_streaming       = false
+    target_origin_id       = var.distribution_name
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 15
+  ordered_cache_behavior {
+    path_pattern = "sitemap.xml"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
     compress               = true
-    default_ttl            = 31536000
-    max_ttl                = 31536000
-    min_ttl                = 31536000
+    default_ttl            = 43200
+    max_ttl                = 43200
+    min_ttl                = 43200
     smooth_streaming       = false
     target_origin_id       = local.media_origin_id
     viewer_protocol_policy = "redirect-to-https"
@@ -460,6 +483,28 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
+  # 16
+  ordered_cache_behavior {
+    path_pattern = "sitemaps/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 43200
+    max_ttl                = 43200
+    min_ttl                = 43200
+    smooth_streaming       = false
+    target_origin_id       = local.media_origin_id
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
 
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]

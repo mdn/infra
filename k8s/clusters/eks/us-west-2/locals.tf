@@ -1,8 +1,14 @@
 
 locals {
 
+  cluster_features = {
+    "aws_calico"  = true
+    "alb_ingress" = true
+    "reloader"    = false
+  }
+
   mdn_apps_node_groups = {
-    default_ng = {
+    default_ng-1 = {
       desired_capacity = "4"
       min_capacity     = "3"
       max_capacity     = "12"
@@ -16,7 +22,7 @@ locals {
       }
 
       additional_tags = {
-        "Name"                              = "mdn-apps-a-default-ng"
+        "Name"                              = "mdn-apps-a-default-ng-1"
         "kubernetes.io/cluster/mdn-apps-a"  = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }

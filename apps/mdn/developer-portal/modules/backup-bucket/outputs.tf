@@ -3,18 +3,9 @@ output "bucket_id" {
 }
 
 output "bucket_iam_role_name" {
-  value = element(concat(aws_iam_role.this.*.name, [""]), 0)
+  value = module.iam_assumable_role_admin.this_iam_role_name
 }
 
 output "bucket_iam_role_arn" {
-  value = element(concat(aws_iam_role.this.*.arn, [""]), 0)
+  value = module.iam_assumable_role_admin.this_iam_role_arn
 }
-
-output "bucket_iam_user_access_key" {
-  value = element(concat(aws_iam_access_key.this.*.id, [""]), 0)
-}
-
-output "bucket_iam_user_secret_key" {
-  value = element(concat(aws_iam_access_key.this.*.secret, [""]), 0)
-}
-
