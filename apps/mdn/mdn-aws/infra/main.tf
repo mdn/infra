@@ -113,14 +113,13 @@ module "lambda-log" {
 # Multi region resources
 
 module "efs-us-west-2" {
-  source               = "./modules/multi_region/efs"
-  enabled              = lookup(var.features, "efs")
-  environment          = "stage"
-  region               = "us-west-2"
-  efs_name             = "stage"
-  vpc_id               = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  subnets              = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
-  nodes_security_group = data.aws_security_groups.us-west-2-nodes_sg.ids
+  source      = "./modules/multi_region/efs"
+  enabled     = lookup(var.features, "efs")
+  environment = "stage"
+  region      = "us-west-2"
+  efs_name    = "stage"
+  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  subnets     = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 }
 
 module "efs-us-west-2-prod" {
@@ -131,11 +130,6 @@ module "efs-us-west-2-prod" {
   efs_name    = "prod"
   vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   subnets     = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
-
-  nodes_security_group = flatten([
-    data.aws_security_groups.us-west-2-nodes_sg.ids,
-    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
-  ])
 }
 
 module "efs-eu-central-1-prod" {
@@ -149,20 +143,17 @@ module "efs-eu-central-1-prod" {
 }
 
 module "redis-stage-us-west-2" {
-  source          = "./modules/multi_region/redis"
-  enabled         = lookup(var.features, "redis")
-  environment     = "stage"
-  region          = "us-west-2"
-  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  azs             = ["us-west-2c", "us-west-2b", "us-west-2a"]
-  redis_name      = "mdn-stage"
-  redis_node_size = "cache.t3.medium"
-  redis_num_nodes = "3"
-
-  nodes_security_group = flatten([
-    data.aws_security_groups.us-west-2-nodes_sg.ids,
-    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
-  ])
+  source               = "./modules/multi_region/redis"
+  enabled              = lookup(var.features, "redis")
+  environment          = "stage"
+  region               = "us-west-2"
+  vpc_id               = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  azs                  = ["us-west-2c", "us-west-2b", "us-west-2a"]
+  redis_engine_version = "5.0.4"
+  redis_param_group    = "default.redis5.0"
+  redis_name           = "mdn-stage"
+  redis_node_size      = "cache.t3.medium"
+  redis_num_nodes      = "3"
 }
 
 module "redis-prod-us-west-2" {
@@ -175,11 +166,6 @@ module "redis-prod-us-west-2" {
   redis_name      = "mdn-prod"
   redis_node_size = "cache.m5.large"
   redis_num_nodes = "3"
-
-  nodes_security_group = flatten([
-    data.aws_security_groups.us-west-2-nodes_sg.ids,
-    data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
-  ])
 }
 
 module "redis-prod-eu-central-1" {
@@ -272,10 +258,6 @@ module "upload-user-stage" {
     module.media-bucket-stage.bucket_iam_policy,
     module.mdn_cdn.cdn-media-iam-policy,
   ]
-
-  eks_worker_role_arn = [
-    data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
-  ]
 }
 
 module "upload-user-prod" {
@@ -286,10 +268,6 @@ module "upload-user-prod" {
   iam_policies = [
     module.media-bucket-prod.bucket_iam_policy,
     module.mdn_cdn_prod.cdn-media-iam-policy,
-  ]
-
-  eks_worker_role_arn = [
-    data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
   ]
 }
 

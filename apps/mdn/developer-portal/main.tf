@@ -56,10 +56,6 @@ module "redis_dev" {
 
   security_groups = [
     data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
-    join(
-      ",",
-      data.terraform_remote_state.kops-us-west-2.outputs.node_security_group_ids,
-    ),
   ]
 }
 
@@ -104,10 +100,6 @@ module "redis_stage" {
 
   security_groups = [
     data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
-    join(
-      ",",
-      data.terraform_remote_state.kops-us-west-2.outputs.node_security_group_ids,
-    ),
   ]
 }
 
@@ -152,10 +144,6 @@ module "redis_prod" {
 
   security_groups = [
     data.terraform_remote_state.eks-us-west-2.outputs.mdn_apps_a_worker_security_group_id,
-    join(
-      ",",
-      data.terraform_remote_state.kops-us-west-2.outputs.node_security_group_ids,
-    ),
   ]
 }
 
