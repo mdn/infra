@@ -273,6 +273,7 @@ module "upload-user-stage" {
     module.mdn_cdn.cdn-media-iam-policy,
   ]
 
+  # Kube2iam prework
   eks_worker_role_arn = [
     data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
   ]
@@ -288,6 +289,7 @@ module "upload-user-prod" {
     module.mdn_cdn_prod.cdn-media-iam-policy,
   ]
 
+  # Kube2iam pre-work
   eks_worker_role_arn = [
     data.terraform_remote_state.kops-us-west-2.outputs.nodes_role_arn,
   ]
@@ -299,5 +301,4 @@ module "media-sync-roles" {
   cluster_oidc_issuer_url = data.terraform_remote_state.eks-us-west-2.outputs.mdn_cluster_oidc_issuer_url
   stage_bucket            = module.media-bucket-stage.bucket_name
   prod_bucket             = module.media-bucket-prod.bucket_name
-
 }
