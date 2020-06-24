@@ -2,13 +2,6 @@ output "efs_backup_bucket" {
   value = module.mdn_shared.efs_backup_bucket_name
 }
 
-output "efs_backup_user_access_key" {
-  value = module.mdn_shared.efs_backup_user_access_key
-}
-
-output "efs_backup_user_secret_key" {
-  value = module.mdn_shared.efs_backup_user_secret_key
-}
 
 output "primary_cdn_domain" {
   value = module.mdn_cdn.cdn-primary-dns
