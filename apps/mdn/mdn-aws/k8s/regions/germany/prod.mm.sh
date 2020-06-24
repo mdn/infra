@@ -10,12 +10,9 @@ export AWS_REGION=eu-central-1
 export K8S_CLUSTER_SHORT_NAME=germany
 
 # Define an alias for kubectl for convenience.
-alias kc="kubectl -n ${K8S_NAMESPACE}
+alias kc="kubectl -n ${K8S_NAMESPACE}"
 
 export ELB_CONNECTION_DRAINING_ENABLED=True
-
-
-
 
 export WEB_SERVICE_NAME=web
 export WEB_SERVICE_TYPE=LoadBalancer
