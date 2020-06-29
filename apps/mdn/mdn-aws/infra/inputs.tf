@@ -10,7 +10,6 @@ variable "features" {
   default = {
     shared-infra = true
     cdn          = true
-    efs          = true
     rds          = true
     redis        = true
   }

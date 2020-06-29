@@ -1,8 +1,3 @@
-output "efs_backup_bucket" {
-  value = module.mdn_shared.efs_backup_bucket_name
-}
-
-
 output "primary_cdn_domain" {
   value = module.mdn_cdn.cdn-primary-dns
 }
@@ -17,10 +12,6 @@ output "downloads_bucket_name" {
 
 output "downloads_bucket_website" {
   value = module.mdn_shared.downloads_bucket_website_endpoint
-}
-
-output "us-west-2-efs-dns" {
-  value = module.efs-us-west-2.efs_dns
 }
 
 output "us-west-2-redis-stage-endpoint" {

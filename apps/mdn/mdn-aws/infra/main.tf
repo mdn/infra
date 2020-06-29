@@ -112,36 +112,6 @@ module "lambda-log" {
 # TODO: Split this up into multiple files other stuff can get messy quick
 # Multi region resources
 
-module "efs-us-west-2" {
-  source      = "./modules/multi_region/efs"
-  enabled     = lookup(var.features, "efs")
-  environment = "stage"
-  region      = "us-west-2"
-  efs_name    = "stage"
-  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  subnets     = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
-}
-
-module "efs-us-west-2-prod" {
-  source      = "./modules/multi_region/efs"
-  enabled     = lookup(var.features, "efs")
-  environment = "prod"
-  region      = "us-west-2"
-  efs_name    = "prod"
-  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  subnets     = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
-}
-
-module "efs-eu-central-1-prod" {
-  source      = "./modules/multi_region/efs"
-  enabled     = lookup(var.features, "efs")
-  environment = "prod"
-  region      = "eu-central-1"
-  efs_name    = "prod"
-  vpc_id      = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
-  subnets     = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
-}
-
 module "redis-stage-us-west-2" {
   source               = "./modules/multi_region/redis"
   enabled              = lookup(var.features, "redis")
