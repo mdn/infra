@@ -20,13 +20,13 @@ fi
 show_help() {
     echo -en "\nUsage: tf-do [options] [command]\n\n"
     echo -en "Options:\n"
-    echo -en "	--help		    Print usage\n"
-    echo -en " 	--debug		    set -x this script\n"
+    echo -en "  --help          Print usage\n"
+    echo -en "  --debug         set -x this script\n"
     echo -en "  --environment   Sets environment. Defaults to stage\n"
     echo -en "Commands:\n"
-    echo -en "	init		Terraform init\n"
-    echo -en "	plan		Terraform plan\n"
-    echo -en "	apply		Terraform apply\n"
+    echo -en "  init        Terraform init\n"
+    echo -en "  plan        Terraform plan\n"
+    echo -en "  apply       Terraform apply\n"
     echo -en "  get         Terraform get\n"
     echo -en "  output      Terraform output\n"
     echo -en "  refresh     Terraform refresh\n"
@@ -49,11 +49,15 @@ get() {
 }
 
 output() {
-    terraform output
+    terraform output "${@}"
 }
 
 refresh() {
     terraform refresh -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
+}
+
+destroy() {
+    terraform destroy -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 while [ "$1" != "" ]; do
@@ -71,6 +75,10 @@ while [ "$1" != "" ]; do
         ;;
         init )
             init
+            GOT_COMMAND=1
+        ;;
+        get )
+            get
             GOT_COMMAND=1
         ;;
         plan )
@@ -91,6 +99,11 @@ while [ "$1" != "" ]; do
         refresh )
             shift
             refresh  "${@}"
+            GOT_COMMAND=1
+        ;;
+        destroy )
+            shift
+            destroy "${@}"
             GOT_COMMAND=1
         ;;
     esac

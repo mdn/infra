@@ -7,7 +7,7 @@ fi
 
 source ./config.sh
 
-if [ -z ${TF_SECRETS_PATH} ]; then
+if [ -z "${TF_SECRETS_PATH}" ]; then
     echo "Secrets path is not set"
     exit 1
 fi
@@ -20,22 +20,16 @@ fi
 show_help() {
     echo -en "\nUsage: tf-do [options] [command]\n\n"
     echo -en "Options:\n"
-    echo -en "	--help		    Print usage\n"
-    echo -en " 	--debug		    set -x this script\n"
+    echo -en "  --help          Print usage\n"
+    echo -en "  --debug         set -x this script\n"
     echo -en "  --environment   Sets environment. Defaults to stage\n"
     echo -en "Commands:\n"
-    echo -en "	init		Terraform init\n"
-    echo -en "	plan		Terraform plan\n"
-    echo -en "	apply		Terraform apply\n"
-}
-
-terraform_do() {
-    declare -a _ACTION; _ACTION=( "${@}" )
-
-    if ! terraform "${_ACTION[@]}" ; then
-        echo -e "\033[1;31mERROR: Failed running 'terraform ${_ACTION[*]}'\033[0m"
-        exit 1
-    fi
+    echo -en "  init        Terraform init\n"
+    echo -en "  plan        Terraform plan\n"
+    echo -en "  apply       Terraform apply\n"
+    echo -en "  get         Terraform get\n"
+    echo -en "  output      Terraform output\n"
+    echo -en "  refresh     Terraform refresh\n"
 }
 
 init() {
@@ -55,7 +49,15 @@ get() {
 }
 
 output() {
-    terraform output
+    terraform output "${@}"
+}
+
+refresh() {
+    terraform refresh -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
+}
+
+destroy() {
+    terraform destroy -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 while [ "$1" != "" ]; do
@@ -75,6 +77,10 @@ while [ "$1" != "" ]; do
             init
             GOT_COMMAND=1
         ;;
+        get )
+            get
+            GOT_COMMAND=1
+        ;;
         plan )
             shift
             plan "${@}"
@@ -83,6 +89,21 @@ while [ "$1" != "" ]; do
         apply )
             shift
             apply "${@}"
+            GOT_COMMAND=1
+        ;;
+        output )
+            shift
+            output "${@}"
+            GOT_COMMAND=1
+        ;;
+        refresh )
+            shift
+            refresh  "${@}"
+            GOT_COMMAND=1
+        ;;
+        destroy )
+            shift
+            destroy "${@}"
             GOT_COMMAND=1
         ;;
     esac
