@@ -34,11 +34,11 @@ variable "redis_automatic_failover" {
 }
 
 variable "redis_param_group" {
-  default = "default.redis3.2"
+  default = "default.redis5.0"
 }
 
 variable "redis_engine_version" {
-  default = "3.2.4"
+  default = "5.0.6"
 }
 
 variable "nodes_security_group" {
