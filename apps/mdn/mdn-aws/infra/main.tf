@@ -113,17 +113,15 @@ module "lambda-log" {
 # Multi region resources
 
 module "redis-stage-us-west-2" {
-  source               = "./modules/multi_region/redis"
-  enabled              = lookup(var.features, "redis")
-  environment          = "stage"
-  region               = "us-west-2"
-  vpc_id               = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  azs                  = ["us-west-2c", "us-west-2b", "us-west-2a"]
-  redis_engine_version = "5.0.4"
-  redis_param_group    = "default.redis5.0"
-  redis_name           = "mdn-stage"
-  redis_node_size      = "cache.t3.medium"
-  redis_num_nodes      = "3"
+  source          = "./modules/multi_region/redis"
+  enabled         = lookup(var.features, "redis")
+  environment     = "stage"
+  region          = "us-west-2"
+  vpc_id          = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  azs             = ["us-west-2c", "us-west-2b", "us-west-2a"]
+  redis_name      = "mdn-stage"
+  redis_node_size = "cache.t3.medium"
+  redis_num_nodes = "3"
 }
 
 module "redis-prod-us-west-2" {
