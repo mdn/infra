@@ -17,7 +17,8 @@ variable "cdn_aliases" {
   type = list(string)
 }
 
-variable "origin_bucket" {
+variable "enable_logging" {
+  default = false
 }
 
 variable "logging_bucket" {
@@ -28,10 +29,6 @@ variable "certificate_arn" {
 
 variable "cloudfront_protocol_policy" {
   default = "redirect-to-https"
-}
-
-variable "event_trigger" {
-  default = "lambda-headers.handler"
 }
 
 variable "minimum_protocol_version" {
@@ -51,4 +48,3 @@ variable "origin_id" {
   description = "Just an origin identifier"
   default     = ""
 }
-

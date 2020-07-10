@@ -22,3 +22,6 @@ variable "bucket_acl" {
 variable "distribution_id" {
 }
 
+variable "enable_logging" {
+  default = false
+}
