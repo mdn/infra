@@ -2,6 +2,7 @@ data "aws_caller_identity" "current" {
 }
 
 data "aws_s3_bucket" "logging" {
+  count  = var.enable_logging ? 1 : 0
   bucket = var.logging_bucket
 }
 
@@ -70,16 +71,16 @@ resource "aws_cloudfront_distribution" "this" {
 
     forwarded_values {
       query_string = true
-      headers      = ["*"]
+      headers      = ["Host"]
 
       cookies {
-        forward = "all"
+        forward = "none"
       }
     }
 
     viewer_protocol_policy = var.cloudfront_protocol_policy
     min_ttl                = 0
-    default_ttl            = 0
+    default_ttl            = 84600
     max_ttl                = 84600
   }
   restrictions {

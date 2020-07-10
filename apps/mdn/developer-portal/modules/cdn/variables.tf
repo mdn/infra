@@ -17,6 +17,10 @@ variable "cdn_aliases" {
   type = list(string)
 }
 
+variable "enable_logging" {
+  default = false
+}
+
 variable "logging_bucket" {
 }
 
