@@ -14,12 +14,12 @@ output "mdn-dev-zone" {
   value = element(concat(aws_route53_zone.mdn-dev.*.zone_id, [""]), 0)
 }
 
-output "us-west-2-zone-id" {
-  value = module.us-west-2.hosted_zone_id
+output "mozilla-dev-zone" {
+  value = aws_route53_zone.mozilla-dev.zone_id
 }
 
-output "us-west-2a-zone-id" {
-  value = module.us-west-2a.hosted_zone_id
+output "us-west-2-zone-id" {
+  value = module.us-west-2.hosted_zone_id
 }
 
 output "eu-central-1-zone-id" {
