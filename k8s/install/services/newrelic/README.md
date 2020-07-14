@@ -1,2 +1,0 @@
-- Creates newrelic namespace
-- Creates newrelic daemonset
