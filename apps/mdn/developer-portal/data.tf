@@ -41,3 +41,9 @@ data "aws_acm_certificate" "developer-portal-cdn-prod" {
   statuses = ["ISSUED"]
 }
 
+data "aws_wafv2_web_acl" "cdn" {
+  provider = aws.acm
+  name     = "default-cdn"
+  scope    = "CLOUDFRONT"
+}
+

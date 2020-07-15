@@ -42,6 +42,7 @@ module "cdn_dev" {
   cdn_aliases     = ["developer-portal.dev.mdn.mozit.cloud", "developer-portal-cdn.dev.mdn.mozit.cloud"]
   logging_bucket  = module.bucket_dev.logging_bucket_id
   certificate_arn = data.aws_acm_certificate.developer-portal-cdn-dev.arn
+  web_acl_id      = data.aws_wafv2_web_acl.cdn.arn
 }
 
 module "redis_dev" {
@@ -85,6 +86,7 @@ module "cdn_stage" {
   cdn_aliases     = ["developer-portal.stage.mdn.mozit.cloud", "developer-portal-cdn.stage.mdn.mozit.cloud"]
   logging_bucket  = module.bucket_stage.logging_bucket_id
   certificate_arn = data.aws_acm_certificate.developer-portal-cdn-stage.arn
+  web_acl_id      = data.aws_wafv2_web_acl.cdn.arn
 }
 
 module "redis_stage" {
@@ -125,9 +127,10 @@ module "bucket_prod" {
 module "cdn_prod" {
   source          = "./modules/cdn"
   environment     = "prod"
-  cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-cdn.prod.mdn.mozit.cloud", "developer.mozilla.com", "www.mozilla.dev", "mozilla.dev"]
+  cdn_aliases     = ["developer-portal.prod.mdn.mozit.cloud", "developer-portal-cdn.prod.mdn.mozit.cloud", "developer.mozilla.com", "mozilla.dev"]
   logging_bucket  = module.bucket_prod.logging_bucket_id
   certificate_arn = data.aws_acm_certificate.developer-portal-cdn-prod.arn
+  web_acl_id      = data.aws_wafv2_web_acl.cdn.arn
 }
 
 module "redis_prod" {

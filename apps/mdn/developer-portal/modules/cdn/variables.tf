@@ -48,3 +48,7 @@ variable "origin_id" {
   description = "Just an origin identifier"
   default     = ""
 }
+
+variable "web_acl_id" {
+  default = ""
+}

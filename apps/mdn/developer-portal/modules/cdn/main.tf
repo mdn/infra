@@ -13,9 +13,10 @@ locals {
 }
 
 resource "aws_cloudfront_distribution" "this" {
-  enabled = var.enabled
-  comment = "developer-portal ${var.environment} CDN"
-  aliases = var.cdn_aliases
+  enabled    = var.enabled
+  comment    = "developer-portal ${var.environment} CDN"
+  aliases    = var.cdn_aliases
+  web_acl_id = var.web_acl_id
 
   #logging_config {
   #  include_cookies = false
@@ -64,7 +65,7 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
     compress         = var.cdn_compress
     target_origin_id = local.origin_id
