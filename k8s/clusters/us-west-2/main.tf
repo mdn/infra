@@ -43,7 +43,7 @@ module "ingress-nginx-mdn-apps-a" {
   }
 
   source          = "../modules/nginx-ingress"
-  certificate_arn = "arn:aws:acm:us-west-2:178589013767:certificate/9f96d029-9b74-40a8-a1c5-763cc511eb87"
+  certificate_arn = data.aws_acm_certificate.redirects.arn
 }
 
 module "mdn" {

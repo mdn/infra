@@ -29,3 +29,9 @@ data "aws_eks_cluster" "mdn-apps-a" {
 data "aws_eks_cluster_auth" "mdn-apps-a" {
   name = module.mdn-apps-a.cluster_id
 }
+
+data "aws_acm_certificate" "redirects" {
+  domain      = "redirects.mdn.mozit.cloud"
+  statuses    = ["ISSUED"]
+  most_recent = true
+}

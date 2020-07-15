@@ -16,3 +16,7 @@ variable "ingress_nginx_settings" {
   type    = map(string)
   default = {}
 }
+
+variable "namespace" {
+  default = ""
+}

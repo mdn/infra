@@ -4,6 +4,7 @@ locals {
   ingress_nginx_repository = "https://kubernetes-charts.storage.googleapis.com"
   ingress_class            = var.environment == "" ? "nginx" : "nginx-${var.environment}"
   ingress_name             = var.name == "" ? "nginx-ingress" : var.name
+  ingress_namespace        = var.namespace == "" ? "kube-system" : var.namespace
 
   ingress_nginx_settings_defaults = {
     "controller.ingressClass"                                                                                             = local.ingress_class
@@ -30,7 +31,7 @@ resource "helm_release" "ingress_nginx" {
   name       = local.ingress_name
   repository = local.ingress_nginx_repository
   chart      = "nginx-ingress"
-  namespace  = "kube-system"
+  namespace  = local.ingress_namespace
 
   dynamic "set" {
     iterator = item
