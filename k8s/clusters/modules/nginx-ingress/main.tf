@@ -14,9 +14,10 @@ locals {
     "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled" = true
     "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-connection-draining-enabled"       = true
     "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-connection-idle-timeout"           = "60"
-    "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-backend-protocol"                  = "http"
+    "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-backend-protocol"                  = "tcp"
     "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-ports"                         = "443"
     "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"                          = var.certificate_arn
+    "controller.service.externalTrafficPolicy"                                                                            = "Local"
     "controller.autoscaling.enabled"                                                                                      = "true"
     "controller.autoscaling.minReplicas"                                                                                  = "2"
     "controller.autoscaling.maxReplicas"                                                                                  = "5"
