@@ -8,7 +8,6 @@ locals {
 
 resource "aws_s3_bucket" "site-bucket-logs" {
   bucket = local.site-bucket-logs
-  region = var.region
   acl    = "log-delivery-write"
 
   tags = {
@@ -21,7 +20,6 @@ resource "aws_s3_bucket" "site-bucket-logs" {
 resource "aws_s3_bucket" "site-bucket" {
   bucket = local.site-bucket
   acl    = "public-read"
-  region = var.region
   policy = data.aws_iam_policy_document.bucket_policy.json
 
   cors_rule {
