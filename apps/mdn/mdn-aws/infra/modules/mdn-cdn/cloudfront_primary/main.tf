@@ -249,7 +249,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 6
   ordered_cache_behavior {
-    path_pattern = "*/profile/*"
+    path_pattern = "*/profile"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -273,7 +273,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 7
   ordered_cache_behavior {
-    path_pattern = "*/profiles/*"
+    path_pattern = "*/profile/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -296,6 +296,30 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   }
 
   # 8
+  ordered_cache_behavior {
+    path_pattern = "*/profiles/*"
+
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = var.distribution_name
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      headers      = ["*"]
+
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+  # 9
   ordered_cache_behavior {
     path_pattern = "*/payments/*"
 
@@ -320,7 +344,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   }
 
 
-  # 9
+  # 10
   ordered_cache_behavior {
     path_pattern = "admin/*"
 
@@ -340,29 +364,6 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward = "all"
-      }
-    }
-  }
-
-  # 10
-  ordered_cache_behavior {
-    path_pattern = "api/v1/doc/*"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 3600
-    max_ttl                = 3600
-    min_ttl                = 3600
-    smooth_streaming       = false
-    target_origin_id       = var.distribution_name
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
       }
     }
   }
