@@ -202,7 +202,7 @@ export PERCONA_TOOLKIT_IMAGE ?= mdnwebdocs/percona-toolkit:226571b
 
 export MEDIA_SYNC_NS ?= mdn-cron
 export MEDIA_SYNC_IMAGE ?= mdnwebdocs/media-sync
-export MEDIA_SYNC_IMAGE_TAG ?= 43bafbf
+export MEDIA_SYNC_IMAGE_TAG ?= cafc23c
 export MEDIA_SYNC_DEBUG_MODE ?= false
 export MEDIA_SYNC_ROLE_ARN ?= "arn:aws:iam::178589013767:role/media-sync-role"
 
