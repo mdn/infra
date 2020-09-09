@@ -46,6 +46,15 @@ module "ingress-nginx-mdn-apps-a" {
   certificate_arn = data.aws_acm_certificate.redirects.arn
 }
 
+module "ingress-nginx-mdn" {
+  providers = {
+    helm = helm.mdn
+  }
+
+  source          = "../modules/nginx-ingress"
+  certificate_arn = data.aws_acm_certificate.redirects.arn
+}
+
 module "mdn" {
   source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
 
