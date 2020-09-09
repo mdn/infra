@@ -206,6 +206,18 @@ export MEDIA_SYNC_IMAGE_TAG ?= cafc23c
 export MEDIA_SYNC_DEBUG_MODE ?= false
 export MEDIA_SYNC_ROLE_ARN ?= "arn:aws:iam::178589013767:role/media-sync-role"
 
+# Redirector
+export REDIRECTOR_NAME ?= "redirector"
+export REDIRECTOR_NAMESPACE ?= "redirector"
+export REDIRECTOR_REPLICAS ?= 1
+export REDIRECTOR_MAX_REPLICAS ?= 4
+export REDIRECTOR_IMAGE_NAME ?= mdnwebdocs/redirector
+export REDIRECTOR_IMAGE_TAG ?= 5dc4a49
+export REDIRECTOR_SERVICE_PORT ?= 80
+export REDIRECTOR_CONTAINER_PORT ?= 80
+# This list must be without quotes
+export REDIRECTOR_HOSTS ?= mozilla.dev,www.mozilla.dev,developer.mozilla.com
+
 ###############################
 ### core tasks
 
@@ -443,6 +455,55 @@ k8s-delete-media-sync-cron:
 
 test-k8s-media-sync-cron: check-service-env
 	j2 mdn-media-sync-cron.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-redirector: k8s-redirector-ingress k8s-redirector-service k8s-redirector-hpa k8s-redirector-deployment
+
+k8s-redirector-ns:
+	kubectl create ns ${REDIRECTOR_NAMESPACE} | true
+
+k8s-redirector-ingress:
+	j2 redirector.ingress.yaml.j2 | kubectl -n ${REDIRECTOR_NAMESPACE} apply -f -
+
+test-k8s-redirector-ingress:
+	j2 redirector.ingress.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-redirector-service:
+	j2 redirector.svc.yaml.j2 | kubectl -n ${REDIRECTOR_NAMESPACE} apply -f -
+
+test-k8s-redirector-service:
+	j2 redirector.svc.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-redirector-hpa:
+	env HPA_NAME=${REDIRECTOR_NAME} \
+		HPA_REPLICAS=${REDIRECTOR_REPLICAS} \
+		HPA_MAX_REPLICAS=${REDIRECTOR_MAX_REPLICAS} \
+		HPA_ENVIROMENT="core" \
+	j2 hpa.yaml.j2 | kubectl -n ${REDIRECTOR_NAMESPACE} apply -f -
+
+test-k8s-redirector-hpa:
+	env HPA_NAME=${REDIRECTOR_NAME} \
+		HPA_REPLICAS=${REDIRECTOR_REPLICAS} \
+		HPA_MAX_REPLICAS=${REDIRECTOR_MAX_REPLICAS} \
+		HPA_ENVIROMENT="core" \
+	j2 hpa.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-redirector-hpa:
+	kubectl -n ${REDIRECTOR_NAMESPACE} delete --ignore-not-found hpa ${REDIRECTOR_NAME}
+
+k8s-redirector-deployment:
+	j2 redirector.deployment.yaml.j2 | kubectl -n ${REDIRECTOR_NAMESPACE} apply -f -
+
+test-k8s-redirector-deployment:
+	j2 redirector.deployment.yaml.j2 | kubeval --strict --ignore-missing-schemas
+
+k8s-delete-redirector-ingress:
+	kubectl -n ${REDIRECTOR_NAMESPACE} delete --ignore-not-found ing ${REDIRECTOR_NAME}
+
+k8s-delete-redirector-service:
+	kubectl -n ${REDIRECTOR_NAMESPACE} delete --ignore-not-found svc ${REDIRECTOR_NAME}
+
+k8s-delete-redirector-deployment:
+	kubectl -n ${REDIRECTOR_NAMESPACE} delete --ignore-not-found deploy ${REDIRECTOR_NAME}
 
 ### end administrative tasks
 ###############################
@@ -691,4 +752,5 @@ k8s-get-kumascript-revision-hash:
 		k8s-kumascript-delete-record-deployment-job \
 		k8s-get-kuma-revision-hash k8s-get-kumascript-revision-hash \
 		k8s-rds-backup-cron k8s-delete-rds-backup-cron k8s-ssr k8s-delete-ssr \
+		k8s-redirector \
 		check-service-env

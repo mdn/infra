@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ HPA_NAME }}
+  labels:
+    app: {{ HPA_NAME }}
+    environment: {{ HPA_ENVIROMENT | default("stage", true) }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ HPA_NAME }}
+  minReplicas: {{ HPA_REPLICAS }}
+  maxReplicas: {{ HPA_MAX_REPLICAS }}
+  targetCPUUtilizationPercentage: {{ HPA_CPU_UTILIZATION_PERCENTAGE | default(80, true) }}
