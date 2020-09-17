@@ -20,14 +20,6 @@ module "ssh_sg" {
   vpc_id = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
 }
 
-module "papertrail-mdn-apps-a" {
-  providers = {
-    helm = helm.mdn-apps-a
-  }
-  source         = "../modules/papertrail"
-  eks_cluster_id = module.mdn-apps-a.cluster_id
-}
-
 module "papertrail-mdn" {
   providers = {
     helm = helm.mdn
@@ -37,14 +29,6 @@ module "papertrail-mdn" {
   eks_cluster_id = module.mdn.cluster_id
 }
 
-module "ingress-nginx-mdn-apps-a" {
-  providers = {
-    helm = helm.mdn-apps-a
-  }
-
-  source          = "../modules/nginx-ingress"
-  certificate_arn = data.aws_acm_certificate.redirects.arn
-}
 
 module "ingress-nginx-mdn" {
   providers = {
@@ -69,18 +53,3 @@ module "mdn" {
   map_roles          = local.map_roles
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
 }
-
-module "mdn-apps-a" {
-  source = "../modules/eks"
-
-  region      = var.region
-  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  eks_subnets = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
-
-  cluster_name    = "mdn-apps-a"
-  cluster_version = "1.17"
-  node_groups     = local.mdn_apps_node_groups
-  map_roles       = local.map_roles
-  tags            = local.cluster_tags
-}
-
