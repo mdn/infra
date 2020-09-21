@@ -19,8 +19,8 @@ variable "cloudfront_primary" {
   default = {
     "enabled"           = true
     "distribution_name" = "mdn-primary-cdn"
-    "aliases.stage"     = "beta.developer.allizom.org,developer-stage.mdn.mozit.cloud,developer.allizom.org"
-    "aliases.prod"      = "beta.developer.mozilla.org,developer-prod.mdn.mozit.cloud,developer.mozilla.org"
+    "aliases.stage"     = "developer-stage.mdn.mozit.cloud,developer.allizom.org"
+    "aliases.prod"      = "developer-prod.mdn.mozit.cloud,developer.mozilla.org"
     "api_bucket.stage"  = "mdn-api-stage"
     "api_bucket.prod"   = "mdn-api-prod"
     "domain.stage"      = "stage.mdn.mozit.cloud"

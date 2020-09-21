@@ -49,7 +49,7 @@ export WEB_CPU_LIMIT=2
 export WEB_CPU_REQUEST=100m
 export WEB_MEMORY_LIMIT=6Gi
 export WEB_MEMORY_REQUEST=4Gi
-export WEB_ALLOWED_HOSTS="developer.allizom.org,beta.developer.allizom.org,wiki.developer.allizom.org,developer-stage.mdn.mozit.cloud,stage.mdn.mozit.cloud,files-stage.mdn.mozit.cloud"
+export WEB_ALLOWED_HOSTS="developer.allizom.org,wiki.developer.allizom.org,developer-stage.mdn.mozit.cloud,stage.mdn.mozit.cloud,files-stage.mdn.mozit.cloud"
 
 export API_NAME=api
 export API_REPLICAS=1
