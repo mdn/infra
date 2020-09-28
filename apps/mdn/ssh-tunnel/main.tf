@@ -9,9 +9,7 @@ module "ssh_tunnel_eu_central_1" {
   github_users = [
     "limed",
     "escattone",
-    "Gregoor",
     "peterbe",
-    "tobinmori",
     "schalkneethling"
   ]
 }
