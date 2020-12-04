@@ -9,7 +9,6 @@ locals {
 
 resource "aws_s3_bucket" "site-bucket-logs" {
   bucket = local.site-bucket-logs
-  region = var.region
   acl    = "log-delivery-write"
 
   tags = {
@@ -61,7 +60,6 @@ data "aws_iam_policy_document" "bucket_policy" {
 resource "aws_s3_bucket" "site-bucket" {
   bucket = local.site-bucket
   acl    = "public-read"
-  region = var.region
 
   cors_rule {
     allowed_headers = ["*"]
