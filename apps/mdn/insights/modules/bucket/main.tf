@@ -3,11 +3,21 @@ resource "aws_s3_bucket" "this" {
   acl    = "public-read"
   policy = data.aws_iam_policy_document.bucket_policy.json
 
+  logging {
+    target_bucket = aws_s3_bucket.logging.id
+    target_prefix = "logs/"
+  }
+
   tags = {
     Name      = var.bucket_name
     Project   = "insights"
     Terraform = "true"
   }
+}
+
+resource "aws_s3_bucket" "logging" {
+  bucket = "${var.bucket_name}-logs"
+  acl    = "log-delivery-write"
 }
 
 data "aws_iam_policy_document" "bucket_policy" {
