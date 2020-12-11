@@ -99,6 +99,11 @@ resource "aws_cloudfront_distribution" "site-distribution" {
   aliases             = var.cloudfront_aliases
   is_ipv6_enabled     = var.enable_ipv6
 
+  logging_config {
+    bucket = aws_s3_bucket.site-bucket-logs.bucket_domain_name
+    prefix = "${var.environment}-cdn-logs/"
+  }
+
   origin {
     domain_name = aws_s3_bucket.site-bucket.website_endpoint
     origin_id   = "origin-${local.site-bucket}"
