@@ -39,4 +39,3 @@ variable "acm_certificate_arn" {
 variable "event_trigger" {
   default = "lambda-headers.handler"
 }
-
