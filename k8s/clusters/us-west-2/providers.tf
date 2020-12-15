@@ -1,10 +1,8 @@
 provider "aws" {
-  version = "~> 2"
-  region  = var.region
+  region = var.region
 }
 
 provider "local" {
-  version = "~> 1.2"
 }
 
 provider "kubernetes" {
@@ -16,8 +14,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  version = "~> 1"
-  alias   = "mdn"
+  alias = "mdn"
 
   kubernetes {
     host                   = data.aws_eks_cluster.mdn.endpoint
