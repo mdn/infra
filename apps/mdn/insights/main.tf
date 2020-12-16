@@ -25,12 +25,6 @@ data "terraform_remote_state" "dns" {
   }
 }
 
-data "aws_acm_certificate" "insights-stage" {
-  provider = aws.aws-acm
-  domain   = "insights.developer.allizom.org"
-  statuses = ["ISSUED"]
-}
-
 data "aws_acm_certificate" "insights-prod" {
   provider = aws.aws-acm
   domain   = "insights.developer.mozilla.org"
@@ -41,19 +35,6 @@ module "bucket" {
   source = "./modules/bucket"
 }
 
-module "insights-dns-stage" {
-  source            = "./modules/dns"
-  domain-zone-id    = data.terraform_remote_state.dns.outputs.master-zone
-  domain-name       = "insights-stage"
-  domain-name-alias = module.insights-stage.cloudfront_domain
-}
-
-module "insights-stage" {
-  source              = "./modules/cdn"
-  environment         = "stage"
-  cloudfront_aliases  = ["insights.developer.allizom.org", "insights-stage.mdn.mozit.cloud"]
-  acm_certificate_arn = data.aws_acm_certificate.insights-stage.arn
-}
 
 module "insights-dns-prod" {
   source            = "./modules/dns"
