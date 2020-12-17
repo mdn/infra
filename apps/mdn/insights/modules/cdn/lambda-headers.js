@@ -36,12 +36,15 @@ exports.handler = (event, context, callback) => {
                   " *.google-analytics.com" +
                 "; script-src" +
                   " 'self'" +
-                  " *.google-analytics.com" +
+                  " 'unsafe-inline'" +
                   " 'sha256-tSAfTBDI9GnqRGwSZkJvYTf662VRLJNAXe5ccqzpauw='" +
                 "; style-src" +
                   " 'self'" +
+                  " 'unsafe-eval'" +
                   // Hash of empty string, injected by webpack
                   " 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='" +
+                "; object-src" +
+                  " 'self'" +
                 "; connect-src" +
                   " 'self'" +
                   " *.mozilla.org *.allizom.org *.mozit.cloud" +
