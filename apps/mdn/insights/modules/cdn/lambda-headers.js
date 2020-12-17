@@ -40,6 +40,7 @@ exports.handler = (event, context, callback) => {
                   " 'sha256-tSAfTBDI9GnqRGwSZkJvYTf662VRLJNAXe5ccqzpauw='" +
                 "; style-src" +
                   " 'self'" +
+                  " 'unsafe-inline'" +
                   " 'unsafe-eval'" +
                   // Hash of empty string, injected by webpack
                   " 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='" +
