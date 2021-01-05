@@ -49,7 +49,7 @@ export WEB_CPU_LIMIT=2
 export WEB_CPU_REQUEST=100m
 export WEB_MEMORY_LIMIT=6Gi
 export WEB_MEMORY_REQUEST=4Gi
-export WEB_ALLOWED_HOSTS="developer.allizom.org,wiki.developer.allizom.org,developer-stage.mdn.mozit.cloud,stage.mdn.mozit.cloud,files-stage.mdn.mozit.cloud"
+export WEB_ALLOWED_HOSTS="developer.allizom.org,developer-stage.mdn.mozit.cloud,stage.mdn.mozit.cloud,files-stage.mdn.mozit.cloud,yari-demos.stage.mdn.mozit.cloud"
 
 export API_NAME=api
 export API_REPLICAS=1
@@ -107,7 +107,7 @@ export KUMA_ADMIN_NAMES="MDN devs"
 export KUMA_ALLOW_ROBOTS=False
 export KUMA_API_S3_BUCKET_NAME=mdn-api-stage
 export KUMA_ATTACHMENT_HOST=files-stage.mdn.mozit.cloud
-export KUMA_ATTACHMENT_ORIGIN=files-stage.mdn.mozit.cloud
+export KUMA_ATTACHMENT_ORIGIN=yari-demos.stage.mdn.mozit.cloud
 export KUMA_ATTACHMENTS_AWS_STORAGE_BUCKET_NAME="mdn-media-stage"
 export KUMA_ATTACHMENTS_AWS_S3_REGION_NAME="us-west-2"
 export KUMA_ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN="media.stage.mdn.mozit.cloud"
