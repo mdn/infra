@@ -9,8 +9,8 @@ locals {
 
   mdn_node_groups = {
     default_ng = {
-      desired_capacity = "10"
-      min_capacity     = "10"
+      desired_capacity = "8"
+      min_capacity     = "8"
       max_capacity     = "20"
       disk_size        = "100"
       instance_type    = "m5.xlarge"
