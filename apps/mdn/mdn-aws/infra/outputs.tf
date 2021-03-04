@@ -1,11 +1,3 @@
-output "primary_cdn_domain" {
-  value = module.mdn_cdn.cdn-primary-dns
-}
-
-output "attachment_cdn_domain" {
-  value = module.mdn_cdn_prod.cdn-attachments-dns
-}
-
 output "downloads_bucket_name" {
   value = module.mdn_shared.downloads_bucket_name
 }

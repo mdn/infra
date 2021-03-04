@@ -1,6 +1,5 @@
 provider "aws" {
-  region  = var.region
-  version = "~>2"
+  region = var.region
 }
 
 terraform {
@@ -35,29 +34,12 @@ module "mdn_cdn" {
   region      = var.region
   environment = "stage"
 
-  # Primary CDN
-  cloudfront_primary_enabled           = var.cloudfront_primary["enabled"]
-  acm_primary_cert_arn                 = data.aws_acm_certificate.stage-primary-cdn-cert.arn
-  cloudfront_primary_distribution_name = var.cloudfront_primary["distribution_name"]
-  cloudfront_primary_aliases           = split(",", var.cloudfront_primary["aliases.stage"])
-  cloudfront_primary_domain_name       = var.cloudfront_primary["domain.stage"]
-  cloudfront_primary_api_bucket        = var.cloudfront_primary["api_bucket.stage"]
-  cloudfront_primary_media_bucket      = module.media-bucket-stage.bucket_name
-
   # attachment CDN
   cloudfront_attachments_enabled           = "0" # Disable for stage
   acm_attachments_cert_arn                 = data.aws_acm_certificate.attachment-cdn-cert.arn
   cloudfront_attachments_distribution_name = var.cloudfront_attachments["distribution_name"]
   cloudfront_attachments_aliases           = split(",", var.cloudfront_attachments["aliases.stage"])
   cloudfront_attachments_domain_name       = var.cloudfront_attachments["domain.stage"]
-
-  # wiki CDN
-  cloudfront_wiki_enabled           = var.cloudfront_wiki["enabled"]
-  acm_wiki_cert_arn                 = data.aws_acm_certificate.stage-wiki-cdn-cert.arn
-  cloudfront_wiki_distribution_name = var.cloudfront_wiki["distribution_name"]
-  cloudfront_wiki_aliases           = split(",", var.cloudfront_wiki["aliases.stage"])
-  cloudfront_wiki_origin_domain     = var.cloudfront_wiki["domain.stage"]
-  cloudfront_wiki_media_bucket      = module.media-bucket-stage.bucket_name
 
   # media CDN
   cloudfront_media_enabled = var.cloudfront_media["enabled"]
@@ -72,15 +54,6 @@ module "mdn_cdn_prod" {
   region      = var.region
   environment = "prod"
 
-  # Primary CDN
-  cloudfront_primary_enabled           = var.cloudfront_primary["enabled"]
-  acm_primary_cert_arn                 = data.aws_acm_certificate.prod-primary-cdn-cert.arn
-  cloudfront_primary_distribution_name = var.cloudfront_primary["distribution_name"]
-  cloudfront_primary_aliases           = split(",", var.cloudfront_primary["aliases.prod"])
-  cloudfront_primary_domain_name       = var.cloudfront_primary["domain.prod"]
-  cloudfront_primary_api_bucket        = var.cloudfront_primary["api_bucket.prod"]
-  cloudfront_primary_media_bucket      = module.media-bucket-prod.bucket_name
-
   # attachment CDN
   cloudfront_attachments_enabled           = var.cloudfront_attachments["enabled"]
   acm_attachments_cert_arn                 = data.aws_acm_certificate.attachment-cdn-cert.arn
@@ -88,25 +61,11 @@ module "mdn_cdn_prod" {
   cloudfront_attachments_aliases           = split(",", var.cloudfront_attachments["aliases.prod"])
   cloudfront_attachments_domain_name       = var.cloudfront_attachments["domain.prod"]
 
-  # wiki CDN
-  cloudfront_wiki_enabled           = var.cloudfront_wiki["enabled"]
-  acm_wiki_cert_arn                 = data.aws_acm_certificate.prod-wiki-cdn-cert.arn
-  cloudfront_wiki_distribution_name = var.cloudfront_wiki["distribution_name"]
-  cloudfront_wiki_aliases           = split(",", var.cloudfront_wiki["aliases.prod"])
-  cloudfront_wiki_origin_domain     = var.cloudfront_wiki["domain.prod"]
-  cloudfront_wiki_media_bucket      = module.media-bucket-prod.bucket_name
-
   # media CDN
   cloudfront_media_enabled = var.cloudfront_media["enabled"]
   acm_media_cert_arn       = data.aws_acm_certificate.prod-media-cdn-cert.arn
   cloudfront_media_aliases = split(",", var.cloudfront_media["aliases.prod"])
   cloudfront_media_bucket  = module.media-bucket-prod.bucket_name
-}
-
-module "lambda-log" {
-  source             = "./modules/lambda-log-processor"
-  source_bucket      = module.mdn_cdn_prod.cdn-primary-logging-bucket
-  destination_bucket = "mdn-cdn-primary-processed"
 }
 
 # TODO: Split this up into multiple files other stuff can get messy quick
@@ -224,7 +183,7 @@ module "upload-user-stage" {
 
   iam_policies = [
     module.media-bucket-stage.bucket_iam_policy,
-    module.mdn_cdn.cdn-media-iam-policy,
+    #module.mdn_cdn.cdn-media-iam-policy,
   ]
 }
 
@@ -235,7 +194,7 @@ module "upload-user-prod" {
 
   iam_policies = [
     module.media-bucket-prod.bucket_iam_policy,
-    module.mdn_cdn_prod.cdn-media-iam-policy,
+    #module.mdn_cdn_prod.cdn-media-iam-policy,
   ]
 
 }

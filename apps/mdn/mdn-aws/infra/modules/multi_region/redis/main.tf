@@ -33,6 +33,7 @@ resource "aws_elasticache_replication_group" "mdn-redis-rg" {
   count                         = var.enabled ? 1 : 0
   automatic_failover_enabled    = var.redis_automatic_failover
   availability_zones            = var.azs
+  multi_az_enabled              = true
   replication_group_id          = var.redis_name
   replication_group_description = "MDN Redis ${var.environment} cluster"
   node_type                     = var.redis_node_size

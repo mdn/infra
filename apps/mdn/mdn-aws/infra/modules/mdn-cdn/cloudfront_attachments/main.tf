@@ -80,6 +80,7 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
+      headers      = ["Host"]
       query_string = false
 
       cookies {
@@ -102,6 +103,7 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
+      headers                 = ["Host"]
       query_string            = true
       query_string_cache_keys = ["revision"]
 

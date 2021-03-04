@@ -29,7 +29,7 @@ data "aws_eks_cluster" "worf" {
 
 module "iam_assumable_role_admin" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.10.0"
+  version                       = "~> v3"
   create_role                   = true
   role_name                     = "worf"
   provider_url                  = replace(data.aws_eks_cluster.worf.identity.0.oidc.0.issuer, "https://", "")
