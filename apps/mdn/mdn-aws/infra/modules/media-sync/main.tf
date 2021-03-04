@@ -1,6 +1,6 @@
 module "iam_assumable_role" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.10.0"
+  version                       = "~> v3"
   create_role                   = true
   role_name                     = "media-sync-role"
   provider_url                  = replace(var.cluster_oidc_issuer_url, "https://", "")

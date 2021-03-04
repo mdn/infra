@@ -44,7 +44,6 @@ resource "aws_s3_bucket" "mdn-elb-logs" {
   count = var.enabled ? 1 : 0
 
   bucket = local.elb_logs
-  region = var.region
   acl    = "log-delivery-write"
 
   lifecycle_rule {
@@ -73,9 +72,7 @@ resource "aws_s3_bucket" "mdn-downloads-logs" {
 
 resource "aws_s3_bucket" "mdn-downloads" {
   count  = var.enabled ? 1 : 0
-  acl    = ""
   bucket = local.downloads
-  region = var.region
 
   cors_rule {
     allowed_headers = ["*"]
@@ -156,7 +153,6 @@ resource "aws_s3_bucket" "mdn-downloads" {
 }
 EOF
 
-
   tags = {
     Name        = local.downloads
     Stack       = "MDN"
@@ -168,7 +164,6 @@ EOF
 resource "aws_s3_bucket" "mdn-shared-backup" {
   count  = var.enabled ? 1 : 0
   bucket = local.shared_backup
-  region = var.region
   acl    = "log-delivery-write"
 
   logging {

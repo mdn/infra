@@ -14,7 +14,7 @@ resource "aws_s3_bucket" "media" {
 
   cors_rule {
     allowed_origins = ["*"]
-    allowed_methods = ["GET"]
+    allowed_methods = ["GET", "HEAD"]
     allowed_headers = ["Authorization"]
     max_age_seconds = 3000
   }

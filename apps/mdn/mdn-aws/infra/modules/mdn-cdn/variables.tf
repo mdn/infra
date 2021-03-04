@@ -8,26 +8,8 @@ variable "enabled" {
 variable "environment" {
 }
 
-variable "cloudfront_primary_enabled" {
-}
-
-variable "cloudfront_primary_aliases" {
-  type = list(string)
-}
-
 variable "cloudfront_primary_distribution_name" {
   default = "mdn-primary-cdn"
-}
-
-variable "cloudfront_primary_api_bucket" {
-}
-
-variable "cloudfront_primary_media_bucket" {}
-
-variable "acm_primary_cert_arn" {
-}
-
-variable "cloudfront_primary_domain_name" {
 }
 
 variable "cloudfront_attachments_enabled" {
@@ -47,25 +29,6 @@ variable "cloudfront_attachments_domain_name" {
 variable "acm_attachments_cert_arn" {
 }
 
-variable "cloudfront_wiki_enabled" {
-}
-
-variable "cloudfront_wiki_distribution_name" {
-  default = "mdn-wiki-cdn"
-}
-
-variable "acm_wiki_cert_arn" {
-}
-
-variable "cloudfront_wiki_aliases" {
-  type = list(string)
-}
-
-variable "cloudfront_wiki_origin_domain" {
-}
-
-variable "cloudfront_wiki_media_bucket" {}
-
 variable "cloudfront_media_enabled" {
 }
 
@@ -77,5 +40,13 @@ variable "acm_media_cert_arn" {
 }
 
 variable "cloudfront_media_bucket" {
+}
+
+variable "cloudfront_media_cache_policy_id" {
+  default = ""
+}
+
+variable "cloudfront_media_origin_request_policy_id" {
+  default = ""
 }
 

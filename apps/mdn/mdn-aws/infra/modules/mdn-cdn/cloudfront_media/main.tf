@@ -5,8 +5,22 @@ data "aws_s3_bucket" "this" {
 data "aws_caller_identity" "current" {
 }
 
+# NOTE: MDN-Origin-And-All-Query-Strings and Managed-CORS-S3Origin should be
+#       actually created resources. Instead we are doing this because it was created
+#       by hand and I wanted a quick way of pulling their ID. The real fix should be
+#       to import these 2 policies and have them reflected in code
+data "aws_cloudfront_cache_policy" "cache_policy" {
+  name = "MDN-Origin-And-All-Query-Strings"
+}
+
+data "aws_cloudfront_origin_request_policy" "origin_policy" {
+  name = "Managed-CORS-S3Origin"
+}
+
 locals {
-  origin_id = "S3-${var.media_bucket}"
+  origin_id                = "S3-${var.media_bucket}"
+  origin_request_policy_id = var.origin_request_policy_id == "" ? data.aws_cloudfront_origin_request_policy.origin_policy.id : var.origin_request_policy_id
+  cache_policy_id          = var.cache_policy_id == "" ? data.aws_cloudfront_cache_policy.cache_policy.id : var.cache_policy_id
 }
 
 resource "aws_cloudfront_distribution" "this" {
@@ -30,21 +44,15 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   default_cache_behavior {
-    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = local.origin_id
-    viewer_protocol_policy = "redirect-to-https"
-    default_ttl            = 86400
-    max_ttl                = 432000
-    min_ttl                = 0
-
-    forwarded_values {
-      query_string = true
-
-      cookies {
-        forward = "none"
-      }
-    }
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    target_origin_id         = local.origin_id
+    origin_request_policy_id = local.origin_request_policy_id
+    cache_policy_id          = local.cache_policy_id
+    viewer_protocol_policy   = "redirect-to-https"
+    default_ttl              = var.default_cache_default_ttl
+    max_ttl                  = var.default_cache_max_ttl
+    min_ttl                  = var.default_cache_min_ttl
   }
 
   restrictions {
@@ -66,6 +74,7 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 data "aws_iam_policy_document" "cdn-policy" {
+  count = var.enabled
   statement {
     sid    = "AllowInvalidateCache"
     effect = "Allow"
@@ -86,6 +95,6 @@ resource "aws_iam_policy" "cdn-invalidate" {
   count  = var.enabled
   name   = "${var.media_bucket}-${var.environment}-cdn-policy"
   path   = "/"
-  policy = data.aws_iam_policy_document.cdn-policy.json
+  policy = data.aws_iam_policy_document.cdn-policy[0].json
 }
 

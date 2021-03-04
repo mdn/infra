@@ -25,7 +25,6 @@ resource "aws_s3_bucket" "backup-bucket-logging" {
 
 resource "aws_s3_bucket" "backup-bucket" {
   bucket = local.backup-bucket
-  region = var.region
   acl    = var.bucket-acl
 
   versioning {
@@ -70,7 +69,7 @@ data "aws_eks_cluster" "this" {
 
 module "iam_assumable_role_admin" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "~> v2.10.0"
+  version                       = "~> v3"
   create_role                   = true
   role_name                     = "mdn-rds-backups"
   provider_url                  = replace(data.aws_eks_cluster.this.identity.0.oidc.0.issuer, "https://", "")
