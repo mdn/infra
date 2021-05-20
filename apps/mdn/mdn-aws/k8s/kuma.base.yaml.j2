@@ -162,6 +162,11 @@
                   key: NEW_RELIC_LICENSE_KEY
             - name: NEW_RELIC_LOG
               value: "{{ NEW_RELIC_LOG }}"
+            - name: PLUS_VARIANTS_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: plus-variants-json
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
             - name: RATELIMIT_ENABLE
