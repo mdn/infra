@@ -190,7 +190,7 @@ resource "aws_lambda_function" "lambda-headers" {
   source_code_hash = data.archive_file.lambda-zip.output_base64sha256
   role             = aws_iam_role.lambda-edge-role.arn
   handler          = var.event_trigger
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs12.x"
 
   tags = {
     Name        = "${var.servicename}-headers"
@@ -198,4 +198,3 @@ resource "aws_lambda_function" "lambda-headers" {
     Terraform   = "true"
   }
 }
-
