@@ -9,9 +9,9 @@ locals {
 
   mdn_node_groups = {
     default_ng = {
-      desired_capacity = "8"
-      min_capacity     = "8"
-      max_capacity     = "20"
+      desired_capacity = "4"
+      min_capacity     = "4"
+      max_capacity     = "12"
       disk_size        = "100"
       instance_type    = "m5.xlarge"
       subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
@@ -52,4 +52,3 @@ locals {
     Terraform = "true"
   }
 }
-
