@@ -24,7 +24,7 @@ Secrets are stored in [mdn-k8s-private](https://github.com/mozilla/mdn-k8s-priva
 [Private repo with git-crypt guide](https://mana.mozilla.org/wiki/display/SRE/Private+repos+with+git-crypt)
 
 ## Source Repos
-Application repo [kuma](https://github.com/mdn/kuma) and [kumascript](https://github.com/mdn/kumascript)
+Application repo [kuma](https://github.com/mdn/kuma)
 
 Infrastructure repo [mdn-infra](https://github.com/mdn/infra)
 
@@ -40,4 +40,3 @@ MDN uses certs from AWS ACM
 
 ## Cloud Account
 AWS account mozilla-mdn 178589013767
-

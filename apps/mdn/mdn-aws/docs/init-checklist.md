@@ -47,72 +47,6 @@ database engine. There are three options for the database backup:
    See [Enable GitHub Auth](https://kuma.readthedocs.io/en/latest/installation.html#enable-github-auth-optional))
 * [ ] (Optional) Disable the password-backed admin account, or give it an
   unused password
-* [ ] Set Constance settings. This can be done from the Django admin
-  (*todo* - update to django-constance 2.0, which includes
-  [management commands](https://django-constance.readthedocs.io/en/latest/#command-line)
-  to view and set Constance settings).
-  Suggested settings to customize:
-  - ``KUMASCRIPT_TIMEOUT`` - Set to non-zero (like ``30``) to enable
-    KumaScript rendering
-  - ``KUMA_WIKI_IFRAME_ALLOWED_HOSTS`` - Add the planned demo domain name to
-    the regex so that samples will be visible
-* [ ] (Optional) Set Waffle flags and switches. The database include some
-  waffle flags and switches, but recent changes in production may be
-  different, or you may want different values for your testing environment.
-
-# Populate Search (Optional)
-
-The database may include indexes, but these aren't reflected in the new
-deployment's ElasticSearch instance. Use the Django admin and the
-[development instructions](https://kuma.readthedocs.io/en/latest/elasticsearch.html#indexing-documents)
-to create a new index.
-
-* [ ] Create, populate, and promote index
-
-# Pre-Render Pages (Optional)
-
-Wiki pages are rendered with KumaScript, and then "bleached" to remove
-dangerous HTML. Rendering is not available in Maintenance Mode, so it may
-be useful to pre-render pages before going into that mode. If you are
-changing settings like the sample domain, you may want to re-render already
-rendered documents.
-
-This Django shell script (``./manage.py shell_plus``) can be used to force
-asynchronous rendering of unrendered pages, using the celery workers:
-
-```
-from kuma.wiki.tasks import render_document
-import time
-all_pages = Document.objects.exclude(is_redirect=True)
-unrendered_pages = all_pages.filter(Q(rendered_html__isnull=True)|Q(rendered_html="")).exclude(is_redirect=True)
-to_render = unrendered_pages
-total = to_render.count()
-for doc_id in to_render.values_list('id', flat=True):
-    render_document.delay(doc_id, cache_control='no-cache', base_url=None, force=True)
-
-count = total
-stalled = 0
-while count:
-    print ("%d of %d remaining" % (count, total))
-    last_count = count
-    time.sleep(5)
-    count = to_render.count()
-    if count == last_count:
-        if stalled > 3:
-            doc_ids = to_render.values_list('id', flat=True)
-            print("Rendering stalled. Unrendered IDs: %s" % doc_ids)
-            break
-        else:
-            stalled += 1
-    else:
-        stalled = 0
-
-if count == 0:
-    print("Done!")
-```
-
-
-* [ ] Render the desired pages
 
 # Generate files
 
@@ -121,8 +55,4 @@ Some files served by Django must be generated first:
 * [ ] Generate ``humans.txt``:
   ```
   ./manange.py make_humans
-  ```
-* [ ] Generate sitemaps:
-  ```
-  ./manage.py make_sitemaps
   ```

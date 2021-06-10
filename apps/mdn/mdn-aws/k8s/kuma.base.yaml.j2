@@ -74,14 +74,6 @@
               value: "{{ KUMA_CELERY_WORKER_MAX_TASKS_PER_CHILD }}"
             - name: CONN_MAX_AGE
               value: "{{ KUMA_CONN_MAX_AGE }}"
-            - name: CSP_ENABLE_MIDDLEWARE
-              value: "{{ KUMA_CSP_ENABLE_MIDDLEWARE }}"
-            - name: CSP_REPORT_ENABLE
-              value: "{{ KUMA_CSP_REPORT_ENABLE }}"
-            - name: CSP_REPORT_ONLY
-              value: "{{ KUMA_CSP_REPORT_ONLY }}"
-            - name: CSP_REPORT_URI
-              value: "{{ KUMA_CSP_REPORT_URI }}"
             - name: CSRF_COOKIE_SECURE
               value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
@@ -118,14 +110,10 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: elasticsearch-url
-            - name: FOUNDATION_CALLOUT
-              value: "{{ KUMA_FOUNDATION_CALLOUT }}"
             - name: GOOGLE_ANALYTICS_ACCOUNT
               value: "{{ KUMA_GOOGLE_ANALYTICS_ACCOUNT }}"
             - name: INTERACTIVE_EXAMPLES_BASE
               value: "{{ INTERACTIVE_EXAMPLES_BASE_URL }}"
-            - name: KUMASCRIPT_URL_TEMPLATE
-              value: {{ KUMA_URL_TEMPLATE_FOR_KUMASCRIPT }}
             - name: LEGACY_ROOT
               value: "{{ KUMA_LEGACY_ROOT }}"
             - name: MAINTENANCE_MODE
@@ -137,10 +125,6 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: aws-api-cloudfront-dist-id
-            - name: MDN_CONTRIBUTION
-              value: "{{ KUMA_ENABLE_CONTRIBUTIONS }}"
-            - name: MDN_CONTRIBUTION_CONFIRMATION_EMAIL
-              value: "{{ KUMA_ENABLE_CONTRIBUTIONS_CONFIRMATION_EMAIL }}"
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEDIA_URL
@@ -201,10 +185,6 @@
               value: "{{ KUMA_SESSION_COOKIE_SECURE }}"
             - name: SITE_URL
               value: {{ KUMA_PROTOCOL }}{{ KUMA_DOMAIN }}
-            - name: SSR_TIMEOUT
-              value: "{{ KUMA_SSR_TIMEOUT }}"
-            - name: SSR_URL
-              value: "{{ KUMA_SSR_URL }}"
             - name: STATIC_URL
               value: {{ KUMA_STATIC_URL }}
             - name: STRIPE_PLAN_ID
@@ -216,8 +196,6 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: stripe-secret-key
-            - name: WIKI_HOST
-              value: {{ KUMA_WIKI_HOST }}
             # Other environment overrides
             - name: PYTHONUNBUFFERED
               value: "True"

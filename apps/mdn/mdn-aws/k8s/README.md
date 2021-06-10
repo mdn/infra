@@ -43,7 +43,7 @@ brew install jq
     source regions/oregon/prod.mm.sh
     ```
 
-#### Deploying MDN with Kuma updates only
+#### Deploying Kuma updates
 
 - Specify the Kuma image tag you want to deploy. It must be available from DockerHub (see https://hub.docker.com/r/mdnwebdocs/kuma/tags/ for a list of available tags). New Kuma images are built and registered on DockerHub after every commit to the `master` branch of https://github.com/mdn/kuma.
 ```sh
@@ -56,56 +56,6 @@ make k8s-db-migration-job
 ```
 
 - Rollout the update
-```sh
-make k8s-kuma-deployments
-```
-
-- Monitor the status of the rollout until it completes
-```sh
-make k8s-kuma-rollout-status
-```
-
-- In an emergency, if the rollout is causing failures, you can roll-back to the previous state.
-```sh
-make k8s-kuma-rollback
-```
-
-#### Deploying MDN with Kumascript updates only
-
-- Specify the Kumascript image tag you want to deploy. It must be available from DockerHub (see https://hub.docker.com/r/mdnwebdocs/kumascript/tags/ for a list of available tags). New Kumascript images are built and registered on DockerHub after every commit to the `master` branch of https://github.com/mdn/kumascript.
-```sh
-export KUMASCRIPT_IMAGE_TAG=<tag-from-dockerhub>
-```
-
-- Rollout the update
-```sh
-make k8s-kumascript-deployments
-```
-
-- Monitor the status of the rollout until it completes
-```sh
-make k8s-kumascript-rollout-status
-```
-
-- In an emergency, if the rollout is causing failures, you can roll-back to the previous state.
-```sh
-make k8s-kumascript-rollback
-```
-
-#### Deploying MDN with both Kuma and Kumascript updates
-
-- Specify the Kuma and Kumascript image tags you want to deploy.
-```sh
-export KUMA_IMAGE_TAG=<tag-from-dockerhub>
-export KUMASCRIPT_IMAGE_TAG=<tag-from-dockerhub>
-```
-
-- Run the database migrations
-```sh
-make k8s-db-migration-job
-```
-
-- Rollout the updates
 ```sh
 make k8s-deployments
 ```
@@ -126,7 +76,6 @@ This section needs to be fleshed-out. It lists the one-time steps required befor
 
 #### Provision AWS and Cloud Resources
 - Create an AWS RDS MySQL instance
-- Create an AWS EFS volume
 - Create an AWS SSL certificate
 - Create an AWS ElasticCache Redis instance
 - Create an ElasticCloud (Elasticsearch) instance
@@ -137,6 +86,5 @@ This step is only done once, and requires special privileges for creating and co
 
 ```sh
 make k8s-ns
-make k8s-shared-storage
 make k8s-services
 ```

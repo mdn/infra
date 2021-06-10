@@ -57,7 +57,7 @@ To show all deployments:
 To show yaml for a single deployment:
 
 ```
- kubectl -n mdn-prod get deployment api -o yaml
+ kubectl -n mdn-prod get deployment web -o yaml
 ```
 
 Run a bash shell on a MDN pod:
@@ -105,8 +105,6 @@ List MDN services:
 ```
 kubectl -n mdn-prod get services
 NAME         CLUSTER-IP      EXTERNAL-IP        PORT(S)         AGE
-api          100.71.55.158   <none>             80/TCP          24d
-kumascript   100.68.62.9     <none>             9080/TCP        24d
 web          100.64.86.247   a8583e1be9a37...   443:31383/TCP   24d
 ```
 
@@ -185,7 +183,6 @@ Starting to serve on 127.0.0.1:8001
 ### New Relic
 
 - [kuma-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34419452)
-- [kumascript-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34601215)
 - [kuma-web-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34459612)
 - [kuma-backend-prod-portland](https://rpm.newrelic.com/accounts/1299394/applications/34601198)
 
@@ -301,8 +298,7 @@ The [rds_backup_tool](https://github.com/mdn/infra/blob/master/tools/aws/rds_bac
   - the [prod deployment](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/k8s) yaml contains the correct number of replicas for each pod, but just in case:
 
     ```
-    kubectl -n mdn-prod scale --replicas=20 deployment/web
-    kubectl -n mdn-prod scale --replicas=4 deployment/api
+    kubectl -n mdn-prod scale --replicas=10 deployment/web
     etc
     ```
 
