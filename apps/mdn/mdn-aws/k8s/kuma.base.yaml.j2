@@ -187,8 +187,8 @@
               value: {{ KUMA_PROTOCOL }}{{ KUMA_DOMAIN }}
             - name: STATIC_URL
               value: {{ KUMA_STATIC_URL }}
-            - name: STRIPE_PLAN_ID
-              value: {{ KUMA_STRIPE_PLAN_ID }}
+            - name: STRIPE_PRICE_IDS
+              value: "{{ KUMA_STRIPE_PRICE_IDS }}"
             - name: STRIPE_PUBLIC_KEY
               value: {{ KUMA_STRIPE_PUBLIC_KEY }}
             - name: STRIPE_SECRET_KEY
