@@ -14,7 +14,7 @@ locals {
       min_capacity              = "2"
       max_capacity              = "12"
       disk_size                 = "50"
-      instance_type             = "m5.large"
+      instance_types            = ["m5.large"]
       key_name                  = "mdn"
       source_security_group_ids = [module.ssh_sg.ssh_security_group_id]
       subnets                   = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
