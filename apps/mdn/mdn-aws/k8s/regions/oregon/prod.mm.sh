@@ -22,8 +22,8 @@ export WEB_SERVICE_PROTOCOL=TCP
 export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:178589013767:certificate/6cd2746f-26e7-491f-95ba-4972b1aa5879
 
 export WEB_NAME=web
-export WEB_REPLICAS=10
-export WEB_MAX_REPLICAS=20
+export WEB_REPLICAS=5
+export WEB_MAX_REPLICAS=15
 export WEB_GUNICORN_WORKERS=8
 export WEB_GUNICORN_TIMEOUT=90
 export WEB_GUNICORN_KEEPALIVE=75
@@ -34,8 +34,8 @@ export WEB_MEMORY_REQUEST=4Gi
 export WEB_ALLOWED_HOSTS="developer.mozilla.org,mdn.mozillademos.org,demos.mdn.mozit.cloud,demos-origin.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud,yari-demos.prod.mdn.mozit.cloud"
 
 export CELERY_WORKERS_NAME=celery-worker
-export CELERY_WORKERS_REPLICAS=4
-export CELERY_WORKERS_MAX_REPLICAS=8
+export CELERY_WORKERS_REPLICAS=1
+export CELERY_WORKERS_MAX_REPLICAS=4
 export CELERY_WORKERS_CPU_LIMIT=4
 export CELERY_WORKERS_CPU_REQUEST=500m
 export CELERY_WORKERS_MEMORY_LIMIT=4Gi
