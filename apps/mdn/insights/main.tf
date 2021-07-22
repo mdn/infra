@@ -35,7 +35,6 @@ module "bucket" {
   source = "./modules/bucket"
 }
 
-
 module "insights-dns-prod" {
   source            = "./modules/dns"
   domain-zone-id    = data.terraform_remote_state.dns.outputs.master-zone
@@ -49,4 +48,3 @@ module "insights-prod" {
   cloudfront_aliases  = ["insights.developer.mozilla.org", "insights-prod.mdn.mozit.cloud"]
   acm_certificate_arn = data.aws_acm_certificate.insights-prod.arn
 }
-

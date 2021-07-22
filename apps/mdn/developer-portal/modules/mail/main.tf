@@ -36,4 +36,3 @@ resource "aws_iam_user_policy" "email" {
   user   = aws_iam_user.email.name
   policy = data.aws_iam_policy_document.email.json
 }
-

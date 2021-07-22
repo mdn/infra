@@ -13,4 +13,3 @@ variable "instance_type" {
 variable "domain" {
   default = "mdn.mozit.cloud"
 }
-

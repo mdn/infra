@@ -5,4 +5,3 @@ output "efs_id" {
 output "efs_dns" {
   value = "${element(concat(aws_efs_file_system.this.*.id, [""]), 0)}.${var.region}.amazonaws.com"
 }
-

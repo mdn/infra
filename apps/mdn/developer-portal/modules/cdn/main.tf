@@ -1,5 +1,4 @@
-data "aws_caller_identity" "current" {
-}
+data "aws_caller_identity" "current" {}
 
 data "aws_s3_bucket" "logging" {
   count  = var.enable_logging ? 1 : 0

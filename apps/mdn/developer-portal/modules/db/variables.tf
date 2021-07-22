@@ -70,4 +70,3 @@ variable "allow_major_version_upgrade" {
 variable "monitoring_interval" {
   default = "0"
 }
-

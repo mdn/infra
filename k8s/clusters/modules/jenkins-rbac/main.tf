@@ -1,4 +1,3 @@
-
 resource "kubernetes_role" "this" {
   for_each = toset(var.namespace)
 

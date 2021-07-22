@@ -13,4 +13,3 @@ output "secret" {
 output "smtp_host" {
   value = "email-smtp.${var.region}.amazonaws.com"
 }
-

@@ -1,4 +1,3 @@
-
 module "ssh_tunnel_eu_central_1" {
   source     = "./modules/ssh-tunnel"
   region     = "us-west-2"

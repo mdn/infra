@@ -258,4 +258,3 @@ resource "aws_iam_role_policy" "mdn-samples" {
   role   = aws_iam_role.mdn-samples.id
   policy = data.aws_iam_policy_document.associate-eip.json
 }
-
