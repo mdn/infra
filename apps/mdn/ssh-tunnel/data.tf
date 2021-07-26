@@ -1,4 +1,4 @@
-data terraform_remote_state "vpc-us-west-2" {
+data "terraform_remote_state" "vpc-us-west-2" {
   backend = "s3"
 
   config = {
@@ -18,7 +18,7 @@ data "terraform_remote_state" "vpc-eu-central-1" {
   }
 }
 
-data terraform_remote_state "dns" {
+data "terraform_remote_state" "dns" {
   backend = "s3"
   config = {
     bucket = "mdn-state-4e366a3ac64d1b4022c8b5e35efbd288"

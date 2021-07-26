@@ -29,7 +29,6 @@ module "papertrail-mdn" {
   eks_cluster_id = module.mdn.cluster_id
 }
 
-
 module "ingress-nginx-mdn" {
   providers = {
     helm = helm.mdn

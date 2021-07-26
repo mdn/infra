@@ -1,4 +1,3 @@
-
 locals {
 
   ingress_nginx_repository = "https://kubernetes.github.io/ingress-nginx"

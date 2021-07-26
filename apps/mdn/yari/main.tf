@@ -1,5 +1,3 @@
-
-
 module "sns-pagerduty" {
   providers = {
     aws = aws.us-east-1

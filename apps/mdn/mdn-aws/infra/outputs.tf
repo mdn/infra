@@ -33,4 +33,3 @@ output "media-sync-role_arn" {
 output "worf_role_arn" {
   value = module.security.worf_role_arn
 }
-

@@ -13,4 +13,3 @@ output "logging_bucket_id" {
 output "logging_bucket_domain_name" {
   value = element(concat(aws_s3_bucket.logging.*.bucket_domain_name, [""]), 0)
 }
-

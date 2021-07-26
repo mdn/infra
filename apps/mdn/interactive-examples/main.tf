@@ -27,4 +27,3 @@ module "interactive-example" {
   acm_certificate_arn = data.aws_acm_certificate.interactive-example.arn
   cdn_aliases         = ["interactive-examples.mdn.mozit.cloud", "interactive-examples.mdn.mozilla.net"]
 }
-

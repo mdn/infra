@@ -37,4 +37,3 @@ output "stage-zone-id" {
 output "prod-zone-id" {
   value = module.prod.hosted_zone_id
 }
-

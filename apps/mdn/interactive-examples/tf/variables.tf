@@ -26,4 +26,3 @@ variable "origin_id" {
 variable "cdn_aliases" {
   type = list(string)
 }
-

@@ -7,4 +7,3 @@ output "redis_endpoint" {
     0,
   )
 }
-

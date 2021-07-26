@@ -14,7 +14,7 @@ data "aws_vpc" "eu-central-1" {
   id = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
 }
 
-data aws_eks_cluster "mdn" {
+data "aws_eks_cluster" "mdn" {
   name = module.mdn.cluster_id
 }
 

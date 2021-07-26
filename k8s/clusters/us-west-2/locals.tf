@@ -1,4 +1,3 @@
-
 locals {
 
   cluster_features = {

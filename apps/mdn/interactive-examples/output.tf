@@ -9,4 +9,3 @@ output "interactive-example-cloudfront-id" {
 output "interactive-example-cloudfront-domain" {
   value = module.interactive-example.interactive-example-cloudfront-domain
 }
-

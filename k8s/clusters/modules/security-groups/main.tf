@@ -1,5 +1,4 @@
-
-data aws_vpc "this" {
+data "aws_vpc" "this" {
   id = var.vpc_id
 }
 
@@ -14,7 +13,6 @@ resource "aws_security_group" "ssh" {
     Region    = var.region
   }
 }
-
 
 resource "aws_security_group_rule" "eks-ingress-ssh-custom" {
   count             = length(var.ip_whitelist) > 0 ? 1 : 0

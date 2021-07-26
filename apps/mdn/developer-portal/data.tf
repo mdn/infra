@@ -46,4 +46,3 @@ data "aws_wafv2_web_acl" "cdn" {
   name     = "default-cdn"
   scope    = "CLOUDFRONT"
 }
-

@@ -204,4 +204,3 @@ resource "aws_lambda_function" "lambda-headers" {
     Terraform   = "true"
   }
 }
-

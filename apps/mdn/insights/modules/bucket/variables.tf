@@ -5,4 +5,3 @@ variable "region" {
 variable "bucket_name" {
   default = "mdn-web-dna"
 }
-
