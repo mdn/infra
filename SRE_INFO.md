@@ -1,18 +1,13 @@
 # SRE Info
 
 ## Infra Access
-To access Kubernetes Masters, you will need your IP to be added to a whitelist in the secrets repo (see secrets below). After that you can request the kubeconfig file through kops:
+Use the [`maws`](https://github.com/mozilla-iam/mozilla-aws-cli/) tool to get credentials to the mozilla-mdn account. Once you have access you can use the `aws eks` tooling to update your local `kubectl` config.
 
 ```bash
-# instructions for aws-vault is below
-$ aws-vault exec mozilla-mdn-admin
-$ git clone https://github.com/mdn/infra.git
-$ cd infra/k8s/clusters/us-west-2a
-$ source config.sh
-$ kops export kubecfg --kubeconfig ~/.kube/mdn-us-west-2.config
-```
+aws eks update-kubeconfig --alias mdn-us-west-2 --name mdn --region us-west-2
+``` 
 
-[SRE aws-vault setup](https://mana.mozilla.org/wiki/display/SRE/aws-vault)
+You can now interact with the cluster using the `kubectl` command.
 
 [SRE account guide](https://mana.mozilla.org/wiki/display/SRE/AWS+Account+access+guide)
 
@@ -24,7 +19,9 @@ Secrets are stored in [mdn-k8s-private](https://github.com/mozilla/mdn-k8s-priva
 [Private repo with git-crypt guide](https://mana.mozilla.org/wiki/display/SRE/Private+repos+with+git-crypt)
 
 ## Source Repos
-Application repo [kuma](https://github.com/mdn/kuma)
+Application repos:
+ * [kuma](https://github.com/mdn/kuma)
+ * [yari](https://github.com/mdn/yari)
 
 Infrastructure repo [mdn-infra](https://github.com/mdn/infra)
 

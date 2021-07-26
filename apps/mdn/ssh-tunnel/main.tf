@@ -6,7 +6,6 @@ module "ssh_tunnel_eu_central_1" {
   zone_id    = data.terraform_remote_state.dns.outputs.us-west-2-zone-id
 
   github_users = [
-    "limed",
     "escattone",
     "peterbe",
     "schalkneethling"
