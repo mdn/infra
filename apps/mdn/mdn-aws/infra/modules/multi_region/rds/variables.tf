@@ -21,7 +21,7 @@ variable "mysql_identifier" {
 variable "mysql_env" {
 }
 
-variable "mysql_security_group_name" {
+variable "rds_security_group_name" {
 }
 
 variable "mysql_storage_gb" {
@@ -36,6 +36,11 @@ variable "mysql_instance_class" {
 
 variable "mysql_port" {
   default     = 3306
+  description = "ingress port to open"
+}
+
+variable "postgres_port" {
+  default     = 5432
   description = "ingress port to open"
 }
 
