@@ -10,11 +10,15 @@ locals {
 
   mdn_node_groups = {
     default_ng_1 = {
+      # JIRA SE-2281
+      # Required based on https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/upgrades.md#upgrade-module-to-v1700-for-managed-node-groups
+      name = "mdn-default_ng_1-topical-stallion"
+
       desired_capacity          = "2"
       min_capacity              = "2"
       max_capacity              = "12"
       disk_size                 = "50"
-      instance_type             = "m5.large"
+      instance_types            = ["m5.large"]
       key_name                  = "mdn"
       source_security_group_ids = [module.ssh_sg.ssh_security_group_id]
       subnets                   = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets

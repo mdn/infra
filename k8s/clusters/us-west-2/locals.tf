@@ -8,11 +8,15 @@ locals {
 
   mdn_node_groups = {
     default_ng = {
+      # JIRA SE-2281
+      # Required based on https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/upgrades.md#upgrade-module-to-v1700-for-managed-node-groups
+      name = "mdn-default_ng-caring-oryx"
+
       desired_capacity = "4"
       min_capacity     = "4"
       max_capacity     = "12"
       disk_size        = "100"
-      instance_type    = "m5.xlarge"
+      instance_types   = ["m5.xlarge"]
       subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
       k8s_label = {
