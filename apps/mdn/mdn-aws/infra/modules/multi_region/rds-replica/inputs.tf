@@ -41,6 +41,10 @@ variable "mysql_port" {
   default = "3306"
 }
 
+variable "postgres_port" {
+  default = 5432
+}
+
 variable "monitoring_interval" {
   default = "0"
 }

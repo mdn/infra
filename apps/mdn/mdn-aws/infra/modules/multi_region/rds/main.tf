@@ -84,13 +84,20 @@ resource "aws_db_instance" "mdn_rds" {
 
 resource "aws_security_group" "mdn_rds_sg" {
   count       = var.enabled ? 1 : 0
-  name        = var.mysql_security_group_name
+  name        = var.rds_security_group_name
   description = "Allow all inbound traffic"
   vpc_id      = var.vpc_id
 
   ingress {
     from_port   = var.mysql_port
     to_port     = var.mysql_port
+    protocol    = "TCP"
+    cidr_blocks = [data.aws_vpc.id.cidr_block]
+  }
+
+  ingress {
+    from_port   = var.postgres_port
+    to_port     = var.postgres_port
     protocol    = "TCP"
     cidr_blocks = [data.aws_vpc.id.cidr_block]
   }

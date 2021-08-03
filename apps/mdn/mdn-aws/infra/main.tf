@@ -120,11 +120,13 @@ module "mysql-us-west-2" {
   mysql_engine_version        = local.rds["stage"]["engine_version"]
   mysql_instance_class        = local.rds["stage"]["instance_class"]
   mysql_backup_retention_days = local.rds["stage"]["backup_retention_days"]
-  mysql_security_group_name   = "mdn_rds_sg_stage"
   mysql_storage_gb            = local.rds["stage"]["storage_gb"]
   mysql_storage_type          = local.rds["stage"]["storage_type"]
-  vpc_id                      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  monitoring_interval         = "60"
+  # This security group is also used for Postgres which is not in terraform yet.
+  # Do not delete this security group
+  rds_security_group_name = "mdn_rds_sg_stage"
+  vpc_id                  = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  monitoring_interval     = "60"
 }
 
 module "mysql-us-west-2-prod" {
@@ -140,11 +142,13 @@ module "mysql-us-west-2-prod" {
   mysql_engine_version        = local.rds["prod"]["engine_version"]
   mysql_instance_class        = local.rds["prod"]["instance_class"]
   mysql_backup_retention_days = local.rds["prod"]["backup_retention_days"]
-  mysql_security_group_name   = "mdn_rds_sg_prod"
   mysql_storage_gb            = local.rds["prod"]["storage_gb"]
   mysql_storage_type          = local.rds["prod"]["storage_type"]
-  vpc_id                      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
-  monitoring_interval         = "60"
+  # This security group is also used for Postgres which is not in terraform yet.
+  # Do not delete this security group
+  rds_security_group_name = "mdn_rds_sg_prod"
+  vpc_id                  = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  monitoring_interval     = "60"
 }
 
 # Replica set

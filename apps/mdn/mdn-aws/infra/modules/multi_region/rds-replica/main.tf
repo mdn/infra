@@ -64,6 +64,13 @@ resource "aws_security_group" "replica-sg" {
     cidr_blocks = [data.aws_vpc.vpc_cidr.cidr_block]
   }
 
+  ingress {
+    from_port   = var.postgres_port
+    to_port     = var.postgres_port
+    protocol    = "TCP"
+    cidr_blocks = [data.aws_vpc.vpc_cidr.cidr_block]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
