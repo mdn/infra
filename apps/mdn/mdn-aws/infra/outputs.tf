@@ -29,7 +29,3 @@ output "rds_backup_role_arn" {
 output "media-sync-role_arn" {
   value = module.media-sync-roles.role_arn
 }
-
-output "worf_role_arn" {
-  value = module.security.worf_role_arn
-}
