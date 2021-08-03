@@ -10,6 +10,10 @@ locals {
 
   mdn_node_groups = {
     default_ng_1 = {
+      # JIRA SE-2281
+      # Required based on https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/upgrades.md#upgrade-module-to-v1700-for-managed-node-groups
+      name = "mdn-default_ng_1-topical-stallion"
+
       desired_capacity          = "2"
       min_capacity              = "2"
       max_capacity              = "12"
