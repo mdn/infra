@@ -10,7 +10,7 @@ github_urls[${users}]="https://github.com/${users}.keys"
 
 function pre_req() {
     apt-get --quiet update
-    apt-get install  --no-install-recommends -qy vim sshuttle python3-pip fail2ban
+    apt-get install  --no-install-recommends -qy vim sshuttle python3-pip fail2ban python3-setuptools
     curl -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
     pip3 install awscli
 }
