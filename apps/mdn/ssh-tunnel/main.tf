@@ -8,6 +8,14 @@ module "ssh_tunnel_eu_central_1" {
   github_users = [
     "escattone",
     "peterbe",
-    "schalkneethling"
+    "schalkneethling",
+    # Web SRE Team
+    # According to https://github.com/orgs/mozilla-it/teams/it-se/members?query=membership:child-team
+    "bkochendorfer",
+    "duallain",
+    "floatingatoll",
+    "sciurus",
+    "smarnach",
+    "cmharlow"
   ]
 }
