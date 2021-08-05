@@ -82,6 +82,39 @@ resource "aws_db_instance" "mdn_rds" {
   tags                         = merge({ "Name" = "MDN-rds-${var.environment}" }, local.tags)
 }
 
+resource "aws_db_instance" "mdn_postgres" {
+  count = var.enabled ? 1 : 0
+
+  allocated_storage           = var.postgres_storage_gb
+  allow_major_version_upgrade = var.postgres_allow_major_version_upgrade
+  auto_minor_version_upgrade  = var.postgres_auto_minor_version_upgrade
+  backup_retention_period     = var.postgres_backup_retention_days
+  backup_window               = var.postgres_backup_window
+
+  db_subnet_group_name = element(aws_db_subnet_group.rds.*.name, count.index)
+
+  depends_on = [aws_security_group.mdn_rds_sg]
+  engine     = var.postgres_engine
+
+
+  engine_version            = var.postgres_engine_version
+  identifier                = var.postgres_identifier #"mdn-prod-postgres"
+  instance_class            = var.postgres_instance_class
+  maintenance_window        = var.postgres_maintenance_window
+  multi_az                  = true
+  name                      = var.postgres_db_name #"developer_mozilla_org"
+  parameter_group_name      = "default.postgres13" # need to create this state as well
+  password                  = var.postgres_password
+  publicly_accessible       = false
+  storage_encrypted         = var.postgres_storage_encrypted
+  storage_type              = var.postgres_storage_type
+  username                  = var.postgres_username
+  port                      = var.postgres_port
+  vpc_security_group_ids    = [aws_security_group.mdn_rds_sg[0].id]
+  final_snapshot_identifier = "mdn-prod-postgres-final"
+  tags                      = merge({ "Name" = "MDN-postgres-${var.environment}" }, local.tags)
+}
+
 resource "aws_security_group" "mdn_rds_sg" {
   count       = var.enabled ? 1 : 0
   name        = var.rds_security_group_name

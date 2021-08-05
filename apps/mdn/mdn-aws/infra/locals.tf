@@ -1,11 +1,12 @@
 locals {
 
   rds_defaults_defaults = {
-    username              = "root"
-    engine_version        = "5.6.51"
-    backup_retention_days = "1"
-    storage_type          = "gp2"
-    storage_gb            = "100"
+    username                = "root"
+    engine_version          = "5.6.51"
+    postgres_engine_version = "13.3"
+    backup_retention_days   = "1"
+    storage_type            = "gp2"
+    storage_gb              = "100"
   }
 
   rds_defaults = merge(
