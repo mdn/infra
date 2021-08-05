@@ -1,5 +1,0 @@
-locals {
-  rds = {
-    user = "root"
-  }
-}
