@@ -236,8 +236,8 @@ data "template_file" "user_data" {
 resource "aws_launch_configuration" "ci" {
   name_prefix = "ci-${var.project}-"
 
-  #image_id = "${data.aws_ami.ubuntu.id}"
-  image_id = "ami-01e0cf6e025c036e4"
+  image_id = "${data.aws_ami.ubuntu.id}"
+  #image_id = "ami-01e0cf6e025c036e4"
 
   instance_type               = var.instance_type
   key_name                    = aws_key_pair.mdn.key_name

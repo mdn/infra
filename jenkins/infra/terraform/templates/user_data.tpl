@@ -27,28 +27,28 @@ restore-backup-set() {
 ci-restore() {
     systemctl stop jenkins
     # List all backups in proper order
-    ALL_BACKUPS=$(find $$BACKUP_DIR -maxdepth 1 -type d   -name 'FULL*' -o -name 'DIFF*' | sort -t- -k2)
+    ALL_BACKUPS=$(find $BACKUP_DIR -maxdepth 1 -type d   -name 'FULL*' -o -name 'DIFF*' | sort -t- -k2)
 
     # Find the last full backup
-    LAST_FULL=$(basename "$(echo "$$ALL_BACKUPS" | grep FULL | tail -n1)")
+    LAST_FULL=$(basename "$(echo "$ALL_BACKUPS" | grep FULL | tail -n1)")
 
     # And all following incrementals
-    INCREMENTALS=$(echo "$$ALL_BACKUPS" | sed -e "0,/$LAST_FULL/d" | xargs -n1 basename)
+    INCREMENTALS=$(echo "$ALL_BACKUPS" | sed -e "0,/$LAST_FULL/d" | xargs -n1 basename)
 
     # Recover from latest backup (full + incrementals)
-    for BACKUP in $$LAST_FULL $$INCREMENTALS; do
-        echo "Restoring from $$BACKUP_DIR/$BACKUP/"
+    for BACKUP in $LAST_FULL $INCREMENTALS; do
+        echo "Restoring from $BACKUP_DIR/$BACKUP/"
         su - jenkins -c "rsync -av $BACKUP_DIR/$BACKUP/ /var/lib/jenkins/"
     done
     systemctl start jenkins
 }
 
 lock() {
-    local prefix=$$1
-    local lock_file="/var/lock/$$prefix.lock"
+    local prefix=$1
+    local lock_file="/var/lock/$prefix.lock"
 
     # create lockfile
-    eval "exec 200>$$lock_file"
+    eval "exec 200>$lock_file"
     # acquire the lock
     flock -n 200 \
         && return 0 \
@@ -68,16 +68,18 @@ main() {
 
     # Setup git and ansible
     apt-get update
-    apt-get install --yes git ansible
+    apt-get install --yes git ansible python-futures
 
     # run ansible
     git clone https://github.com/mdn/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
     cd /tmp/ansible-jenkins && \
-        ansible-playbook site.yml -e "jenkins_backup_directory="$${BACKUP_DIR}" jenkins_backup_bucket="$${BACKUP_BUCKET}" \
-                                        jenkins_backup_dms="$${JENKINS_BACKUP_DMS}" nginx_htpasswd="$${NGINX_HTPASSWD}" \
-                                        papertrail_host="$${PAPERTRAIL_HOST}" papertrail_port="$${PAPERTRAIL_PORT}" \
+        ansible-playbook site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} \
+                                        jenkins_backup_dms=$${JENKINS_BACKUP_DMS} nginx_htpasswd=$${NGINX_HTPASSWD} \
+                                        papertrail_host=$${PAPERTRAIL_HOST} papertrail_port=$${PAPERTRAIL_PORT}" \
         || die "Failed to run ansible"
 
+    # TODO: FIX When we upgrade. Current RSA breaks the aws cli
+    pip install rsa==3.4.2
     echo "Setting EIP"
     associate_eip || die "Failed to associate EIP"
 
