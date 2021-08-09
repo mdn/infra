@@ -115,7 +115,7 @@ resource "aws_db_instance" "mdn_postgres" {
   skip_final_snapshot          = false
   port                         = var.postgres_port
   vpc_security_group_ids       = [aws_security_group.mdn_rds_sg[0].id]
-  final_snapshot_identifier    = "mdn-prod-postgres-final"
+  final_snapshot_identifier    = "mdn-${var.environment}-postgres-final"
   tags                         = merge({ "Name" = "MDN-${var.environment}-postgres" }, local.tags)
 }
 
