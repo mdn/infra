@@ -96,23 +96,27 @@ resource "aws_db_instance" "mdn_postgres" {
   depends_on = [aws_security_group.mdn_rds_sg]
   engine     = var.postgres_engine
 
+  iops = var.environment == "prod" ? 1000 : null
 
-  engine_version            = var.postgres_engine_version
-  identifier                = var.postgres_identifier #"mdn-prod-postgres"
-  instance_class            = var.postgres_instance_class
-  maintenance_window        = var.postgres_maintenance_window
-  multi_az                  = true
-  name                      = var.postgres_db_name #"developer_mozilla_org"
-  parameter_group_name      = "default.postgres13" # need to create this state as well
-  password                  = var.postgres_password
-  publicly_accessible       = false
-  storage_encrypted         = var.postgres_storage_encrypted
-  storage_type              = var.postgres_storage_type
-  username                  = var.postgres_username
-  port                      = var.postgres_port
-  vpc_security_group_ids    = [aws_security_group.mdn_rds_sg[0].id]
-  final_snapshot_identifier = "mdn-prod-postgres-final"
-  tags                      = merge({ "Name" = "MDN-postgres-${var.environment}" }, local.tags)
+  engine_version               = var.postgres_engine_version
+  identifier                   = var.postgres_identifier #"mdn-prod-postgres"
+  instance_class               = var.postgres_instance_class
+  maintenance_window           = var.postgres_maintenance_window
+  monitoring_interval          = var.monitoring_interval
+  multi_az                     = true
+  name                         = var.postgres_db_name #"developer_mozilla_org"
+  parameter_group_name         = "default.postgres13" # need to create this state as well
+  password                     = var.postgres_password
+  publicly_accessible          = false
+  storage_encrypted            = var.postgres_storage_encrypted
+  storage_type                 = var.postgres_storage_type
+  username                     = var.postgres_username
+  performance_insights_enabled = true
+  skip_final_snapshot          = false
+  port                         = var.postgres_port
+  vpc_security_group_ids       = [aws_security_group.mdn_rds_sg[0].id]
+  final_snapshot_identifier    = "mdn-prod-postgres-final"
+  tags                         = merge({ "Name" = "MDN-${var.environment}-postgres" }, local.tags)
 }
 
 resource "aws_security_group" "mdn_rds_sg" {

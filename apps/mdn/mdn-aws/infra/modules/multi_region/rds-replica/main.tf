@@ -55,6 +55,8 @@ resource "aws_db_instance" "replica" {
 resource "aws_db_instance" "postgres_replica" {
   count = var.enabled ? 1 : 0
 
+
+  iops                 = var.environment == "prod" ? 1000 : null
   identifier           = local.postgres_name_prefix #"mdn-prod-postgres-replica"
   replicate_source_db  = var.postgres_replica_source_db
   instance_class       = var.postgres_instance_class

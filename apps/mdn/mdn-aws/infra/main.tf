@@ -127,13 +127,13 @@ module "mysql-us-west-2" {
 
   # postgres database
   postgres_db_name               = local.rds["stage"]["db_name"]
-  postgres_username              = local.rds["stage"]["username"]
+  postgres_username              = local.rds["stage"]["postgres_username"]
   postgres_password              = var.rds["stage"]["password"]
-  postgres_identifier            = "mdn-postgres-stage"
+  postgres_identifier            = "mdn-stage-postgres"
   postgres_engine_version        = local.rds["stage"]["postgres_engine_version"]
   postgres_instance_class        = local.rds["stage"]["instance_class"]
   postgres_backup_retention_days = local.rds["stage"]["backup_retention_days"]
-  postgres_storage_gb            = local.rds["stage"]["storage_gb"]
+  postgres_storage_gb            = local.rds["stage"]["postgres_storage_gb"]
   postgres_storage_type          = local.rds["stage"]["storage_type"]
 
   # shared
@@ -162,10 +162,10 @@ module "mysql-us-west-2-prod" {
 
   # postgres database
   postgres_db_name               = local.rds["prod"]["db_name"]
-  postgres_username              = local.rds["prod"]["username"]
+  postgres_username              = local.rds["prod"]["postgres_username"]
   postgres_password              = var.rds["prod"]["password"]
-  postgres_identifier            = "mdn-postgres-prod"
-  postgres_engine_version        = local.rds["prod"]["engine_version"]
+  postgres_identifier            = "mdn-prod-postgres"
+  postgres_engine_version        = local.rds["prod"]["postgres_engine_version"]
   postgres_instance_class        = local.rds["prod"]["instance_class"]
   postgres_backup_retention_days = 30
   postgres_storage_gb            = local.rds["prod"]["storage_gb"]
