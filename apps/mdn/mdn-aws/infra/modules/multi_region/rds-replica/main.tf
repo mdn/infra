@@ -32,26 +32,6 @@ resource "aws_db_subnet_group" "replica" {
   tags        = merge({ "Name" = "${local.name_prefix}-subnet-group" }, local.tags)
 }
 
-resource "aws_db_instance" "replica" {
-  count = var.enabled ? 1 : 0
-
-  identifier           = local.name_prefix
-  replicate_source_db  = var.replica_source_db
-  instance_class       = var.instance_class
-  storage_type         = var.storage_type
-  kms_key_id           = var.kms_key_id
-  storage_encrypted    = true
-  db_subnet_group_name = aws_db_subnet_group.replica.name
-
-  vpc_security_group_ids = [aws_security_group.replica-sg[0].id]
-  multi_az               = var.multi_az
-
-  apply_immediately   = true
-  skip_final_snapshot = true
-  monitoring_interval = var.monitoring_interval
-  tags                = merge({ "Name" = local.name_prefix }, local.tags)
-}
-
 resource "aws_db_instance" "postgres_replica" {
   count = var.enabled ? 1 : 0
 
@@ -78,13 +58,6 @@ resource "aws_security_group" "replica-sg" {
   name  = "${local.name_prefix}-sg"
 
   vpc_id = var.vpc_id
-
-  ingress {
-    from_port   = var.mysql_port
-    to_port     = var.mysql_port
-    protocol    = "TCP"
-    cidr_blocks = [data.aws_vpc.vpc_cidr.cidr_block]
-  }
 
   ingress {
     from_port   = var.postgres_port

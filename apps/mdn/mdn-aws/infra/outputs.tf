@@ -10,8 +10,8 @@ output "us-west-2-redis-stage-endpoint" {
   value = module.redis-stage-us-west-2.redis_endpoint
 }
 
-output "us-west-2-rds-endpoint" {
-  value = module.mysql-us-west-2.rds_endpoint
+output "us-west-2-postgres-rds-endpoint" {
+  value = module.mysql-us-west-2.postgres_rds_endpoint
 }
 
 output "ci_acm_arn" {

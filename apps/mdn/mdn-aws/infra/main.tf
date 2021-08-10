@@ -113,18 +113,6 @@ module "mysql-us-west-2" {
   environment = "stage"
   region      = "us-west-2"
 
-  # mysql database
-  mysql_env                   = "stage"
-  mysql_db_name               = local.rds["stage"]["db_name"]
-  mysql_username              = local.rds["stage"]["username"]
-  mysql_password              = var.rds["stage"]["password"]
-  mysql_identifier            = "mdn-stage"
-  mysql_engine_version        = local.rds["stage"]["engine_version"]
-  mysql_instance_class        = local.rds["stage"]["instance_class"]
-  mysql_backup_retention_days = local.rds["stage"]["backup_retention_days"]
-  mysql_storage_gb            = local.rds["stage"]["storage_gb"]
-  mysql_storage_type          = local.rds["stage"]["storage_type"]
-
   # postgres database
   postgres_db_name               = local.rds["stage"]["db_name"]
   postgres_username              = local.rds["stage"]["postgres_username"]
@@ -148,18 +136,6 @@ module "mysql-us-west-2-prod" {
   environment = "prod"
   region      = "us-west-2"
 
-  # mysql database
-  mysql_env                   = "prod"
-  mysql_db_name               = local.rds["prod"]["db_name"]
-  mysql_username              = local.rds["prod"]["username"]
-  mysql_password              = var.rds["prod"]["password"]
-  mysql_identifier            = "mdn-prod"
-  mysql_engine_version        = local.rds["prod"]["engine_version"]
-  mysql_instance_class        = local.rds["prod"]["instance_class"]
-  mysql_backup_retention_days = local.rds["prod"]["backup_retention_days"]
-  mysql_storage_gb            = local.rds["prod"]["storage_gb"]
-  mysql_storage_type          = local.rds["prod"]["storage_type"]
-
   # postgres database
   postgres_db_name               = local.rds["prod"]["db_name"]
   postgres_username              = local.rds["prod"]["postgres_username"]
@@ -181,7 +157,6 @@ module "mysql-eu-central-1-replica-prod" {
   source                     = "./modules/multi_region/rds-replica"
   environment                = "prod"
   region                     = "eu-central-1"
-  replica_source_db          = module.mysql-us-west-2-prod.rds_arn
   postgres_replica_source_db = module.mysql-us-west-2-prod.postgres_rds_arn
   vpc_id                     = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
   kms_key_id                 = lookup(var.rds, "key_id.eu-central-1") # Less than ideal this key is copied from the console
