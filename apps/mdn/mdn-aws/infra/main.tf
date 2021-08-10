@@ -108,10 +108,12 @@ module "redis-prod-eu-central-1" {
 }
 
 module "mysql-us-west-2" {
-  source                      = "./modules/multi_region/rds"
-  enabled                     = lookup(var.features, "rds")
-  environment                 = "stage"
-  region                      = "us-west-2"
+  source      = "./modules/multi_region/rds"
+  enabled     = lookup(var.features, "rds")
+  environment = "stage"
+  region      = "us-west-2"
+
+  # mysql database
   mysql_env                   = "stage"
   mysql_db_name               = local.rds["stage"]["db_name"]
   mysql_username              = local.rds["stage"]["username"]
@@ -122,18 +124,31 @@ module "mysql-us-west-2" {
   mysql_backup_retention_days = local.rds["stage"]["backup_retention_days"]
   mysql_storage_gb            = local.rds["stage"]["storage_gb"]
   mysql_storage_type          = local.rds["stage"]["storage_type"]
-  # This security group is also used for Postgres which is not in terraform yet.
-  # Do not delete this security group
+
+  # postgres database
+  postgres_db_name               = local.rds["stage"]["db_name"]
+  postgres_username              = local.rds["stage"]["postgres_username"]
+  postgres_password              = var.rds["stage"]["password"]
+  postgres_identifier            = "mdn-stage-postgres"
+  postgres_engine_version        = local.rds["stage"]["postgres_engine_version"]
+  postgres_instance_class        = local.rds["stage"]["instance_class"]
+  postgres_backup_retention_days = local.rds["stage"]["backup_retention_days"]
+  postgres_storage_gb            = local.rds["stage"]["postgres_storage_gb"]
+  postgres_storage_type          = local.rds["stage"]["storage_type"]
+
+  # shared
   rds_security_group_name = "mdn_rds_sg_stage"
   vpc_id                  = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   monitoring_interval     = "60"
 }
 
 module "mysql-us-west-2-prod" {
-  source                      = "./modules/multi_region/rds"
-  enabled                     = var.features["rds"]
-  environment                 = "prod"
-  region                      = "us-west-2"
+  source      = "./modules/multi_region/rds"
+  enabled     = var.features["rds"]
+  environment = "prod"
+  region      = "us-west-2"
+
+  # mysql database
   mysql_env                   = "prod"
   mysql_db_name               = local.rds["prod"]["db_name"]
   mysql_username              = local.rds["prod"]["username"]
@@ -144,8 +159,18 @@ module "mysql-us-west-2-prod" {
   mysql_backup_retention_days = local.rds["prod"]["backup_retention_days"]
   mysql_storage_gb            = local.rds["prod"]["storage_gb"]
   mysql_storage_type          = local.rds["prod"]["storage_type"]
-  # This security group is also used for Postgres which is not in terraform yet.
-  # Do not delete this security group
+
+  # postgres database
+  postgres_db_name               = local.rds["prod"]["db_name"]
+  postgres_username              = local.rds["prod"]["postgres_username"]
+  postgres_password              = var.rds["prod"]["password"]
+  postgres_identifier            = "mdn-prod-postgres"
+  postgres_engine_version        = local.rds["prod"]["postgres_engine_version"]
+  postgres_instance_class        = local.rds["prod"]["instance_class"]
+  postgres_backup_retention_days = 30
+  postgres_storage_gb            = local.rds["prod"]["storage_gb"]
+
+  #shared
   rds_security_group_name = "mdn_rds_sg_prod"
   vpc_id                  = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   monitoring_interval     = "60"
@@ -153,14 +178,15 @@ module "mysql-us-west-2-prod" {
 
 # Replica set
 module "mysql-eu-central-1-replica-prod" {
-  source              = "./modules/multi_region/rds-replica"
-  environment         = "prod"
-  region              = "eu-central-1"
-  replica_source_db   = module.mysql-us-west-2-prod.rds_arn
-  vpc_id              = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
-  kms_key_id          = lookup(var.rds, "key_id.eu-central-1") # Less than ideal this key is copied from the console
-  instance_class      = local.rds["prod"]["instance_class"]
-  monitoring_interval = "60"
+  source                     = "./modules/multi_region/rds-replica"
+  environment                = "prod"
+  region                     = "eu-central-1"
+  replica_source_db          = module.mysql-us-west-2-prod.rds_arn
+  postgres_replica_source_db = module.mysql-us-west-2-prod.postgres_rds_arn
+  vpc_id                     = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
+  kms_key_id                 = lookup(var.rds, "key_id.eu-central-1") # Less than ideal this key is copied from the console
+  instance_class             = local.rds["prod"]["instance_class"]
+  monitoring_interval        = "60"
 }
 
 module "metrics" {

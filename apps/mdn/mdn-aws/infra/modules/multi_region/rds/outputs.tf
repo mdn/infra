@@ -14,3 +14,6 @@ output "rds_id" {
   value = element(concat(aws_db_instance.mdn_rds.*.id, [""]), 0)
 }
 
+output "postgres_rds_arn" {
+  value = element(concat(aws_db_instance.mdn_postgres.*.arn, [""]), 0)
+}

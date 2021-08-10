@@ -3,7 +3,8 @@ provider "aws" {
 }
 
 locals {
-  name_prefix = "${var.replica_identifier}-${var.environment}-replica"
+  name_prefix          = "${var.replica_identifier}-${var.environment}-replica"
+  postgres_name_prefix = "${var.replica_identifier}-${var.environment}-postgres-replica"
   tags = {
     Service     = "MDN"
     Environment = var.environment
@@ -49,6 +50,27 @@ resource "aws_db_instance" "replica" {
   skip_final_snapshot = true
   monitoring_interval = var.monitoring_interval
   tags                = merge({ "Name" = local.name_prefix }, local.tags)
+}
+
+resource "aws_db_instance" "postgres_replica" {
+  count = var.enabled ? 1 : 0
+
+
+  iops                 = var.environment == "prod" ? 1000 : null
+  identifier           = local.postgres_name_prefix #"mdn-prod-postgres-replica"
+  replicate_source_db  = var.postgres_replica_source_db
+  instance_class       = var.postgres_instance_class
+  storage_type         = "io1"
+  storage_encrypted    = true
+  db_subnet_group_name = aws_db_subnet_group.replica.name
+
+  vpc_security_group_ids = [aws_security_group.replica-sg[0].id]
+  multi_az               = var.multi_az
+
+  apply_immediately   = true
+  skip_final_snapshot = true
+  monitoring_interval = var.monitoring_interval
+  tags                = merge({ "Name" = local.postgres_name_prefix }, local.tags)
 }
 
 resource "aws_security_group" "replica-sg" {

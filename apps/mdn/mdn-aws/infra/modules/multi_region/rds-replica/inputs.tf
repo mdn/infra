@@ -49,3 +49,8 @@ variable "monitoring_interval" {
   default = "0"
 }
 
+variable "postgres_replica_source_db" {}
+
+variable "postgres_instance_class" {
+  default = "db.m5.large"
+}
