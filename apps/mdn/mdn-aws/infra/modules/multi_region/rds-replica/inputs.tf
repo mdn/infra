@@ -20,9 +20,6 @@ variable "storage_type" {
   default = "gp2"
 }
 
-variable "replica_source_db" {
-}
-
 variable "subnet_type" {
   default = "Public"
 }
@@ -35,10 +32,6 @@ variable "vpc_id" {
 
 variable "multi_az" {
   default = true
-}
-
-variable "mysql_port" {
-  default = "3306"
 }
 
 variable "postgres_port" {
