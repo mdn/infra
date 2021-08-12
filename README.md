@@ -36,15 +36,11 @@ repo was forked from [mozmeao/infra][mozmeao-infra] to the [MDN org][mdn-org].
 - [Kubernetes](https://kubernetes.io/)
   - container orchestration in the cloud
   - see [this](https://github.com/mdn/infra/tree/master/k8s) page for more info.
-- [Kops](https://github.com/kubernetes/kops)
-  - Kubernetes installation in AWS
 - [DockerHub](https://hub.docker.com/)
   - public image registry
 
 ### Monitoring tools:
 
-- [Mig](http://mig.mozilla.org/)
-  - Mozilla's real-time digital forensics and investigation platform.
 - [New Relic](https://newrelic.com/)
   - performance monitoring
 - [Papertrail](https://papertrailapp.com/)
