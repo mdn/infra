@@ -2,14 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-terraform {
-  backend "s3" {
-    bucket = "mdn-state-4e366a3ac64d1b4022c8b5e35efbd288"
-    key    = "terraform/mdn-infra"
-    region = "us-west-2"
-  }
-}
-
 module "mdn_shared" {
   source  = "./modules/shared"
   enabled = lookup(var.features, "shared-infra")
@@ -66,6 +58,14 @@ module "mdn_cdn_prod" {
   acm_media_cert_arn       = data.aws_acm_certificate.prod-media-cdn-cert.arn
   cloudfront_media_aliases = split(",", var.cloudfront_media["aliases.prod"])
   cloudfront_media_bucket  = module.media-bucket-prod.bucket_name
+}
+
+# SE-2442 create updates infrastructure
+module "mdn_updates_stage" {
+  source       = "./modules/mdn-updates"
+  region       = var.region
+  environment  = "stage"
+  acm_cert_arn = data.aws_acm_certificate.updates_stage_mdn_mozit_cloud.arn
 }
 
 # TODO: Split this up into multiple files other stuff can get messy quick

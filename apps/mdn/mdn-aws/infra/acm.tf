@@ -29,3 +29,10 @@ data "aws_acm_certificate" "prod-media-cdn-cert" {
   domain   = "media.prod.mdn.mozit.cloud"
 }
 
+# Update certificate for stage
+# Created via ClickOps as the main domain lives in infoblox
+data "aws_acm_certificate" "updates_stage_mdn_mozit_cloud" {
+  provider = aws.acm
+  domain   = "updates.developer.allizom.org"
+}
+
