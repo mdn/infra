@@ -63,7 +63,6 @@ data "aws_iam_policy_document" "public_read" {
   }
 }
 
-
 # S3 buckets to be used as origins for the Cloudfront instances
 resource "aws_s3_bucket" "updates_bucket" {
   bucket = "${local.bucket_name}-${random_id.rand_var.hex}"
