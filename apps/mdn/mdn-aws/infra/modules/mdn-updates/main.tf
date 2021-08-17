@@ -70,7 +70,7 @@ resource "aws_s3_bucket" "updates_bucket" {
 
   cors_rule {
     allowed_headers = ["*"]
-    allowed_methods = ["PUT", "POST"]
+    allowed_methods = ["GET", "HEAD"]
     allowed_origins = ["*"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
@@ -106,7 +106,7 @@ resource "aws_s3_bucket" "updates_bucket" {
 
 # These were created via ClickOps
 data "aws_cloudfront_cache_policy" "cache_policy" {
-  name = "MDN-Origin-And-All-Query-Strings"
+  name = "Managed-CachingDisabled"
 }
 
 data "aws_cloudfront_cache_policy" "cache_policy_one_year" {
@@ -139,16 +139,12 @@ resource "aws_cloudfront_distribution" "updates_distribution" {
 
   # default – with CachingDisabled caching policy and CORS-S3Origin origin request policy
   default_cache_behavior {
-    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    allowed_methods          = ["GET", "HEAD", "OPTIONS"]
     cached_methods           = ["GET", "HEAD"]
     target_origin_id         = aws_s3_bucket.updates_bucket.id
     cache_policy_id          = data.aws_cloudfront_cache_policy.cache_policy.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.origin_policy.id
     viewer_protocol_policy   = "redirect-to-https"
-    # No cache
-    default_ttl = 0
-    max_ttl     = 0
-    min_ttl     = 0
   }
 
   # /packages – with MDN-Yearlong-Caching caching policy and CORS-S3Origin origin request policy
@@ -161,10 +157,6 @@ resource "aws_cloudfront_distribution" "updates_distribution" {
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.origin_policy.id
     target_origin_id         = aws_s3_bucket.updates_bucket.id
 
-    # Yearlong cache policy
-    min_ttl                = 31536000
-    default_ttl            = 31536000
-    max_ttl                = 31536000
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
