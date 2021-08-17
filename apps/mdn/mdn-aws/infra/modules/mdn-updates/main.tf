@@ -141,7 +141,7 @@ resource "aws_cloudfront_distribution" "updates_distribution" {
       https_port               = "443"
       origin_protocol_policy   = "http-only"
       origin_read_timeout      = 30
-      origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+      origin_ssl_protocols     = ["TLSv1.2"]
       origin_keepalive_timeout = 5
     }
   }
