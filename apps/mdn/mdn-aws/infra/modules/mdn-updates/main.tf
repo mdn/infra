@@ -1,6 +1,15 @@
 locals {
-  aliases     = var.environment == "prod" ? ["updates.developer.mozilla.org", "updates.prod.mdn.mozit.cloud"] : ["updates.developer.allizom.org", "updates.stage.mdn.mozit.cloud"]
-  bucket_name = "updates-${var.environment}-developer-${var.environment == "prod" ? "mozilla" : "allizom"}"
+  aliases_map = {
+    "prod"  = ["updates.developer.mozilla.org", "updates.prod.mdn.mozit.cloud"]
+    "stage" = ["updates.developer.allizom.org", "updates.stage.mdn.mozit.cloud"]
+  }
+
+  bucket_suffix_map = {
+    "prod"  = "mozilla"
+    "stage" = "allizom"
+  }
+
+  bucket_name = "updates-${var.environment}-developer-${lookup(local.bucket_suffix_map, var.environment)}"
 }
 
 resource "random_id" "rand_var" {
@@ -120,7 +129,7 @@ data "aws_cloudfront_origin_request_policy" "origin_policy" {
 # Create Cloudfront distribution
 resource "aws_cloudfront_distribution" "updates_distribution" {
   comment = "MDN ${var.environment} Updates CDN"
-  aliases = local.aliases
+  aliases = lookup(local.aliases_map, var.environment)
   enabled = true
 
   origin {
