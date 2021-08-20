@@ -118,12 +118,37 @@ data "aws_cloudfront_cache_policy" "cache_policy" {
   name = "Managed-CachingDisabled"
 }
 
-data "aws_cloudfront_cache_policy" "cache_policy_one_year" {
-  name = "MDN-Yearlong-Caching"
-}
-
 data "aws_cloudfront_origin_request_policy" "origin_policy" {
   name = "Managed-CORS-S3Origin"
+}
+
+
+resource "aws_cloudfront_cache_policy" "cache_policy_one_year_origin_header" {
+  name    = "MDN-Yearlong-Caching-Origin-Header"
+  comment = "This is the same as MDN-Yearlong-Caching but includes the Origin Header in the Cache key"
+
+  default_ttl = 31536000
+  max_ttl     = 31536000
+  min_ttl     = 31536000
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    enable_accept_encoding_brotli = true
+    enable_accept_encoding_gzip   = true
+
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Origin"]
+      }
+    }
+  }
 }
 
 # Create Cloudfront distribution
@@ -162,7 +187,7 @@ resource "aws_cloudfront_distribution" "updates_distribution" {
     path_pattern             = "/packages/*"
     allowed_methods          = ["GET", "HEAD", "OPTIONS"]
     cached_methods           = ["GET", "HEAD"]
-    cache_policy_id          = data.aws_cloudfront_cache_policy.cache_policy_one_year.id
+    cache_policy_id          = aws_cloudfront_cache_policy.cache_policy_one_year_origin_header.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.origin_policy.id
     target_origin_id         = aws_s3_bucket.updates_bucket.id
 

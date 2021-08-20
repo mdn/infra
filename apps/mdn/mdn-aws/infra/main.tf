@@ -68,6 +68,14 @@ module "mdn_updates_stage" {
   acm_cert_arn = data.aws_acm_certificate.updates_stage_mdn_mozit_cloud.arn
 }
 
+# SE-2442 create updates infrastructure
+module "mdn_updates_prod" {
+  source       = "./modules/mdn-updates"
+  region       = var.region
+  environment  = "prod"
+  acm_cert_arn = data.aws_acm_certificate.updates_prod_mdn_mozit_cloud.arn
+}
+
 # TODO: Split this up into multiple files other stuff can get messy quick
 # Multi region resources
 
