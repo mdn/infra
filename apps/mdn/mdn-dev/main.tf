@@ -41,11 +41,12 @@ module "dns-mozit" {
 }
 
 module "dns-mdn-dev" {
-  source            = "./modules/dns"
-  domain-zone-id    = data.terraform_remote_state.dns.outputs.mdn-dev-zone
-  domain-name       = "mdn.dev"
-  domain-name-alias = module.mdn-dev.cloudfront_domain
-  alias-zone-id     = module.mdn-dev.cloudfront_hosted_zone_id
+  source                 = "./modules/dns"
+  domain-zone-id         = data.terraform_remote_state.dns.outputs.mdn-dev-zone
+  domain-name            = "mdn.dev"
+  domain-name-alias      = module.mdn-dev.cloudfront_domain
+  alias-zone-id          = module.mdn-dev.cloudfront_hosted_zone_id
+  evaluate-target-health = false
 }
 
 module "mdn-dev" {
