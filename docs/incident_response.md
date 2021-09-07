@@ -46,8 +46,8 @@ Example:
 
 ```
 rjohnson> I need a few minutes of downtime                        4:01 PM
-rjohnson> peterbe has agreed to take over IL                      4:01 PM
-peterbe> Confirmed, I am now IL                                   4:01 PM
+rjohnson> fiji has agreed to take over IL                         4:01 PM
+fiji> Confirmed, I am now IL                                      4:01 PM
 ```
 
 ## Communications
