@@ -13,7 +13,6 @@ module "ssh_tunnel_eu_central_1" {
     "bkochendorfer",
     "duallain",
     "floatingatoll",
-    "sciurus",
     "smarnach",
     "cmharlow"
   ]
