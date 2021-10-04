@@ -7,10 +7,8 @@ locals {
   }
 
   mdn_node_groups = {
-    default_ng = {
-      # JIRA SE-2281
-      # Required based on https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/upgrades.md#upgrade-module-to-v1700-for-managed-node-groups
-      name = "mdn-default_ng-caring-oryx"
+    blue-workers = {
+      name = "mdn-blue-workers"
 
       desired_capacity = "4"
       min_capacity     = "4"
@@ -25,7 +23,7 @@ locals {
       }
 
       additional_tags = {
-        "Name"                              = "mdn-default-ng"
+        "Name"                              = "mdn-blue-workers"
         "kubernetes.io/cluster/mdn"         = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }
