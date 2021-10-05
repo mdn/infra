@@ -9,10 +9,8 @@ locals {
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
 
   mdn_node_groups = {
-    default_ng_1 = {
-      # JIRA SE-2281
-      # Required based on https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/docs/upgrades.md#upgrade-module-to-v1700-for-managed-node-groups
-      name = "mdn-default_ng_1-topical-stallion"
+    green-workers = {
+      name = "mdn-green-workers"
 
       desired_capacity          = "2"
       min_capacity              = "2"
@@ -29,7 +27,7 @@ locals {
       }
 
       additional_tags = {
-        "Name"                              = "mdn-default-ng-1"
+        "Name"                              = "mdn-green-workers"
         "kubernetes.io/cluster/mdn"         = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }
