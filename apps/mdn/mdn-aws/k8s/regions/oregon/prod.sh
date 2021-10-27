@@ -85,6 +85,7 @@ export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_STRIPE_PRICE_IDS=price_1J3PO4FBqYLAtsStE7HbeSeb
 export KUMA_STRIPE_PUBLIC_KEY=pk_live_GZl4tCi8J5mWhKbJeRey4DSy
 export KUMA_WEB_CONCURRENCY=4
+export KUMA_FXA_TOKEN_ISSUER=https://accounts.firefox.com
 export KUMA_OIDC_RP_CLIENT_ID=""
 export KUMA_OIDC_OP_AUTHORIZATION_ENDPOINT=https://accounts.firefox.com/authorization
 export KUMA_OIDC_OP_TOKEN_ENDPOINT=https://oauth.accounts.firefox.com/v1/token
