@@ -84,6 +84,7 @@ export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_STRIPE_PRICE_IDS=price_1J3MOCFBqYLAtsStui2HZlIZ
 export KUMA_STRIPE_PUBLIC_KEY=pk_test_8QPCGoZzaushrXveHRqHAZch
 export KUMA_WEB_CONCURRENCY=4
+export KUMA_FXA_TOKEN_ISSUER=https://accounts.stage.mozaws.net
 export KUMA_OIDC_RP_CLIENT_ID=e7bc284c2d3b4a90
 export KUMA_OIDC_CONFIGURATION_URL=https://accounts.stage.mozaws.net/.well-known/openid-configuration
 export KUMA_OIDC_OP_AUTHORIZATION_ENDPOINT=https://accounts.stage.mozaws.net/authorization

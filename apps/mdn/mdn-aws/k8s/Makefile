@@ -77,6 +77,7 @@ export KUMA_STATIC_URL ?= /static/
 export KUMA_STRIPE_PRICE_IDS ?= "price_none"
 export KUMA_STRIPE_PUBLIC_KEY ?= ""
 export KUMA_WEB_CONCURRENCY ?= 4
+export KUMA_FXA_TOKEN_ISSUER ?= "https://accounts.firefox.com"
 export KUMA_OIDC_RP_CLIENT_ID ?= ""
 export KUMA_OIDC_CONFIGURATION_URL ?= "https://accounts.firefox.com/.well-known/openid-configuration"
 export KUMA_OIDC_OP_AUTHORIZATION_ENDPOINT ?= "https://accounts.firefox.com/authorization"
