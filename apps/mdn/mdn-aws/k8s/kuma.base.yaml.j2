@@ -28,36 +28,8 @@
               value: {{ KUMA_ATTACHMENT_HOST }}
             - name: ATTACHMENT_ORIGIN
               value: {{ KUMA_ATTACHMENT_ORIGIN | default(KUMA_ATTACHMENT_HOST, True) }}
-            # AWS access keys for mdn-s3-api-(stage|prod)-uploader user:
-            - name: ATTACHMENTS_AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: aws-access-key
-            - name: ATTACHMENTS_AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: aws-secret-key
-            - name: ATTACHMENTS_AWS_STORAGE_BUCKET_NAME
-              value: "{{ KUMA_ATTACHMENTS_AWS_STORAGE_BUCKET_NAME }}"
-            - name: ATTACHMENTS_AWS_S3_REGION_NAME
-              value: "{{ KUMA_ATTACHMENTS_AWS_S3_REGION_NAME }}"
             - name: ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN
               value: "{{ KUMA_ATTACHMENTS_AWS_S3_CUSTOM_DOMAIN }}"
-            - name: ATTACHMENTS_USE_S3
-              value: "{{ KUMA_ATTACHMENTS_USE_S3 }}"
-            # AWS access keys for mdn-s3-api-(stage|prod)-uploader user:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: aws-access-key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: aws-secret-key
             - name: CELERY_BROKER_URL
               valueFrom:
                 secretKeyRef:
@@ -120,13 +92,6 @@
               value: "{{ KUMA_LEGACY_ROOT }}"
             - name: MAINTENANCE_MODE
               value: "{{ KUMA_MAINTENANCE_MODE }}"
-            - name: MDN_API_S3_BUCKET_NAME
-              value: "{{ KUMA_API_S3_BUCKET_NAME }}"
-            - name: MDN_API_CLOUDFRONT_DISTRIBUTIONID
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: aws-api-cloudfront-dist-id
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEDIA_URL
@@ -165,11 +130,6 @@
               value: "{{ KUMA_OIDC_OP_USER_ENDPOINT }}"
             - name: OIDC_OP_JWKS_ENDPOINT
               value: "{{ KUMA_OIDC_OP_JWKS_ENDPOINT }}"
-            - name: PLUS_VARIANTS_JSON
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: plus-variants-json
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
             - name: RATELIMIT_ENABLE
@@ -206,15 +166,6 @@
               value: {{ KUMA_PROTOCOL }}{{ KUMA_DOMAIN }}
             - name: STATIC_URL
               value: {{ KUMA_STATIC_URL }}
-            - name: STRIPE_PRICE_IDS
-              value: "{{ KUMA_STRIPE_PRICE_IDS }}"
-            - name: STRIPE_PUBLIC_KEY
-              value: {{ KUMA_STRIPE_PUBLIC_KEY }}
-            - name: STRIPE_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: stripe-secret-key
             # Other environment overrides
             - name: PYTHONUNBUFFERED
               value: "True"
