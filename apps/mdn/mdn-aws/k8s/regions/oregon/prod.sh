@@ -81,6 +81,7 @@ export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_WEB_CONCURRENCY=4
 export KUMA_FXA_TOKEN_ISSUER=https://accounts.firefox.com
 export KUMA_OIDC_RP_CLIENT_ID=""
+export KUMA_OIDC_CONFIGURATION_URL=https://accounts.firefox.com/.well-known/openid-configuration
 export KUMA_OIDC_OP_AUTHORIZATION_ENDPOINT=https://accounts.firefox.com/authorization
 export KUMA_OIDC_OP_TOKEN_ENDPOINT=https://oauth.accounts.firefox.com/v1/token
 export KUMA_OIDC_OP_USER_ENDPOINT=https://profile.accounts.firefox.com/v1/profile
