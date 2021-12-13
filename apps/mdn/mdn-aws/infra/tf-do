@@ -1,11 +1,13 @@
 #!/bin/bash
 
-if [ ! -f ./config.sh ]; then
-    echo "Config file not found"
-    exit 1
+if [ -z "${TF_SECRETS_PATH}" ]; then
+    if [ ! -f ./config.sh ]; then
+        echo "Config file not found"
+        exit 1
+    fi
+    source ./config.sh
 fi
 
-source ./config.sh
 
 if [ -z "${TF_SECRETS_PATH}" ]; then
     echo "Secrets path is not set"

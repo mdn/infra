@@ -189,6 +189,7 @@ resource "aws_iam_user" "mdn-efs-backup-user" {
 
 resource "aws_iam_access_key" "mdn-efs-backup-user" {
   user = aws_iam_user.mdn-efs-backup-user.name
+  status = "Inactive"
 }
 
 resource "aws_iam_user_policy" "backup-user-policy" {

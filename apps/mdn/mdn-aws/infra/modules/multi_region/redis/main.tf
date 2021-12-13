@@ -42,7 +42,7 @@ resource "aws_elasticache_replication_group" "mdn-redis-rg" {
   parameter_group_name          = var.redis_param_group
   engine_version                = var.redis_engine_version
   subnet_group_name             = aws_elasticache_subnet_group.mdn-redis-subnet-group[0].name
-  security_group_ids            = concat(var.nodes_security_group, list(aws_security_group.redis_sg.id))
+  security_group_ids            = concat(var.nodes_security_group, tolist([aws_security_group.redis_sg.id]))
   tags                          = merge({ "Name" = var.redis_name }, local.tags)
 }
 
