@@ -195,6 +195,20 @@ resource "aws_cloudfront_distribution" "updates_distribution" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
+  # /notifications – with MDN-Yearlong-Caching caching policy and CORS-S3Origin origin request policy
+  # Cache behavior with precedence 1
+  ordered_cache_behavior {
+    path_pattern             = "/notifications/*"
+    allowed_methods          = ["GET", "HEAD", "OPTIONS"]
+    cached_methods           = ["GET", "HEAD"]
+    cache_policy_id          = aws_cloudfront_cache_policy.cache_policy_one_year_origin_header.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.origin_policy.id
+    target_origin_id         = aws_s3_bucket.updates_bucket.id
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
