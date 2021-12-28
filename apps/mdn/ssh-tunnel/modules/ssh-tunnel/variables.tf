@@ -20,7 +20,7 @@ variable "ssh_pubkey" {
 
 variable "github_users" {
   type    = list(string)
-  default = ["escattone", "schalkneethling"]
+  default = ["fiji-flo", "schalkneethling"]
 }
 
 variable "zone_id" {}
