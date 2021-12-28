@@ -1,4 +1,4 @@
-module "ssh_tunnel_eu_central_1" {
+module "ssh_tunnel_us_west_2" {
   source     = "./modules/ssh-tunnel"
   region     = "us-west-2"
   spot_price = "0.0021"
