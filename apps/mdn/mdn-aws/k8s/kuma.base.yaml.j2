@@ -117,6 +117,11 @@
                   key: NEW_RELIC_LICENSE_KEY
             - name: NEW_RELIC_LOG
               value: "{{ NEW_RELIC_LOG }}"
+            - name: NOTIFICATIONS_ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: notifications-admin-token
             - name: OIDC_RP_CLIENT_ID
               value: "{{ KUMA_OIDC_RP_CLIENT_ID }}"
             - name: OIDC_RP_CLIENT_SECRET
