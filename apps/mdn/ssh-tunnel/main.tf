@@ -13,7 +13,6 @@ module "ssh_tunnel_us_west_2" {
     "bkochendorfer",
     "duallain",
     "floatingatoll",
-    "smarnach",
-    "cmharlow"
+    "smarnach"
   ]
 }
