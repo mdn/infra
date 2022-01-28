@@ -10,6 +10,9 @@ PAPERTRAIL_HOST="${papertrail_host}"
 PAPERTRAIL_PORT="${papertrail_port}"
 EIP_ID="${eip_id}"
 
+# 2rs2ts https://github.com/ansible/ansible/issues/31617
+export HOME=/root
+
 die() {
     echo "$*" 1>&2
     exit 1
@@ -72,22 +75,21 @@ main() {
 
     # run ansible
     git clone https://github.com/mdn/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
+
     cd /tmp/ansible-jenkins && \
-        ansible-playbook site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} \
+        ansible-playbook -vvvvv site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} \
                                         jenkins_backup_dms=$${JENKINS_BACKUP_DMS} nginx_htpasswd=$${NGINX_HTPASSWD} \
                                         papertrail_host=$${PAPERTRAIL_HOST} papertrail_port=$${PAPERTRAIL_PORT}" \
         || die "Failed to run ansible"
-
-    # TODO: FIX When we upgrade. Current RSA breaks the aws cli
-    pip install rsa==3.4.2
-    echo "Setting EIP"
-    associate_eip || die "Failed to associate EIP"
 
     echo "Restoring backup sets to $${BACKUP_DIR}"
     restore-backup-set || die "Failed to restore backup set to $${BACKUP_DIR}"
 
     echo "Restoring jenkins"
     ci-restore || die "Failed to restore jenkins"
+
+    echo "Setting EIP"
+    associate_eip || die "Failed to associate EIP"
 }
 
 main
