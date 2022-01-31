@@ -60,6 +60,13 @@ module "mdn_cdn_prod" {
   cloudfront_media_bucket  = module.media-bucket-prod.bucket_name
 }
 
+module "interactive_examples_stage" {
+  source       = "./modules/interactive-examples"
+  region       = var.region
+  environment  = "stage"
+  acm_cert_arn = data.aws_acm_certificate.interactive_examples_stage_mdn_mozilla_net.arn
+}
+
 # SE-2442 create updates infrastructure
 module "mdn_updates_stage" {
   source       = "./modules/mdn-updates"

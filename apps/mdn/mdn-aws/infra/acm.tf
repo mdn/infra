@@ -29,6 +29,17 @@ data "aws_acm_certificate" "prod-media-cdn-cert" {
   domain   = "media.prod.mdn.mozit.cloud"
 }
 
+data "aws_acm_certificate" "interactive_examples_stage_mdn_mozilla_net" {
+  provider = aws.acm
+  domain   = "interactive-examples.stage.mdn.mozilla.net"
+}
+
+# Disabled for now till stage is up and running
+#data "aws_acm_certificate" "interactive_examples_prod_mdn_mozilla_net" {
+#  provider = aws.acm
+#  domain   = "interactive-examples.prod.mdn.mozilla.net"
+#}
+
 # SE-2442
 # Updates certificate for stage
 # Created via ClickOps as the main domain lives in infoblox
