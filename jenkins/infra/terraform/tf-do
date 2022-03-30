@@ -60,6 +60,10 @@ destroy() {
     terraform destroy -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
+import() {
+  terraform import -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
+}
+
 while [ "$1" != "" ]; do
     case "$1" in
         -x | --debug | --setx )
@@ -104,6 +108,11 @@ while [ "$1" != "" ]; do
         destroy )
             shift
             destroy "${@}"
+            GOT_COMMAND=1
+        ;;
+        import )
+            shift
+            import "${@}"
             GOT_COMMAND=1
         ;;
     esac
