@@ -145,6 +145,30 @@ module "mysql-us-west-2" {
   monitoring_interval     = "60"
 }
 
+module "postgres-stage-redash-us-west-2" {
+
+  source      = "./modules/multi_region/rds"
+  enabled     = lookup(var.features, "rds")
+  environment = "stage"
+  region      = "us-west-2"
+
+  # postgres database
+  postgres_db_name               = local.rds["redash"]["db_name"]
+  postgres_username              = local.rds["redash"]["postgres_username"]
+  postgres_password              = var.rds["redash"]["password"]
+  postgres_identifier            = "mdn-stage-redash-postgres"
+  postgres_engine_version        = local.rds["redash"]["postgres_engine_version"]
+  postgres_instance_class        = local.rds["redash"]["instance_class"]
+  postgres_backup_retention_days = local.rds["redash"]["backup_retention_days"]
+  postgres_storage_gb            = local.rds["redash"]["postgres_storage_gb"]
+  postgres_storage_type          = local.rds["redash"]["storage_type"]
+
+  # shared
+  rds_security_group_name = "mdn_rds_sg_stage"
+  vpc_id                  = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+  monitoring_interval     = "60"
+}
+
 module "mysql-us-west-2-prod" {
   source      = "./modules/multi_region/rds"
   enabled     = var.features["rds"]

@@ -4,7 +4,7 @@ locals {
     username                = "root"
     postgres_username       = "postgres"
     engine_version          = "5.6.51"
-    postgres_engine_version = "13.3"
+    postgres_engine_version = "13.4"
     backup_retention_days   = "1"
     storage_type            = "gp2"
     storage_gb              = "100"
@@ -24,13 +24,21 @@ locals {
       backup_retention_days = "1"
       storage_gb            = "100"
       postgres_storage_gb   = "20"
-    },
+    },    
     prod = {
       db_name               = "developer_mozilla_org"
       password              = ""
       instance_class        = "db.m5.xlarge"
       backup_retention_days = "7"
       storage_gb            = "200"
+    }
+    redash = { 
+      db_name               = "mdn_redash"
+      password              = ""
+      instance_class        = "db.t2.small"
+      backup_retention_days = "1"
+      storage_gb            = "100"
+      postgres_storage_gb   = "20"
     }
   }
 
