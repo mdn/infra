@@ -24,7 +24,7 @@ locals {
 }
 
 resource "aws_db_subnet_group" "rds" {
-  count       = var.enabled ? 1 : 0
+  count       = (var.enabled ? 1 : 0) * (length(var.rds_subnet_group_name) > 0 ? 0 : 1)
   name        = "mdn-${var.environment}-rds-subnet-group"
   description = "mdn-${var.environment}-rds-subnet-group"
   subnet_ids  = data.aws_subnet_ids.this.ids
@@ -40,7 +40,7 @@ resource "aws_db_instance" "mdn_postgres" {
   backup_retention_period     = var.postgres_backup_retention_days
   backup_window               = var.postgres_backup_window
 
-  db_subnet_group_name = element(aws_db_subnet_group.rds.*.name, count.index)
+  db_subnet_group_name = length(var.rds_subnet_group_name) > 0 ? var.rds_subnet_group_name : element(aws_db_subnet_group.rds.*.name, count.index)
 
   depends_on = [aws_security_group.mdn_rds_sg]
   engine     = var.postgres_engine
@@ -64,13 +64,13 @@ resource "aws_db_instance" "mdn_postgres" {
   performance_insights_enabled = true
   skip_final_snapshot          = false
   port                         = var.postgres_port
-  vpc_security_group_ids       = [aws_security_group.mdn_rds_sg[0].id]
+  vpc_security_group_ids       = [length(var.rds_security_group_id) > 0 ? var.rds_security_group_id : aws_security_group.mdn_rds_sg[0].id]
   final_snapshot_identifier    = "mdn-${var.environment}-postgres-final"
   tags                         = merge({ "Name" = "MDN-${var.environment}-postgres" }, local.tags)
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
-  count       = var.enabled ? 1 : 0
+  count       = (var.enabled ? 1 : 0) * (length(var.rds_security_group_id) > 0 ? 0 : 1)
   name        = var.rds_security_group_name
   description = "Allow all inbound traffic"
   vpc_id      = var.vpc_id

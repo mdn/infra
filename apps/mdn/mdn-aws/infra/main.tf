@@ -164,6 +164,8 @@ module "postgres-stage-redash-us-west-2" {
   postgres_storage_type          = local.rds["redash"]["storage_type"]
 
   # shared
+  rds_security_group_id   = module.mysql-us-west-2.rds_security_group_id
+  rds_subnet_group_name   = module.mysql-us-west-2.rds_subnet_group_name
   rds_security_group_name = "mdn_rds_sg_stage"
   vpc_id                  = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
   monitoring_interval     = "60"
