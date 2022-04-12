@@ -31,6 +31,10 @@ resource "aws_db_subnet_group" "rds" {
   tags        = merge({ "Name" = "mdn-${var.environment}-rds-subnet-group" }, local.tags)
 }
 
+data "aws_iam_role" "rds_monitor_role" {
+  name = "rds-monitoring-role"
+}
+
 resource "aws_db_instance" "mdn_postgres" {
   count = var.enabled ? 1 : 0
 
@@ -53,6 +57,7 @@ resource "aws_db_instance" "mdn_postgres" {
   instance_class               = var.postgres_instance_class
   maintenance_window           = var.postgres_maintenance_window
   monitoring_interval          = var.monitoring_interval
+  monitoring_role_arn          = data.aws_iam_role.rds_monitor_role.arn
   multi_az                     = true
   name                         = var.postgres_db_name #"developer_mozilla_org"
   parameter_group_name         = "default.postgres13" # need to create this state as well

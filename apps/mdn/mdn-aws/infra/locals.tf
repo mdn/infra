@@ -35,7 +35,7 @@ locals {
     redash = { 
       db_name               = "mdn_redash"
       password              = ""
-      instance_class        = "db.t2.small"
+      instance_class        = "db.t3.small"
       backup_retention_days = "1"
       storage_gb            = "100"
       postgres_storage_gb   = "20"
