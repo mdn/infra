@@ -5,6 +5,14 @@
 
 ## MDN AWS provisioning
 
+---
+- ### NOTE  arm64/Apple Silicon users.
+
+  As of writing (Terraform v1.1.8) you will need to do run the following before executing terraform commands
+
+  -  ```export GODEBUG=asyncpreemptoff=1 ```
+
+--- 
 ### Requirements:
 
 - Terraform

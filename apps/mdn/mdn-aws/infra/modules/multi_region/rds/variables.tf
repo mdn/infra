@@ -9,6 +9,16 @@ variable "enabled" {
 variable "rds_security_group_name" {
 }
 
+variable "rds_security_group_id" {
+  default = ""
+  description = "security_group_id"
+}
+
+variable "rds_subnet_group_name" {
+  default = ""
+  description = "security_group_name"
+}
+
 variable "postgres_port" {
   default     = 5432
   description = "ingress port to open"
