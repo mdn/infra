@@ -155,7 +155,7 @@ module "postgres-stage-redash-us-west-2" {
   # postgres database
   postgres_db_name               = local.rds["redash"]["db_name"]
   postgres_username              = local.rds["redash"]["postgres_username"]
-  postgres_password              = var.rds["redash"]["password"]
+  postgres_password              = var.rds["redash-stage"]["password"]
   postgres_identifier            = "mdn-stage-redash-postgres"
   postgres_engine_version        = local.rds["redash"]["postgres_engine_version"]
   postgres_instance_class        = local.rds["redash"]["instance_class"]
@@ -203,7 +203,7 @@ module "postgres-prod-redash-us-west-2" {
   # postgres database
   postgres_db_name               = local.rds["redash"]["db_name"]
   postgres_username              = local.rds["redash"]["postgres_username"]
-  postgres_password              = var.rds["redash"]["password"]
+  postgres_password              = var.rds["redash-prod"]["password"]
   postgres_identifier            = "mdn-prod-redash-postgres"
   postgres_engine_version        = local.rds["redash"]["postgres_engine_version"]
   postgres_instance_class        = local.rds["redash"]["instance_class"]
