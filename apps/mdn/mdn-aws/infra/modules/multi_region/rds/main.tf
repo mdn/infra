@@ -49,7 +49,7 @@ resource "aws_db_instance" "mdn_postgres" {
   depends_on = [aws_security_group.mdn_rds_sg]
   engine     = var.postgres_engine
 
-  iops                = var.environment == "prod" ? 1000 : null
+  iops                = (var.environment == "prod" && length(var.rds_subnet_group_name) == 0)  ? 1000 : null
   deletion_protection = var.environment == "prod" ? true : false
 
   engine_version               = var.postgres_engine_version

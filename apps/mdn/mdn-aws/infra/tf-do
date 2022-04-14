@@ -32,6 +32,7 @@ show_help() {
     echo -en "  get         Terraform get\n"
     echo -en "  output      Terraform output\n"
     echo -en "  refresh     Terraform refresh\n"
+    echo -en "  import      Terraform import\n"
 }
 
 init() {
@@ -60,6 +61,10 @@ refresh() {
 
 destroy() {
     terraform destroy -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
+}
+
+import() {
+  terraform import -var-file="${TF_SECRETS_PATH}/terraform.tfvars" "${@}"
 }
 
 while [ "$1" != "" ]; do
@@ -106,6 +111,11 @@ while [ "$1" != "" ]; do
         destroy )
             shift
             destroy "${@}"
+            GOT_COMMAND=1
+        ;;
+        import )
+            shift
+            import "${@}"
             GOT_COMMAND=1
         ;;
     esac

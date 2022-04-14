@@ -197,7 +197,7 @@ module "postgres-prod-redash-us-west-2" {
 
   source      = "./modules/multi_region/rds"
   enabled     = lookup(var.features, "rds")
-  environment = "stage"
+  environment = "prod"
   region      = "us-west-2"
 
   # postgres database
