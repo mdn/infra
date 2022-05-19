@@ -30,43 +30,52 @@ resource "aws_eip" "ci-eip" {
   }
 }
 
-# Create a new load balancer
-resource "aws_elb" "ci" {
-  name    = "ci-elb-${var.project}"
+# Create a new nlb
+resource "aws_lb" "ci" {
+  name    = "ci-mdn-2"
   subnets = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
-  listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
+  load_balancer_type = "network"
+
+  dynamic "subnet_mapping" {
+    for_each = local.ip_subnet_mapping
+    content {
+      subnet_id     = subnet_mapping.value.subnet
+      allocation_id = subnet_mapping.value.eip
+    }
   }
-
-  listener {
-    instance_port      = 80
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = data.aws_acm_certificate.ci.arn
-  }
-
-  health_check {
-    healthy_threshold   = 3
-    unhealthy_threshold = 5
-    timeout             = 10
-    target              = "TCP:80"
-    interval            = 30
-  }
-
-  cross_zone_load_balancing = true
-
-  security_groups = [
-    aws_security_group.elb.id,
-  ]
 
   tags = {
-    Name   = "ci-elb"
+    Name   = "ci-nlb"
     Region = var.region
+  }
+}
+
+resource "aws_lb_listener" "ci" {
+  load_balancer_arn = aws_lb.ci.arn
+  port              = "443"
+  protocol          = "TLS"
+  certificate_arn   = data.aws_acm_certificate.ci.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ci.arn
+  }
+}
+
+resource "aws_lb_target_group" "ci" {
+  name        = "ci-mdn-2"
+  target_type = "instance"
+  protocol    = "TCP"
+  port        = 80
+  vpc_id      = data.terraform_remote_state.vpc-us-west-2.outputs.vpc_id
+
+  health_check {
+    interval            = 30
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    protocol            = "TCP"
+    timeout             = 10
   }
 }
 
@@ -176,8 +185,8 @@ resource "aws_autoscaling_group" "ci" {
   # This is on purpose, when the LC changes, will force creation of a new ASG
   name = "ci-${var.project} - ${aws_launch_configuration.ci.name}"
 
-  load_balancers = [
-    aws_elb.ci.name,
+  target_group_arns = [
+    aws_lb_target_group.ci.arn
   ]
 
   lifecycle {
