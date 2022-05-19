@@ -1,5 +1,5 @@
 output "elb_id" {
-  value = aws_elb.ci.dns_name
+  value = aws_lb.ci.dns_name
 }
 
 output "backup_bucket_name" {
