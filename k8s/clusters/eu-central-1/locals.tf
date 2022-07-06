@@ -18,7 +18,7 @@ locals {
       disk_size        = "50"
       instance_types   = ["m5.large"]
       subnets          = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
-      ami_id           = "ami-04ea0b353c9bfb834"
+      ami_id           = "ami-0adb057ced8202b06"
 
       k8s_label = {
         Service = "default"
