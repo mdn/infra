@@ -13,14 +13,14 @@ module "ssh_sg" {
 }
 
 module "mdn" {
-  source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=master"
+  source = "github.com/mozilla-it/terraform-modules//aws/eks?ref=add-1.22"
 
   region          = var.region
   vpc_id          = data.terraform_remote_state.vpc-eu-central-1.outputs.vpc_id
   cluster_subnets = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
 
   cluster_name       = "mdn"
-  cluster_version    = "1.21"
+  cluster_version    = "1.22"
   cluster_features   = local.cluster_features
   node_groups        = local.mdn_node_groups
   map_roles          = local.map_roles
