@@ -46,7 +46,7 @@ module "mdn" {
   cluster_subnets = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
 
   cluster_name       = "mdn"
-  cluster_version    = "1.19"
+  cluster_version    = "1.20"
   cluster_features   = local.cluster_features
   node_groups        = local.mdn_node_groups
   map_roles          = local.map_roles
