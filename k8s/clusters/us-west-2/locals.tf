@@ -7,8 +7,8 @@ locals {
   }
 
   mdn_node_groups = {
-    green-workers = {
-      name = "mdn-green-workers"
+    blue-workers = {
+      name = "mdn-blue-workers"
 
       desired_capacity = "4"
       min_capacity     = "4"
@@ -16,7 +16,7 @@ locals {
       disk_size        = "100"
       instance_types   = ["m5.xlarge"]
       subnets          = data.terraform_remote_state.vpc-us-west-2.outputs.public_subnets
-      ami_id = "ami-0e9d7772961b84bc8"
+      ami_id           = "ami-0aa4096ec49a62235"
 
       k8s_label = {
         Service = "default"
@@ -24,7 +24,7 @@ locals {
       }
 
       additional_tags = {
-        "Name"                              = "mdn-green-workers"
+        "Name"                              = "mdn-blue-workers"
         "kubernetes.io/cluster/mdn"         = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }

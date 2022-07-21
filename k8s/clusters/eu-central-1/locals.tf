@@ -2,15 +2,15 @@ locals {
 
   cluster_features = {
     "aws_calico"  = true
-    "alb_ingress" = true
+    "alb_ingress" = false
     "reloader"    = false
   }
 
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
 
   mdn_node_groups = {
-    blue-workers = {
-      name = "mdn-blue-workers"
+    green-workers = {
+      name = "mdn-green-workers"
 
       desired_capacity = "2"
       min_capacity     = "2"
@@ -18,7 +18,6 @@ locals {
       disk_size        = "50"
       instance_types   = ["m5.large"]
       subnets          = data.terraform_remote_state.vpc-eu-central-1.outputs.public_subnets
-      ami_id           = "ami-04ea0b353c9bfb834"
 
       k8s_label = {
         Service = "default"
@@ -26,7 +25,7 @@ locals {
       }
 
       additional_tags = {
-        "Name"                              = "mdn-blue-workers"
+        "Name"                              = "mdn-green-workers"
         "kubernetes.io/cluster/mdn"         = "owned"
         "k8s.io/cluster-autoscaler/enabled" = "true"
       }
