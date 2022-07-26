@@ -1,4 +1,4 @@
-apiVersion: extensions/v1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ REDIRECTOR_NAME }}
@@ -15,7 +15,11 @@ spec:
   - host: {{ domain }}
     http:
       paths:
-      - backend:
-          serviceName: {{ REDIRECTOR_NAME }}
-          servicePort: {{ REDIRECTOR_SERVICE_PORT }}
+      - path: /
+        pathType: ImplementationSpecific 
+        backend:
+          service:
+            name: {{ REDIRECTOR_NAME }}
+            port:
+              number: {{ REDIRECTOR_SERVICE_PORT }}
   {% endfor %}
