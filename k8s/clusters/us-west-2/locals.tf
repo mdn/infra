@@ -1,9 +1,11 @@
 locals {
 
   cluster_features = {
-    "aws_calico"  = true
-    "alb_ingress" = true
-    "reloader"    = false
+    // calico managed by helm separately
+    "aws_calico"       = false
+    "alb_ingress"      = true
+    "reloader"         = false
+    "external_secrets" = false
   }
 
   mdn_node_groups = {
