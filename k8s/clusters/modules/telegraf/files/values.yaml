@@ -1,0 +1,16 @@
+---
+config:
+  outputs:
+    - influxdb:
+        database: ${INFLUX_DATABASE}
+        username: ${INFLUX_USER}
+        password: ${INFLUX_PASSWORD}
+        urls:
+          - ${INFLUX_URL}
+
+        skip_database_creation: true
+        timeout: 15s
+
+  inputs:
+    - statsd:
+        service_address: ":8125"

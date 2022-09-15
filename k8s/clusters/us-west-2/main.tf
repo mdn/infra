@@ -52,3 +52,16 @@ module "mdn" {
   map_roles          = local.map_roles
   velero_bucket_name = "velero-${module.mdn.cluster_id}-${var.region}-${data.aws_caller_identity.current.account_id}"
 }
+
+module "telegraf" {
+  providers = {
+    helm       = helm.mdn
+    kubernetes = kubernetes.mdn
+  }
+
+  source = "../modules/telegraf"
+
+  service_name   = "mdn"
+  cluster_name   = "mdn"
+  cluster_region = var.region
+}
