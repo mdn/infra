@@ -1,4 +1,7 @@
-# MDN Web Docs infrastructure
+# MDN infrastructure (deprecated)
+
+> **Important**
+> In April 2023, MDN moved from AWS to GCP. This repository is no longer used.
 
 This repo is maintained by the [MDN Web Docs][mdn] operations team, which
 includes MDN developers, Mozilla IT, and
